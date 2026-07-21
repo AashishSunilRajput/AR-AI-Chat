@@ -1,0 +1,433 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+//
+// ENUMS
+//
+
+enum Plan {
+  FREE
+  STARTER
+  PRO
+  ENTERPRISE
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  CLIENT_ADMIN
+  MANAGER
+  AGENT
+  USER
+}
+
+enum AIProvider {
+  OPENAI
+  GEMINI
+  CLAUDE
+}
+
+enum WidgetTheme {
+  LIGHT
+  DARK
+  AUTO
+}
+
+enum WidgetPosition {
+  BOTTOM_RIGHT
+  BOTTOM_LEFT
+}
+
+enum ProcessingStatus {
+
+  PENDING
+
+  PROCESSING
+
+  COMPLETED
+
+  FAILED
+
+}
+
+enum EmbeddingProvider {
+
+  OPENAI
+
+  GEMINI
+
+  CLAUDE
+
+}
+
+enum ConversationStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+
+
+//
+// ORGANIZATION
+//
+
+model Organization {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  slug        String              @unique
+  email       String              @unique
+  phone       String?
+  website     String?
+  logo        String?
+
+  plan        Plan                @default(FREE)
+  status      OrganizationStatus  @default(ACTIVE)
+
+  users       User[]
+  chatbots Chatbot[]
+  knowledgeBases KnowledgeBase[]
+  visitors Visitor[]
+  settings    OrganizationSetting?
+
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+//
+// USERS
+//
+
+model User {
+  id             Int            @id @default(autoincrement())
+
+  organizationId Int?
+  organization   Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  name           String
+  email          String         @unique
+  password       String
+
+  role           UserRole       @default(CLIENT_ADMIN)
+
+  isActive       Boolean        @default(true)
+
+  refreshTokens  RefreshToken[]
+  sessions       Session[]
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+//
+// ORGANIZATION SETTINGS
+//
+
+model OrganizationSetting {
+  id               Int           @id @default(autoincrement())
+
+  organizationId   Int           @unique
+
+  organization     Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  timezone         String        @default("Asia/Kolkata")
+  language         String        @default("en")
+
+  companyAddress   String?
+  companyCity      String?
+  companyState     String?
+  companyCountry   String?
+
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+//
+// REFRESH TOKENS
+//
+
+model RefreshToken {
+  id         Int      @id @default(autoincrement())
+
+  token      String   @unique
+
+  userId      Int
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt   DateTime
+
+  revoked     Boolean @default(false)
+
+  createdAt   DateTime @default(now())
+}
+
+//
+// LOGIN SESSIONS
+//
+
+model Session {
+  id          Int      @id @default(autoincrement())
+
+  userId      Int
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  ipAddress   String?
+
+  userAgent   String?
+
+  device      String?
+
+  createdAt   DateTime @default(now())
+
+  lastSeenAt  DateTime @default(now())
+}
+model Chatbot {
+  id             Int          @id @default(autoincrement())
+
+  organizationId Int
+
+  name           String
+
+  slug           String       @unique
+
+  description    String?
+
+  isActive       Boolean      @default(true)
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  settings       ChatbotSetting?
+  knowledgeBases KnowledgeBase[]
+  visitors Visitor[]
+
+conversations Conversation[]
+
+widgetKey      String   @unique
+allowedDomains Json?
+  createdAt      DateTime     @default(now())
+
+  updatedAt      DateTime     @updatedAt
+}
+
+model ChatbotSetting {
+
+  id Int @id @default(autoincrement())
+
+  chatbotId Int @unique
+
+  chatbot Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+
+  aiProvider AIProvider @default(OPENAI)
+
+  model String @default("gpt-5-mini")
+
+  temperature Float @default(0.7)
+
+  maxTokens Int @default(1000)
+
+  systemPrompt String?
+
+  welcomeMessage String? @default("Hi 👋 How can I help you today?")
+
+  primaryColor String @default("#2563EB")
+
+  avatar String?
+
+  theme WidgetTheme @default(LIGHT)
+
+  position WidgetPosition @default(BOTTOM_RIGHT)  
+
+  allowedDomains Json?
+
+  isPublic Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model KnowledgeBase {
+
+  id Int @id @default(autoincrement())
+
+  organizationId Int
+
+  chatbotId Int
+
+  name String
+
+  description String?
+
+  isActive Boolean @default(true)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  chatbot Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+
+  documents KnowledgeDocument[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model KnowledgeDocument {
+
+  id Int @id @default(autoincrement())
+
+  knowledgeBaseId Int
+
+  title String
+
+  fileName String
+
+  fileType String
+
+  fileSize Int
+
+  storagePath String
+
+  extractedText String?
+
+  processingStatus ProcessingStatus @default(PENDING)
+
+  knowledgeBase KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+
+  chunks KnowledgeChunk[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+model KnowledgeChunk {
+
+  id Int @id @default(autoincrement())
+
+  documentId Int
+
+  chunkIndex Int
+
+  content String
+
+  tokenCount Int?
+
+  embeddingId String?
+
+ 
+
+  document KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+ embeddings KnowledgeEmbedding[]
+  createdAt DateTime @default(now())
+}
+
+model KnowledgeEmbedding {
+
+  id Int @id @default(autoincrement())
+
+  chunkId Int
+
+  chunk KnowledgeChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+
+  provider EmbeddingProvider @default(OPENAI)
+
+  model String
+
+  vector Json
+
+  tokenCount Int?
+
+  createdAt DateTime @default(now())
+
+}
+
+model Visitor {
+
+  id             Int       @id @default(autoincrement())
+
+  organizationId Int
+
+  chatbotId      Int
+
+  sessionToken   String    @unique
+
+  name           String?
+
+  email          String?
+
+  ipAddress      String?
+
+  userAgent      String?
+
+  lastSeenAt     DateTime  @default(now())
+
+  createdAt      DateTime  @default(now())
+
+  updatedAt      DateTime  @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  chatbot        Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+
+  conversations  Conversation[]
+}
+
+model Conversation {
+
+  id          Int      @id @default(autoincrement())
+
+  visitorId   Int
+  chatbotId   Int
+
+  status      ConversationStatus @default(ACTIVE)
+
+  startedAt   DateTime @default(now())
+
+  endedAt     DateTime?
+
+  createdAt   DateTime @default(now())
+
+  updatedAt   DateTime @updatedAt
+
+  visitor      Visitor @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+
+  chatbot      Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+
+  messages     Message[]
+}
+
+model Message {
+
+  id               Int      @id @default(autoincrement())
+
+  conversationId   Int
+
+  role             MessageRole
+
+  message          String   @db.Text
+
+  model            String?
+
+  inputTokens      Int?
+
+  outputTokens     Int?
+
+  createdAt        DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+}
