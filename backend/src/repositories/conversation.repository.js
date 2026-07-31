@@ -54,13 +54,16 @@ class ConversationRepository {
 
     }
 
-    // ==========================================
-    // Find By Id
-    // ==========================================
+// ==========================================
+// Find By Id
+// ==========================================
 
-    async findById(id) {
+async findById(id) {
 
-        return await prisma.conversation.findUnique({
+    console.log("SEARCHING CONVERSATION ID:", id);
+
+    const conversation =
+        await prisma.conversation.findUnique({
 
             where: {
 
@@ -73,6 +76,8 @@ class ConversationRepository {
                 visitor: true,
 
                 chatbot: true,
+
+                leads: true,
 
                 messages: {
 
@@ -88,33 +93,259 @@ class ConversationRepository {
 
         });
 
-    }
+
+    console.log(
+        "DATABASE RESULT:",
+        conversation
+    );
+
+
+    return conversation;
+
+}
 
     // ==========================================
     // Close Conversation
     // ==========================================
 
-    async close(id) {
+async close(id) {
+    return await prisma.conversation.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            status: "CLOSED",
+            endedAt: new Date()
+        },
+        include: {
+            visitor: true,
+            chatbot: true,
+            messages: {
+                orderBy: {
+                    createdAt: "asc"
+                }
+            }
+        }
+    });
+}
 
-        return await prisma.conversation.update({
+    
+async findAll() {
 
-            where: {
+    return await prisma.conversation.findMany({
 
-                id: Number(id)
+        include: {
 
-            },
+            visitor: true,
 
-            data: {
+            chatbot: true,
 
-                status: "CLOSED",
+            _count: {
 
-                endedAt: new Date()
+                select: {
+
+                    messages: true
+
+                }
 
             }
 
-        });
+        },
+
+        orderBy: {
+
+            id: "desc"
+
+        }
+
+    });
+
+}
+
+async findAllByOrganization(
+    organizationId
+) {
+
+    return await prisma.conversation.findMany({
+
+        where: {
+
+            chatbot: {
+
+                organizationId:
+                    Number(organizationId)
+
+            }
+
+        },
+
+        include: {
+
+            visitor: true,
+
+            chatbot: true,
+
+            _count: {
+
+                select: {
+
+                    messages: true
+
+                }
+
+            }
+
+        },
+
+        orderBy: {
+
+            id: "desc"
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// Find By Id + Organization  
+// ==========================================
+
+async findByIdWithOrganization(
+    id,
+    organizationId
+) {
+
+    return await prisma.conversation.findFirst({
+
+        where: {
+
+            id: Number(id),
+
+            chatbot: {
+
+                organizationId: Number(
+                    organizationId
+                )
+
+            }
+
+        },
+
+       include: {
+
+    visitor: true,
+
+    chatbot: true,
+
+    leads: true,
+
+    messages: {
+
+        orderBy: {
+
+            createdAt:"asc"
+
+        }
 
     }
+
+}
+
+    });
+
+}
+
+// ==========================================
+// Conversation Stats
+// ==========================================
+
+async getStats(organizationId = null) {
+
+    const where = organizationId
+        ? {
+              chatbot: {
+                  organizationId: Number(organizationId)
+              }
+          }
+        : {};
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [
+
+        total,
+
+        active,
+
+        closed,
+
+        todayCount
+
+    ] = await Promise.all([
+
+        prisma.conversation.count({
+
+            where
+
+        }),
+
+        prisma.conversation.count({
+
+            where: {
+
+                ...where,
+
+                status: "ACTIVE"
+
+            }
+
+        }),
+
+        prisma.conversation.count({
+
+            where: {
+
+                ...where,
+
+                status: "CLOSED"
+
+            }
+
+        }),
+
+        prisma.conversation.count({
+
+            where: {
+
+                ...where,
+
+                createdAt: {
+
+                    gte: today
+
+                }
+
+            }
+
+        })
+
+    ]);
+
+    return {
+
+        total,
+
+        active,
+
+        closed,
+
+        today: todayCount
+
+    };
+
+}
 
 }
 

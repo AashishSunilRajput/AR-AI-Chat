@@ -15,6 +15,18 @@ export function WidgetProvider({ children }) {
 
     const [conversationId, setConversationId] = useState(null);
 
+    // ==========================================
+    // Lead Capture
+    // ==========================================
+
+    const [showLeadForm, setShowLeadForm] = useState(false);
+
+    const [leadSubmitted, setLeadSubmitted] = useState(
+
+        localStorage.getItem("arai_lead_submitted") === "true"
+
+    );
+
     useEffect(() => {
 
         initialize();
@@ -25,14 +37,18 @@ export function WidgetProvider({ children }) {
 
         try {
 
+            // ==========================================
             // Widget Config
+            // ==========================================
 
             const widgetResponse =
                 await widgetService.getConfig();
 
             setConfig(widgetResponse.data);
 
-            // Visitor + Conversation
+            // ==========================================
+            // Visitor Session
+            // ==========================================
 
             const visitorResponse =
                 await visitorService.startSession();
@@ -44,6 +60,21 @@ export function WidgetProvider({ children }) {
                 visitorResponse.data.conversationId
 
             );
+
+            // ==========================================
+            // Check Local Storage
+            // ==========================================
+
+            const submitted =
+                localStorage.getItem(
+                    "arai_lead_submitted"
+                );
+
+            if (submitted) {
+
+                setLeadSubmitted(true);
+
+            }
 
         }
 
@@ -73,7 +104,17 @@ export function WidgetProvider({ children }) {
 
                 visitor,
 
-                conversationId
+                conversationId,
+
+                // Lead Capture
+
+                showLeadForm,
+
+                setShowLeadForm,
+
+                leadSubmitted,
+
+                setLeadSubmitted
 
             }}
 

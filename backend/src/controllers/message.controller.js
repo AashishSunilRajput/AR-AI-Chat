@@ -6,44 +6,42 @@ class MessageController {
     // Send Message
     // ==========================================
 
-    async send(req, res, next) {
+   async send(req, res, next) {
 
-        try {
+    try {
 
-            const {
+        console.log("REQUEST BODY:", req.body);
 
-                conversationId,
+        const {
+            conversationId,
+            message
+        } = req.body;
 
-                message
 
-            } = req.body;
+        console.log(
+            "conversationId received:",
+            conversationId
+        );
 
-            const response =
-                await messageService.send(
 
-                    conversationId,
+        const response = await messageService.send(
+            req.chatbot,
+            conversationId,
+            message
+        );
 
-                    message
+        return res.status(200).json({
+            success:true,
+            data:response
+        });
 
-                );
+    } catch(error) {
 
-            return res.status(200).json({
-
-                success: true,
-
-                data: response
-
-            });
-
-        }
-
-        catch (error) {
-
-            next(error);
-
-        }
+        next(error);
 
     }
+
+}
 
     // ==========================================
     // Conversation History
@@ -53,12 +51,11 @@ class MessageController {
 
         try {
 
-            const messages =
-                await messageService.getMessages(
+            const messages = await messageService.getMessages(
 
-                    req.params.conversationId
+                req.params.conversationId
 
-                );
+            );
 
             return res.status(200).json({
 
@@ -96,8 +93,7 @@ class MessageController {
 
                 success: true,
 
-                message:
-                    "Message deleted successfully"
+                message: "Message deleted successfully"
 
             });
 

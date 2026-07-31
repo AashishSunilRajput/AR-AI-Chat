@@ -23,27 +23,50 @@ class ChatbotSettingService {
 
     async getSettings(chatbotId, user) {
 
-        const chatbot =
-            await chatbotRepository.findByIdAndOrganization(
+        let chatbot;
 
-                Number(chatbotId),
+        // ======================================
+        // SUPER ADMIN
+        // ======================================
 
-                user.organizationId
+        if (user.role === "SUPER_ADMIN") {
 
-            );
+            chatbot =
+                await chatbotRepository.findById(
+                    Number(chatbotId)
+                );
+
+        }
+
+        // ======================================
+        // CLIENT ADMIN
+        // ======================================
+
+        else {
+
+            chatbot =
+                await chatbotRepository.findByIdAndOrganization(
+
+                    Number(chatbotId),
+
+                    user.organizationId
+
+                );
+
+        }
 
         if (!chatbot) {
 
-            throw new Error("Chatbot not found");
+            throw new Error(
+                "Chatbot not found"
+            );
 
         }
 
         let settings =
             await chatbotSettingRepository.findByChatbot(
 
-                Number(chatbotId),
-
-                user.organizationId
+                Number(chatbotId)
 
             );
 
@@ -51,7 +74,9 @@ class ChatbotSettingService {
 
             settings =
                 await this.createDefault(
+
                     Number(chatbotId)
+
                 );
 
         }
@@ -64,29 +89,56 @@ class ChatbotSettingService {
     // Update Settings
     // ==========================================
 
-    async updateSettings(chatbotId, user, data) {
+    async updateSettings(
+        chatbotId,
+        user,
+        data
+    ) {
 
-        const chatbot =
-            await chatbotRepository.findByIdAndOrganization(
+        let chatbot;
 
-                Number(chatbotId),
+        // ======================================
+        // SUPER ADMIN
+        // ======================================
 
-                user.organizationId
+        if (user.role === "SUPER_ADMIN") {
 
-            );
+            chatbot =
+                await chatbotRepository.findById(
+                    Number(chatbotId)
+                );
+
+        }
+
+        // ======================================
+        // CLIENT ADMIN
+        // ======================================
+
+        else {
+
+            chatbot =
+                await chatbotRepository.findByIdAndOrganization(
+
+                    Number(chatbotId),
+
+                    user.organizationId
+
+                );
+
+        }
 
         if (!chatbot) {
 
-            throw new Error("Chatbot not found");
+            throw new Error(
+                "Chatbot not found"
+            );
 
         }
 
         let settings =
             await chatbotSettingRepository.findByChatbot(
 
-                Number(chatbotId),
-
-                user.organizationId
+                Number(chatbotId)
 
             );
 
@@ -94,7 +146,9 @@ class ChatbotSettingService {
 
             settings =
                 await this.createDefault(
+
                     Number(chatbotId)
+
                 );
 
         }

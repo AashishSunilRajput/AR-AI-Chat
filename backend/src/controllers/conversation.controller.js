@@ -10,12 +10,14 @@ class ConversationController {
 
         try {
 
-            const conversation =
-                await conversationService.get(
+           const conversation =
+    await conversationService.get(
 
-                    req.params.id
+        req.params.id,
 
-                );
+        req.user
+
+    );
 
             return res.status(200).json({
 
@@ -35,6 +37,39 @@ class ConversationController {
 
     }
 
+    
+
+// ==========================================
+// Get All Conversations
+// ==========================================
+
+async getAll(req, res, next) {
+
+    try {
+
+        const conversations =
+            await conversationService.getAll(
+                req.user
+            );
+
+        return res.status(200).json({
+
+            success: true,
+
+            data: conversations
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
     // ==========================================
     // Close Conversation
     // ==========================================
@@ -43,12 +78,14 @@ class ConversationController {
 
         try {
 
-            const conversation =
-                await conversationService.close(
+          const conversation =
+    await conversationService.close(
 
-                    req.params.id
+        req.params.id,
 
-                );
+        req.user
+
+    );
 
             return res.status(200).json({
 
@@ -69,6 +106,42 @@ class ConversationController {
         }
 
     }
+
+    // ==========================================
+// Conversation Stats
+// ==========================================
+
+async stats(req, res, next) {
+    
+
+    try {
+
+        const stats =
+            await conversationService.getStats(
+
+                req.user
+
+            );
+
+            console.log(req.user);
+
+        return res.json({
+
+            success: true,
+
+            data: stats
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
 
 }
 

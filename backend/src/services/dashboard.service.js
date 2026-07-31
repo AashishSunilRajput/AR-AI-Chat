@@ -8,46 +8,80 @@ class DashboardService {
 
     async getDashboard(user) {
 
-        // Organization Details
-        const organization = await dashboardRepository.getOrganization(
-            user.organizationId
-        );
+        // ===========================================
+        // SUPER ADMIN
+        // ===========================================
 
-        if (!organization) {
-            throw new Error("Organization not found");
+        if (user.role === "SUPER_ADMIN") {
+
+            const totalUsers =
+                await dashboardRepository.totalUsersGlobal();
+
+            const activeUsers =
+                await dashboardRepository.activeUsersGlobal();
+
+            return {
+
+                organization: null,
+
+                stats: {
+
+                    totalOrganizations:
+                        await dashboardRepository.totalOrganizations(),
+
+                    totalUsers,
+
+                    activeUsers,
+
+                    inactiveUsers:
+                        totalUsers - activeUsers,
+
+                    totalChatbots:
+                        await dashboardRepository.totalChatbots(),
+
+                    totalKnowledgeBases:
+                        await dashboardRepository.totalKnowledgeBases(),
+
+                    totalLeads:
+                        await dashboardRepository.totalLeads(),
+
+                    totalConversations:
+                        await dashboardRepository.totalConversations()
+
+                }
+
+            };
+
         }
 
-        // User Statistics
-        const totalUsers = await dashboardRepository.totalUsers(
-            user.organizationId
-        );
+        // ===========================================
+        // CLIENT ADMIN
+        // ===========================================
 
-        const activeUsers = await dashboardRepository.activeUsers(
-            user.organizationId
-        );
+        const organization =
+            await dashboardRepository.getOrganization(
+                user.organizationId
+            );
 
-        const inactiveUsers = totalUsers - activeUsers;
+        if (!organization) {
 
-        // Dashboard Response
+            throw new Error("Organization not found");
+
+        }
+
+        const totalUsers =
+            await dashboardRepository.totalUsers(
+                user.organizationId
+            );
+
+        const activeUsers =
+            await dashboardRepository.activeUsers(
+                user.organizationId
+            );
+
         return {
 
-            organization: {
-
-                id: organization.id,
-
-                name: organization.name,
-
-                slug: organization.slug,
-
-                email: organization.email,
-
-                plan: organization.plan,
-
-                status: organization.status,
-
-                createdAt: organization.createdAt
-
-            },
+            organization,
 
             stats: {
 
@@ -55,15 +89,28 @@ class DashboardService {
 
                 activeUsers,
 
-                inactiveUsers,
+                inactiveUsers:
+                    totalUsers - activeUsers,
 
-                totalChatbots: 0,
+                totalChatbots:
+                    await dashboardRepository.totalChatbotsByOrganization(
+                        user.organizationId
+                    ),
 
-                totalKnowledgeBases: 0,
+                totalKnowledgeBases:
+                    await dashboardRepository.totalKnowledgeBasesByOrganization(
+                        user.organizationId
+                    ),
 
-                totalLeads: 0,
+                totalLeads:
+                    await dashboardRepository.totalLeadsByOrganization(
+                        user.organizationId
+                    ),
 
-                totalConversations: 0
+                totalConversations:
+                    await dashboardRepository.totalConversationsByOrganization(
+                        user.organizationId
+                    )
 
             }
 

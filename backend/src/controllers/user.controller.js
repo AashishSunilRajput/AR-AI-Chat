@@ -48,39 +48,43 @@ class UserController {
     // Get All Users
     // ====================================
 
-    async getAll(req, res) {
+   async getAll(req, res) {
 
-        try {
+    try {
 
-            const users = await userService.getAll(
-                req.user
-            );
+       // console.log("REQ USER =====>", req.user);
 
-            return res.status(200).json({
 
-                success: true,
+        const users = await userService.getAll(
+            req.user
+        );
 
-                message: "Users fetched successfully",
 
-                data: users
+        return res.status(200).json({
 
-            });
+            success:true,
 
-        } catch (error) {
+            message:"Users fetched successfully",
 
-            return res.status(500).json({
+            data:users
 
-                success: false,
+        });
 
-                message: error.message,
-
-                errors: null
-
-            });
-
-        }
 
     }
+    catch(error){
+
+        return res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+    }
+
+}
 
     // ====================================
     // Get User By ID

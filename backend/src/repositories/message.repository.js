@@ -10,13 +10,9 @@ class MessageRepository {
 
         return await prisma.message.create({
 
-            data,
+            data
 
-            include: {
-
-                conversation: true
-
-            }
+          
 
         });
 

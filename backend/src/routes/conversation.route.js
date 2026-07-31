@@ -1,9 +1,32 @@
 import express from "express";
 
 import conversationController
-from "../controllers/conversation.controller.js";
+    from "../controllers/conversation.controller.js";
+
+import authMiddleware
+    from "../middleware/auth.middleware.js";
 
 const router = express.Router();
+
+router.get(
+    "/stats",
+    authMiddleware,
+    conversationController.stats
+);
+
+// ==========================================
+// Get All Conversations
+// ==========================================
+
+router.get(
+
+    "/",
+
+    authMiddleware,
+
+    conversationController.getAll
+
+);
 
 // ==========================================
 // Get Conversation
@@ -12,6 +35,8 @@ const router = express.Router();
 router.get(
 
     "/:id",
+
+    authMiddleware,
 
     conversationController.get
 
@@ -24,6 +49,8 @@ router.get(
 router.patch(
 
     "/:id/close",
+
+    authMiddleware,
 
     conversationController.close
 

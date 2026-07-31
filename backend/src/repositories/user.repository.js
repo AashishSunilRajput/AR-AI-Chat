@@ -1,6 +1,8 @@
 import prisma from "../config/prisma.js";
 
+
 class UserRepository {
+
 
     async create(data) {
 
@@ -10,15 +12,21 @@ class UserRepository {
 
     }
 
+
+
     async findByEmail(email) {
 
         return await prisma.user.findUnique({
+
             where: {
                 email
             }
+
         });
 
     }
+
+
 
     async findById(id) {
 
@@ -29,12 +37,15 @@ class UserRepository {
             },
 
             include: {
-                organization: true
+                organization:true
             }
 
         });
 
     }
+
+
+
 
     async findByIdAndOrganization(id, organizationId) {
 
@@ -48,35 +59,147 @@ class UserRepository {
 
             },
 
-            include: {
-                organization: true
+            include:{
+                organization:true
             }
 
         });
 
     }
 
-    async getAllUsers(organizationId) {
+
+
+
+    // =====================================
+    // SUPER ADMIN - ALL USERS
+    // =====================================
+
+    async getAllUsers() {
+
 
         return await prisma.user.findMany({
 
             where: {
-                organizationId
+
+                role: {
+
+                    not: "SUPER_ADMIN"
+
+                }
+
             },
 
+
+            select: {
+
+                id:true,
+
+                organizationId:true,
+
+                name:true,
+
+                email:true,
+
+                role:true,
+
+                isActive:true,
+
+
+                organization:{
+
+                    select:{
+
+                        id:true,
+
+                        name:true
+
+                    }
+
+                },
+
+
+                createdAt:true,
+
+                updatedAt:true
+
+            },
+
+
             orderBy: {
-                id: "desc"
+
+                id:"desc"
+
+            }
+
+
+        });
+
+
+    }
+
+
+
+
+
+    // =====================================
+    // CLIENT ORGANIZATION USERS
+    // =====================================
+
+    async getUsersByOrganization(
+        organizationId
+    ){
+
+
+        return await prisma.user.findMany({
+
+            where: {
+
+                organizationId
+
+            },
+
+
+            select: {
+
+                id:true,
+
+                organizationId:true,
+
+                name:true,
+
+                email:true,
+
+                role:true,
+
+                isActive:true,
+
+                createdAt:true,
+
+                updatedAt:true
+
+            },
+
+
+            orderBy: {
+
+                id:"desc"
+
             }
 
         });
 
+
     }
 
-    async update(id, data) {
+
+
+
+
+    async update(id,data){
 
         return await prisma.user.update({
 
-            where: {
+            where:{
                 id
             },
 
@@ -86,15 +209,19 @@ class UserRepository {
 
     }
 
-    async updateStatus(id, isActive) {
+
+
+
+
+    async updateStatus(id,isActive){
 
         return await prisma.user.update({
 
-            where: {
+            where:{
                 id
             },
 
-            data: {
+            data:{
                 isActive
             }
 
@@ -102,11 +229,15 @@ class UserRepository {
 
     }
 
-    async delete(id) {
+
+
+
+
+    async delete(id){
 
         return await prisma.user.delete({
 
-            where: {
+            where:{
                 id
             }
 
@@ -114,11 +245,15 @@ class UserRepository {
 
     }
 
-    async countUsers(organizationId) {
+
+
+
+
+    async countUsers(organizationId){
 
         return await prisma.user.count({
 
-            where: {
+            where:{
                 organizationId
             }
 
@@ -126,6 +261,8 @@ class UserRepository {
 
     }
 
+
 }
+
 
 export default new UserRepository();

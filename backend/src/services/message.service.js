@@ -1,6 +1,6 @@
 import messageRepository from "../repositories/message.repository.js";
 import conversationRepository from "../repositories/conversation.repository.js";
-import aiService from "./ai.service.js";
+import leadDetection from "./lead-detection.service.js";
 
 class MessageService {
 
@@ -8,7 +8,7 @@ class MessageService {
     // Send Message
     // ==========================================
 
-    async send(conversationId, message) {
+    async send(chatbot, conversationId, message) {
 
         const conversation =
             await conversationRepository.findById(
@@ -17,9 +17,7 @@ class MessageService {
 
         if (!conversation) {
 
-            throw new Error(
-                "Conversation not found"
-            );
+            throw new Error("Conversation not found");
 
         }
 
@@ -39,15 +37,34 @@ class MessageService {
             });
 
         // ==========================================
-        // Generate AI Reply
+        // Conversation History
         // ==========================================
 
-        const aiResponse =
-            await aiService.generateReply(
-
-                message
-
+        const history =
+            await messageRepository.findByConversation(
+                conversationId
             );
+
+        // ==========================================
+        // Lead Detection
+        // ==========================================
+
+        const lead =
+            leadDetection.detect(message);
+
+        // ==========================================
+        // Temporary AI Reply
+        // ==========================================
+
+        const aiResponse = {
+
+            reply:
+                "Thank you for your message. AI integration is coming soon.",
+
+            model:
+                chatbot.settings?.model || "temporary"
+
+        };
 
         // ==========================================
         // Save AI Message
@@ -74,7 +91,13 @@ class MessageService {
 
             userMessage,
 
-            assistantMessage
+            assistantMessage,
+
+            history,
+
+            leadDetected: lead.detected,
+
+            keyword: lead.keyword
 
         };
 

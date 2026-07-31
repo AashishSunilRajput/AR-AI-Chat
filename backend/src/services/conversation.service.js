@@ -38,35 +38,132 @@ class ConversationService {
 
     }
 
-    // ==========================================
-    // Get By Id
-    // ==========================================
+// ==========================================
+// Get By Id
+// ==========================================
 
-    async get(id) {
+async get(
+    id,
+    user
+) {
 
-        const conversation =
-            await conversationRepository.findById(id);
+    let conversation;
 
-        if (!conversation) {
+    if (user.role === "SUPER_ADMIN") {
 
-            throw new Error("Conversation not found");
-
-        }
-
-        return conversation;
+        conversation =
+            await conversationRepository.findById(
+                id
+            );
 
     }
+    else {
+
+        conversation =
+            await conversationRepository.findByIdWithOrganization(
+
+                id,
+
+                user.organizationId
+
+            );
+
+    }
+
+    if (!conversation) {
+
+        throw new Error(
+            "Conversation not found"
+        );
+
+    }
+
+    return conversation;
+
+}
 
     // ==========================================
     // Close Conversation
     // ==========================================
 
-    async close(id) {
+   async close(
+    id,
+    user
+) {
 
-        return await conversationRepository.close(id);
+    let conversation;
+
+    if (user.role === "SUPER_ADMIN") {
+
+        conversation =
+            await conversationRepository.findById(id);
+
+    }
+    else {
+
+        conversation =
+            await conversationRepository.findByIdWithOrganization(
+
+                id,
+
+                user.organizationId
+
+            );
 
     }
 
+    if (!conversation) {
+
+        throw new Error(
+            "Conversation not found"
+        );
+
+    }
+
+    return await conversationRepository.close(id);
+
 }
 
+
+
+// ==========================================
+// Get All
+// ==========================================
+
+async getAll(user) {
+
+    if (user.role === "SUPER_ADMIN") {
+
+        return await conversationRepository.findAll();
+
+    }
+
+    return await conversationRepository.findAllByOrganization(
+
+        user.organizationId
+
+    );
+
+}
+
+// ==========================================
+// Conversation Stats
+// ==========================================
+
+async getStats(user) {
+
+    if (user.role === "SUPER_ADMIN") {
+
+        return await conversationRepository.getStats();
+
+    }
+
+    return await conversationRepository.getStats(
+
+        user.organizationId
+
+    );
+
+}
+}
 export default new ConversationService();

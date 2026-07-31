@@ -68,6 +68,14 @@ class EmbeddingService {
 
     }
 
+    async getByDocument(documentId){
+
+    return await embeddingRepository.findByDocument(
+        Number(documentId)
+    );
+
+}
+
 }
 
 export default new EmbeddingService();

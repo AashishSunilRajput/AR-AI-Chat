@@ -1,33 +1,21 @@
 import { useEffect, useRef } from "react";
 
-import { useWidget } from "../../context/WidgetContext";
-
 import useMessages from "../../hooks/useMessages";
-
 import MessageBubble from "./MessageBubble";
 
 function ChatBody() {
 
     const {
 
-        conversationId
-
-    } = useWidget();
-
-    const {
-
         messages,
 
-        loading
+        loading,
 
-    } = useMessages(
+        sending
 
-        conversationId
+    } = useMessages();
 
-    );
-
-    const bottomRef =
-        useRef(null);
+    const bottomRef = useRef(null);
 
     useEffect(() => {
 
@@ -37,29 +25,25 @@ function ChatBody() {
 
         });
 
-    }, [messages]);
+    }, [messages, sending]);
 
     if (loading) {
 
         return (
 
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center bg-slate-50">
 
-                Loading...
+                <div className="flex flex-col items-center gap-3">
 
-            </div>
+                    <div className="h-10 w-10 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin"></div>
 
-        );
+                    <div className="text-sm text-slate-500">
 
-    }
+                        Loading conversation...
 
-    if (!messages.length) {
+                    </div>
 
-        return (
-
-            <div className="flex-1 flex items-center justify-center text-slate-400">
-
-                No messages
+                </div>
 
             </div>
 
@@ -69,13 +53,55 @@ function ChatBody() {
 
     return (
 
-        <div className="flex-1 overflow-y-auto bg-slate-50 p-5">
+        <div
+
+            className="
+                flex-1
+                overflow-y-auto
+
+                bg-slate-50
+
+                px-5
+                py-6
+
+                space-y-2
+            "
+
+        >
 
             {
 
-                messages.map(
+                messages.length === 0
 
-                    message => (
+                    ?
+
+                    <div className="h-full flex flex-col items-center justify-center text-center">
+
+                        <div className="text-6xl">
+
+                            🤖
+
+                        </div>
+
+                        <h3 className="mt-5 text-xl font-bold text-slate-700">
+
+                            Welcome 👋
+
+                        </h3>
+
+                        <p className="mt-2 text-slate-500 max-w-xs leading-7">
+
+                            Ask me anything about our services.
+
+                            I'm here to help you.
+
+                        </p>
+
+                    </div>
+
+                    :
+
+                    messages.map(message => (
 
                         <MessageBubble
 
@@ -87,17 +113,41 @@ function ChatBody() {
 
                         />
 
-                    )
-
-                )
+                    ))
 
             }
 
-            <div
+            {
 
-                ref={bottomRef}
+                sending &&
 
-            />
+                <div className="flex gap-3 items-end">
+
+                    <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white">
+
+                        🤖
+
+                    </div>
+
+                    <div className="bg-white border border-slate-200 rounded-2xl px-5 py-3 shadow-sm">
+
+                        <div className="flex gap-1">
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce"></span>
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.15s]"></span>
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.3s]"></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            }
+
+            <div ref={bottomRef} />
 
         </div>
 

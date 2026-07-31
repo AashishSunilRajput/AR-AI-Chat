@@ -108,6 +108,78 @@ class OrganizationRepository {
 
     }
 
+
+    async getOrganizations() {
+
+    return await prisma.organization.findMany({
+
+        orderBy: {
+            createdAt: "desc"
+        },
+
+        include: {
+
+            _count: {
+
+                select: {
+
+                    users: true,
+
+                    chatbots: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+async createOrganization(data){
+
+    return await prisma.organization.create({
+
+        data
+
+    });
+
+}
+
+
+
+async createOrganizationSetting(id){
+
+
+    return await prisma.organizationSetting.create({
+
+        data:{
+
+            organizationId:id
+
+        }
+
+    });
+
+
+}
+
+
+
+
+async createAdmin(data){
+
+
+    return await prisma.user.create({
+
+        data
+
+    });
+
+
+}
+
 }
 
 export default new OrganizationRepository();

@@ -1,28 +1,50 @@
 import prisma from "../config/prisma.js";
 
-
 class KnowledgeDocumentRepository {
 
-
-    // ==========================================
+    // ======================================
     // Create Document
-    // ==========================================
+    // ======================================
 
-    async create(data) {
-
-        return await prisma.knowledgeDocument.create({
-
-            data
-
-        });
-
-    }
+async create(data) {
 
 
+    const {
+        knowledgeBaseId,
+        ...documentData
+    } = data;
 
-    // ==========================================
-    // Find All Documents
-    // ==========================================
+
+    return await prisma.knowledgeDocument.create({
+
+        data: {
+
+
+            ...documentData,
+
+
+            knowledgeBase: {
+
+                connect: {
+
+                    id: Number(
+                        knowledgeBaseId
+                    )
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+}
+
+    // ======================================
+    // Get All Documents
+    // ======================================
 
     async findAll(knowledgeBaseId) {
 
@@ -31,6 +53,20 @@ class KnowledgeDocumentRepository {
             where: {
 
                 knowledgeBaseId
+
+            },
+
+            include: {
+
+                _count: {
+
+                    select: {
+
+                        chunks: true
+
+                    }
+
+                }
 
             },
 
@@ -44,11 +80,9 @@ class KnowledgeDocumentRepository {
 
     }
 
-
-
-    // ==========================================
+    // ======================================
     // Find By ID
-    // ==========================================
+    // ======================================
 
     async findById(id) {
 
@@ -64,7 +98,15 @@ class KnowledgeDocumentRepository {
 
                 knowledgeBase: true,
 
-                chunks: true
+                chunks: {
+
+                    orderBy: {
+
+                        chunkIndex: "asc"
+
+                    }
+
+                }
 
             }
 
@@ -72,11 +114,9 @@ class KnowledgeDocumentRepository {
 
     }
 
-
-
-    // ==========================================
-    // Find By ID + Organization Security
-    // ==========================================
+    // ======================================
+    // Find By ID + Organization
+    // ======================================
 
     async findByIdWithOrganization(
         id,
@@ -99,7 +139,17 @@ class KnowledgeDocumentRepository {
 
             include: {
 
-                knowledgeBase: true
+                knowledgeBase: true,
+
+                chunks: {
+
+                    orderBy: {
+
+                        chunkIndex: "asc"
+
+                    }
+
+                }
 
             }
 
@@ -107,11 +157,9 @@ class KnowledgeDocumentRepository {
 
     }
 
-
-
-    // ==========================================
+    // ======================================
     // Update Document
-    // ==========================================
+    // ======================================
 
     async update(id, data) {
 
@@ -129,15 +177,13 @@ class KnowledgeDocumentRepository {
 
     }
 
-
-
-    // ==========================================
-    // Update Processing Status
-    // ==========================================
+    // ======================================
+    // Update Status
+    // ======================================
 
     async updateStatus(
         id,
-        status
+        processingStatus
     ) {
 
         return await prisma.knowledgeDocument.update({
@@ -150,7 +196,7 @@ class KnowledgeDocumentRepository {
 
             data: {
 
-                processingStatus: status
+                processingStatus
 
             }
 
@@ -158,31 +204,153 @@ class KnowledgeDocumentRepository {
 
     }
 
+    // ======================================
+// Start Processing
+// ======================================
 
+async startProcessing(id, totalPages = 0) {
 
-    // ==========================================
-    // Delete
-    // ==========================================
+    return await prisma.knowledgeDocument.update({
 
-    async delete(id) {
+        where: {
+            id: Number(id)
+        },
 
-        return await prisma.knowledgeDocument.delete({
+        data: {
+
+            processingStatus: "PROCESSING",
+
+            startedAt: new Date(),
+
+            completedAt: null,
+
+            failedReason: null,
+
+            currentUrl: null,
+
+            processedPages: 0,
+
+            totalPages
+
+        }
+
+    });
+
+}
+
+// ======================================
+// Update Progress
+// ======================================
+
+async updateProgress(
+    id,
+    {
+        processedPages,
+        totalPages,
+        currentUrl
+    }
+) {
+
+    return await prisma.knowledgeDocument.update({
+
+        where: {
+            id: Number(id)
+        },
+
+        data: {
+
+            processedPages,
+
+            totalPages,
+
+            currentUrl
+
+        }
+
+    });
+
+}
+
+// ======================================
+// Finish Processing
+// ======================================
+
+async finishProcessing(id) {
+
+    const document =
+        await prisma.knowledgeDocument.findUnique({
 
             where: {
+                id: Number(id)
+            },
 
-                id
-
+            select: {
+                startedAt: true
             }
 
         });
 
-    }
+    const duration =
+        document?.startedAt
+            ? Math.floor(
+                  (Date.now() -
+                      document.startedAt.getTime()) /
+                      1000
+              )
+            : null;
 
+    return await prisma.knowledgeDocument.update({
 
+        where: {
+            id: Number(id)
+        },
 
-    // ==========================================
+        data: {
+
+            processingStatus: "COMPLETED",
+
+            completedAt: new Date(),
+
+            importDuration: duration
+
+        }
+
+    });
+
+}
+
+// ======================================
+// Fail Processing
+// ======================================
+
+async failProcessing(
+    id,
+    reason
+) {
+
+    return await prisma.knowledgeDocument.update({
+
+        where: {
+            id: Number(id)
+        },
+
+        data: {
+
+            processingStatus: "FAILED",
+
+            completedAt: new Date(),
+
+            failedReason: reason
+
+        }
+
+    });
+
+}
+
+    // ======================================
     // Count Documents
-    // ==========================================
+    // ======================================
 
     async count(knowledgeBaseId) {
 
@@ -198,8 +366,71 @@ class KnowledgeDocumentRepository {
 
     }
 
+    // ==========================================
+// Count By Document
+// ==========================================
+
+async countByDocument(documentId) {
+
+    return await prisma.knowledgeEmbedding.count({
+
+        where: {
+
+            chunk: {
+
+                documentId: Number(documentId)
+
+            }
+
+        }
+
+    });
 
 }
 
+// ==========================================
+// Find By Source URL
+// ==========================================
+
+async findBySourceUrl(
+    knowledgeBaseId,
+    sourceUrl
+) {
+
+    return await prisma.knowledgeDocument.findFirst({
+
+        where: {
+
+            knowledgeBaseId: Number(
+                knowledgeBaseId
+            ),
+
+            sourceUrl
+
+        }
+
+    });
+
+}
+
+    // ======================================
+    // Delete Document
+    // ======================================
+
+    async delete(id) {
+
+        return await prisma.knowledgeDocument.delete({
+
+            where: {
+
+                id
+
+            }
+
+        });
+
+    }
+
+}
 
 export default new KnowledgeDocumentRepository();

@@ -9,21 +9,62 @@ class KnowledgeBaseService {
 
     async create(user, data) {
 
-        const chatbot =
-            await chatbotRepository.findByIdAndOrganization(
-                Number(data.chatbotId),
-                user.organizationId
-            );
+        let chatbot;
+
+        // SUPER ADMIN
+        if (user.role === "SUPER_ADMIN") {
+
+            chatbot =
+                await chatbotRepository.findById(
+                    Number(data.chatbotId)
+                );
+
+        }
+
+        // CLIENT ADMIN
+        else {
+
+            chatbot =
+                await chatbotRepository.findByIdAndOrganization(
+
+                    Number(data.chatbotId),
+
+                    user.organizationId
+
+                );
+
+        }
 
         if (!chatbot) {
+
             throw new Error("Chatbot not found");
+
+        }
+
+        const exists =
+            await knowledgeBaseRepository.findByName(
+
+                chatbot.organizationId,
+
+                chatbot.id,
+
+                data.name
+
+            );
+
+        if (exists) {
+
+            throw new Error(
+                "Knowledge Base name already exists"
+            );
+
         }
 
         return await knowledgeBaseRepository.create({
 
-            organizationId: user.organizationId,
+            organizationId: chatbot.organizationId,
 
-            chatbotId: data.chatbotId,
+            chatbotId: chatbot.id,
 
             name: data.name,
 
@@ -34,31 +75,61 @@ class KnowledgeBaseService {
     }
 
     // ==========================================
-    // List
+    // Get All
     // ==========================================
 
     async getAll(user) {
 
-        return await knowledgeBaseRepository.findAll(
+        if (user.role === "SUPER_ADMIN") {
+
+            return await knowledgeBaseRepository.findAll();
+
+        }
+
+        return await knowledgeBaseRepository.findByOrganization(
+
             user.organizationId
+
         );
 
     }
 
     // ==========================================
-    // Details
+    // Get By Id
     // ==========================================
 
     async getById(id, user) {
 
-        const knowledgeBase =
-            await knowledgeBaseRepository.findById(
-                Number(id),
-                user.organizationId
-            );
+        let knowledgeBase;
+
+        if (user.role === "SUPER_ADMIN") {
+
+            knowledgeBase =
+                await knowledgeBaseRepository.findById(
+                    Number(id)
+                );
+
+        }
+
+        else {
+
+            knowledgeBase =
+                await knowledgeBaseRepository.findById(
+
+                    Number(id),
+
+                    user.organizationId
+
+                );
+
+        }
 
         if (!knowledgeBase) {
-            throw new Error("Knowledge Base not found");
+
+            throw new Error(
+                "Knowledge Base not found"
+            );
+
         }
 
         return knowledgeBase;
@@ -72,22 +143,46 @@ class KnowledgeBaseService {
     async update(id, user, data) {
 
         const knowledgeBase =
-            await knowledgeBaseRepository.findById(
-                Number(id),
-                user.organizationId
+            await this.getById(id, user);
+
+        const duplicate =
+            await knowledgeBaseRepository.findByName(
+
+                knowledgeBase.organizationId,
+
+                knowledgeBase.chatbotId,
+
+                data.name
+
             );
 
-        if (!knowledgeBase) {
-            throw new Error("Knowledge Base not found");
+        if (
+
+            duplicate &&
+
+            duplicate.id !== knowledgeBase.id
+
+        ) {
+
+            throw new Error(
+                "Knowledge Base name already exists"
+            );
+
         }
 
         return await knowledgeBaseRepository.update(
 
             Number(id),
 
-            user.organizationId,
+            {
 
-            data
+                name: data.name,
+
+                description: data.description,
+
+                isActive: data.isActive
+
+            }
 
         );
 
@@ -99,21 +194,20 @@ class KnowledgeBaseService {
 
     async delete(id, user) {
 
-        const knowledgeBase =
-            await knowledgeBaseRepository.findById(
-                Number(id),
-                user.organizationId
-            );
-
-        if (!knowledgeBase) {
-            throw new Error("Knowledge Base not found");
-        }
+        await this.getById(id, user);
 
         await knowledgeBaseRepository.delete(
+
             Number(id)
+
         );
 
-        return true;
+        return {
+
+            message:
+                "Knowledge Base deleted successfully"
+
+        };
 
     }
 

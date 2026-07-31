@@ -8,11 +8,56 @@ import validate from "../middleware/validate.middleware.js";
 
 import organizationValidation from "../validators/organization.validation.js";
 
+
 const router = express.Router();
+
+
+// =======================================
+// Get Organization List
+// GET /api/organization/
+// SUPER ADMIN
+// =======================================
+
+router.get(
+
+    "/",
+
+    authMiddleware,
+
+    authorize("SUPER_ADMIN"),
+
+    organizationController.getOrganizations
+
+);
+
+
+
+// =======================================
+// Create Organization
+// POST /api/organization/
+// SUPER ADMIN
+// =======================================
+
+router.post(
+
+    "/",
+
+    authMiddleware,
+
+    authorize("SUPER_ADMIN"),
+
+    validate(
+        organizationValidation.create
+    ),
+
+    organizationController.create
+
+);
+
+
 
 // =======================================
 // Get Organization Profile
-// GET /api/organization/profile
 // =======================================
 
 router.get(
@@ -30,9 +75,10 @@ router.get(
 
 );
 
+
+
 // =======================================
 // Update Organization Profile
-// PUT /api/organization/profile
 // =======================================
 
 router.put(
@@ -53,5 +99,7 @@ router.put(
     organizationController.updateProfile
 
 );
+
+
 
 export default router;

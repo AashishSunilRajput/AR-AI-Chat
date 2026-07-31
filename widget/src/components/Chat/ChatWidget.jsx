@@ -10,7 +10,24 @@ function ChatWidget() {
 
     return (
 
-        <>
+        <div
+
+            className="
+                fixed
+                bottom-6
+                right-6
+
+                z-[2147483647]
+
+                flex
+                flex-col
+
+                items-end
+
+                pointer-events-none
+            "
+
+        >
 
             <AnimatePresence>
 
@@ -18,39 +35,35 @@ function ChatWidget() {
 
                     open &&
 
-                    <ChatWindow
+                    <div className="pointer-events-auto">
 
-                        onClose={() =>
+                        <ChatWindow
 
-                            setOpen(false)
+                            onClose={() =>
+                                setOpen(false)
+                            }
 
-                        }
+                        />
 
-                    />
+                    </div>
 
                 }
 
             </AnimatePresence>
 
-            <div className="mt-4 flex justify-end">
+            <div className="pointer-events-auto">
 
                 <ChatButton
 
                     onClick={() =>
-
-                        setOpen(
-
-                            !open
-
-                        )
-
+                        setOpen(!open)
                     }
 
                 />
 
             </div>
 
-        </>
+        </div>
 
     );
 

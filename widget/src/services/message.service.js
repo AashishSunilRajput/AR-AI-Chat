@@ -1,15 +1,15 @@
 import api from "./api";
+import { WIDGET_KEY } from "../config/api";
 
 class MessageService {
 
     async getMessages(conversationId) {
 
-        const response =
-            await api.get(
+        const response = await api.get(
 
-                `/messages/${conversationId}`
+            `/messages/conversation/${conversationId}`
 
-            );
+        );
 
         return response.data;
 
@@ -17,14 +17,13 @@ class MessageService {
 
     async sendMessage(data) {
 
-        const response =
-            await api.post(
+        const response = await api.post(
 
-                "/messages/send",
+            `/widget/message/${WIDGET_KEY}`,
 
-                data
+            data
 
-            );
+        );
 
         return response.data;
 

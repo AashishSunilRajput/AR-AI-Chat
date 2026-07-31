@@ -93,6 +93,26 @@ class VisitorRepository {
     }
 
     // ==========================================
+    // Update Visitor
+    // ==========================================
+
+    async update(id, data) {
+
+        return await prisma.visitor.update({
+
+            where: {
+
+                id: Number(id)
+
+            },
+
+            data
+
+        });
+
+    }
+
+    // ==========================================
     // Delete
     // ==========================================
 

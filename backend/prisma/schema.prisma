@@ -49,7 +49,6 @@ enum WidgetPosition {
 }
 
 enum ProcessingStatus {
-
   PENDING
 
   PROCESSING
@@ -57,17 +56,14 @@ enum ProcessingStatus {
   COMPLETED
 
   FAILED
-
 }
 
 enum EmbeddingProvider {
-
   OPENAI
 
   GEMINI
 
   CLAUDE
-
 }
 
 enum ConversationStatus {
@@ -81,32 +77,46 @@ enum MessageRole {
   SYSTEM
 }
 
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
 
 
+enum DocumentSourceType {
+  WEBSITE
+  PDF
+  TEXT
+  FAQ
+}
 //
 // ORGANIZATION
 //
 
 model Organization {
-  id          Int                 @id @default(autoincrement())
-  name        String
-  slug        String              @unique
-  email       String              @unique
-  phone       String?
-  website     String?
-  logo        String?
+  id      Int     @id @default(autoincrement())
+  name    String
+  slug    String  @unique
+  email   String  @unique
+  phone   String?
+  website String?
+  logo    String?
 
-  plan        Plan                @default(FREE)
-  status      OrganizationStatus  @default(ACTIVE)
+  plan   Plan               @default(FREE)
+  status OrganizationStatus @default(ACTIVE)
 
-  users       User[]
-  chatbots Chatbot[]
+  users          User[]
+  chatbots       Chatbot[]
   knowledgeBases KnowledgeBase[]
-  visitors Visitor[]
-  settings    OrganizationSetting?
+  visitors       Visitor[]
+  leads          Lead[]
+  settings       OrganizationSetting?
 
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 //
@@ -114,24 +124,24 @@ model Organization {
 //
 
 model User {
-  id             Int            @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   organizationId Int?
-  organization   Organization?  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  name           String
-  email          String         @unique
-  password       String
+  name     String
+  email    String @unique
+  password String
 
-  role           UserRole       @default(CLIENT_ADMIN)
+  role UserRole @default(CLIENT_ADMIN)
 
-  isActive       Boolean        @default(true)
+  isActive Boolean @default(true)
 
-  refreshTokens  RefreshToken[]
-  sessions       Session[]
+  refreshTokens RefreshToken[]
+  sessions      Session[]
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 //
@@ -139,22 +149,22 @@ model User {
 //
 
 model OrganizationSetting {
-  id               Int           @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  organizationId   Int           @unique
+  organizationId Int @unique
 
-  organization     Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  timezone         String        @default("Asia/Kolkata")
-  language         String        @default("en")
+  timezone String @default("Asia/Kolkata")
+  language String @default("en")
 
-  companyAddress   String?
-  companyCity      String?
-  companyState     String?
-  companyCountry   String?
+  companyAddress String?
+  companyCity    String?
+  companyState   String?
+  companyCountry String?
 
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 //
@@ -162,19 +172,19 @@ model OrganizationSetting {
 //
 
 model RefreshToken {
-  id         Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  token      String   @unique
+  token String @unique
 
-  userId      Int
+  userId Int
 
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  expiresAt   DateTime
+  expiresAt DateTime
 
-  revoked     Boolean @default(false)
+  revoked Boolean @default(false)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 //
@@ -182,52 +192,52 @@ model RefreshToken {
 //
 
 model Session {
-  id          Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  userId      Int
+  userId Int
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  ipAddress   String?
+  ipAddress String?
 
-  userAgent   String?
+  userAgent String?
 
-  device      String?
+  device String?
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  lastSeenAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
 }
+
 model Chatbot {
-  id             Int          @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   organizationId Int
 
-  name           String
+  name String
 
-  slug           String       @unique
+  slug String @unique
 
-  description    String?
+  description String?
 
-  isActive       Boolean      @default(true)
+  isActive Boolean @default(true)
 
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   settings       ChatbotSetting?
   knowledgeBases KnowledgeBase[]
-  visitors Visitor[]
+  visitors       Visitor[]
 
-conversations Conversation[]
+  conversations Conversation[]
 
-widgetKey      String   @unique
-allowedDomains Json?
-  createdAt      DateTime     @default(now())
+  widgetKey      String   @unique
+  allowedDomains Json?
+  createdAt      DateTime @default(now())
 
-  updatedAt      DateTime     @updatedAt
+  updatedAt DateTime @updatedAt
 }
 
 model ChatbotSetting {
-
   id Int @id @default(autoincrement())
 
   chatbotId Int @unique
@@ -252,7 +262,7 @@ model ChatbotSetting {
 
   theme WidgetTheme @default(LIGHT)
 
-  position WidgetPosition @default(BOTTOM_RIGHT)  
+  position WidgetPosition @default(BOTTOM_RIGHT)
 
   allowedDomains Json?
 
@@ -262,8 +272,8 @@ model ChatbotSetting {
 
   updatedAt DateTime @updatedAt
 }
-model KnowledgeBase {
 
+model KnowledgeBase {
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -286,36 +296,80 @@ model KnowledgeBase {
 
   updatedAt DateTime @updatedAt
 }
+
 model KnowledgeDocument {
+  id                Int                    @id @default(autoincrement())
 
-  id Int @id @default(autoincrement())
+  knowledgeBaseId   Int
 
-  knowledgeBaseId Int
+  title             String
 
-  title String
+  sourceType        DocumentSourceType     @default(WEBSITE)
 
-  fileName String
+  sourceUrl         String?
 
-  fileType String
+  fileName          String
 
-  fileSize Int
+  fileType          String
 
-  storagePath String
+  fileSize          Int
 
-  extractedText String?
+  storagePath       String
 
-  processingStatus ProcessingStatus @default(PENDING)
+  extractedText     String?
 
-  knowledgeBase KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  processingStatus  ProcessingStatus       @default(PENDING)
 
-  chunks KnowledgeChunk[]
+  // ==========================
+  // Website Import Progress
+  // ==========================
 
-  createdAt DateTime @default(now())
+  totalPages        Int                    @default(0)
 
-  updatedAt DateTime @updatedAt
+  processedPages    Int                    @default(0)
+
+  currentUrl        String?
+
+  startedAt         DateTime?
+
+  completedAt       DateTime?
+
+  failedReason      String?
+
+  importDuration    Int?
+
+  // ==========================
+  // Crawl Settings
+  // ==========================
+
+  maxPages          Int                    @default(100)
+
+  maxDepth          Int                    @default(3)
+
+  sameDomainOnly    Boolean                @default(true)
+
+  ignoreQueryParams Boolean                @default(true)
+
+  skipImages        Boolean                @default(true)
+
+  skipPdf           Boolean                @default(true)
+
+  skipDocuments     Boolean                @default(false)
+
+  timeoutMinutes    Int                    @default(10)
+
+  // ==========================
+
+  knowledgeBase     KnowledgeBase          @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+
+  chunks            KnowledgeChunk[]
+
+  createdAt         DateTime               @default(now())
+
+  updatedAt         DateTime               @updatedAt
 }
-model KnowledgeChunk {
 
+model KnowledgeChunk {
   id Int @id @default(autoincrement())
 
   documentId Int
@@ -328,15 +382,12 @@ model KnowledgeChunk {
 
   embeddingId String?
 
- 
-
-  document KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
- embeddings KnowledgeEmbedding[]
-  createdAt DateTime @default(now())
+  document   KnowledgeDocument    @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  embeddings KnowledgeEmbedding[]
+  createdAt  DateTime             @default(now())
 }
 
 model KnowledgeEmbedding {
-
   id Int @id @default(autoincrement())
 
   chunkId Int
@@ -352,82 +403,112 @@ model KnowledgeEmbedding {
   tokenCount Int?
 
   createdAt DateTime @default(now())
-
 }
 
 model Visitor {
-
-  id             Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   organizationId Int
 
-  chatbotId      Int
+  chatbotId Int
 
-  sessionToken   String    @unique
+  sessionToken String @unique
 
-  name           String?
+  name String?
 
-  email          String?
+  email String?
 
-  ipAddress      String?
+  ipAddress String?
 
-  userAgent      String?
+  userAgent String?
 
-  lastSeenAt     DateTime  @default(now())
+  lastSeenAt DateTime @default(now())
 
-  createdAt      DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  updatedAt      DateTime  @updatedAt
+  updatedAt DateTime @updatedAt
 
-  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  chatbot        Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+  chatbot Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
 
-  conversations  Conversation[]
+  conversations Conversation[]
+  leads         Lead[]
 }
 
 model Conversation {
+  id Int @id @default(autoincrement())
 
-  id          Int      @id @default(autoincrement())
+  visitorId Int
+  chatbotId Int
 
-  visitorId   Int
-  chatbotId   Int
+  status ConversationStatus @default(ACTIVE)
 
-  status      ConversationStatus @default(ACTIVE)
+  startedAt DateTime @default(now())
 
-  startedAt   DateTime @default(now())
+  endedAt DateTime?
 
-  endedAt     DateTime?
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt   DateTime @updatedAt
+  visitor Visitor @relation(fields: [visitorId], references: [id], onDelete: Cascade)
 
-  visitor      Visitor @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  chatbot Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
 
-  chatbot      Chatbot @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
-
-  messages     Message[]
+  messages Message[]
+  leads    Lead[]
 }
 
 model Message {
+  id Int @id @default(autoincrement())
 
-  id               Int      @id @default(autoincrement())
+  conversationId Int
 
-  conversationId   Int
+  role MessageRole
 
-  role             MessageRole
+  message String @db.Text
 
-  message          String   @db.Text
+  model String?
 
-  model            String?
+  inputTokens Int?
 
-  inputTokens      Int?
+  outputTokens Int?
 
-  outputTokens     Int?
-
-  createdAt        DateTime @default(now())
+  createdAt DateTime @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
 
+model Lead {
+  id Int @id @default(autoincrement())
+
+  organizationId Int
+
+  visitorId Int?
+
+  conversationId Int?
+
+  name String?
+
+  email String?
+
+  phone String?
+
+  company String?
+
+  source String @default("widget")
+
+  status LeadStatus @default(NEW)
+
+  notes String? @db.Text
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  visitor      Visitor?     @relation(fields: [visitorId], references: [id], onDelete: SetNull)
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
 }

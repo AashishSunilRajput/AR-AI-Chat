@@ -28,30 +28,31 @@ class KnowledgeChunkRepository {
     // Get Document Chunks
     // ======================================
 
+async findByDocument(documentId) {
 
-    async findByDocument(
-        documentId
-    ) {
+    return await prisma.knowledgeChunk.findMany({
 
+        where: {
 
-        return await prisma.knowledgeChunk.findMany({
+            documentId: Number(documentId)
 
-            where: {
+        },
 
-                documentId
+        include: {
 
-            },
+            embeddings: true
 
-            orderBy: {
+        },
 
-                chunkIndex: "asc"
+        orderBy: {
 
-            }
+            chunkIndex: "asc"
 
-        });
+        }
 
+    });
 
-    }
+}
 
 
 

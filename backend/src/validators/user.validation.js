@@ -2,11 +2,9 @@ import { z } from "zod";
 
 class UserValidation {
 
-    // ============================
-    // Create User
-    // ============================
-
     create = z.object({
+
+        organizationId: z.coerce.number().optional(),
 
         name: z
             .string()
@@ -19,21 +17,18 @@ class UserValidation {
             .string()
             .min(6, "Password must be at least 6 characters"),
 
-        role: z
-            .enum([
-                "CLIENT_ADMIN",
-                "MANAGER",
-                "AGENT",
-                "USER"
-            ])
+        role: z.enum([
+            "CLIENT_ADMIN",
+            "MANAGER",
+            "AGENT",
+            "USER"
+        ])
 
     });
 
-    // ============================
-    // Update User
-    // ============================
-
     update = z.object({
+
+        organizationId: z.coerce.number().optional(),
 
         name: z
             .string()
@@ -46,19 +41,14 @@ class UserValidation {
             .string()
             .optional(),
 
-        role: z
-            .enum([
-                "CLIENT_ADMIN",
-                "MANAGER",
-                "AGENT",
-                "USER"
-            ])
+        role: z.enum([
+            "CLIENT_ADMIN",
+            "MANAGER",
+            "AGENT",
+            "USER"
+        ])
 
     });
-
-    // ============================
-    // Update Status
-    // ============================
 
     updateStatus = z.object({
 

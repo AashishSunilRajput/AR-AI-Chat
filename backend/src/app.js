@@ -23,6 +23,10 @@ import messageRoutes from "./routes/message.route.js";
 
 import widgetRoutes from "./routes/widget.route.js";
 
+import leadRoutes from "./routes/lead.routes.js";
+import widgetMessageRoutes from "./routes/widget-message.routes.js";
+import websiteImportRoutes from "./routes/website-import.routes.js";
+
 const app = express();
 
 
@@ -93,8 +97,22 @@ app.use("/api/conversations", conversationRoutes);
 
 app.use("/api/messages", messageRoutes);
 app.use("/api/widget", widgetRoutes);
+app.use(
+    "/api/leads",
+    leadRoutes
+);
+app.use(
 
+    "/api/widget/message",
 
+    widgetMessageRoutes
+
+);
+
+app.use(
+    "/api/knowledge-documents",
+    websiteImportRoutes
+);
 
 
 // Test Routes

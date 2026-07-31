@@ -1,0 +1,16 @@
+-- AlterTable
+ALTER TABLE "KnowledgeDocument" ADD COLUMN     "completedAt" TIMESTAMP(3),
+ADD COLUMN     "currentUrl" TEXT,
+ADD COLUMN     "failedReason" TEXT,
+ADD COLUMN     "ignoreQueryParams" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "importDuration" INTEGER,
+ADD COLUMN     "maxDepth" INTEGER NOT NULL DEFAULT 3,
+ADD COLUMN     "maxPages" INTEGER NOT NULL DEFAULT 100,
+ADD COLUMN     "processedPages" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "sameDomainOnly" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "skipDocuments" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "skipImages" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "skipPdf" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "startedAt" TIMESTAMP(3),
+ADD COLUMN     "timeoutMinutes" INTEGER NOT NULL DEFAULT 10,
+ADD COLUMN     "totalPages" INTEGER NOT NULL DEFAULT 0;

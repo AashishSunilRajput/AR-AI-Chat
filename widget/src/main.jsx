@@ -6,18 +6,31 @@ import "./styles/global.css";
 import App from "./App";
 
 import { WidgetProvider } from "./context/WidgetContext";
+import { MessagesProvider } from "./context/MessagesContext";
 
-ReactDOM.createRoot(
+// Support both Standalone + Embedded Mode
 
-    document.getElementById("root")
+const rootElement =
+    window.ARAI_WIDGET_CONFIG?.rootElement ||
+    document.getElementById("root");
 
-).render(
+if (!rootElement) {
+
+    throw new Error("Root element not found");
+
+}
+
+ReactDOM.createRoot(rootElement).render(
 
     <React.StrictMode>
 
         <WidgetProvider>
 
-            <App />
+            <MessagesProvider>
+
+                <App />
+
+            </MessagesProvider>
 
         </WidgetProvider>
 

@@ -6,19 +6,15 @@ class ChatbotSettingRepository {
     // Find Settings
     // ==========================================
 
-    async findByChatbot(chatbotId, organizationId) {
+    async findByChatbot(
+        chatbotId
+    ) {
 
-        return await prisma.chatbotSetting.findFirst({
+        return await prisma.chatbotSetting.findUnique({
 
             where: {
 
-                chatbotId,
-
-                chatbot: {
-
-                    organizationId
-
-                }
+                chatbotId
 
             }
 
@@ -44,12 +40,17 @@ class ChatbotSettingRepository {
     // Update
     // ==========================================
 
-    async update(chatbotId, data) {
+    async update(
+        chatbotId,
+        data
+    ) {
 
         return await prisma.chatbotSetting.update({
 
             where: {
+
                 chatbotId
+
             },
 
             data

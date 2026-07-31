@@ -15,19 +15,77 @@ class ChatbotRepository {
     }
 
     // ==========================================
-    // Find All
+    // SUPER ADMIN
+    // All Chatbots
     // ==========================================
 
-    async findAll(organizationId) {
+    async findAll() {
+
+        return await prisma.chatbot.findMany({
+
+            include: {
+
+                organization: {
+
+                    select: {
+
+                        id: true,
+
+                        name: true
+
+                    }
+
+                }
+
+            },
+
+            orderBy: {
+
+                id: "desc"
+
+            }
+
+        });
+
+    }
+
+    // ==========================================
+    // CLIENT ADMIN
+    // Organization Chatbots
+    // ==========================================
+
+    async findByOrganization(
+        organizationId
+    ) {
 
         return await prisma.chatbot.findMany({
 
             where: {
+
                 organizationId
+
+            },
+
+            include: {
+
+                organization: {
+
+                    select: {
+
+                        id: true,
+
+                        name: true
+
+                    }
+
+                }
+
             },
 
             orderBy: {
+
                 id: "desc"
+
             }
 
         });
@@ -43,7 +101,15 @@ class ChatbotRepository {
         return await prisma.chatbot.findUnique({
 
             where: {
+
                 id
+
+            },
+
+            include: {
+
+                organization: true
+
             }
 
         });
@@ -54,7 +120,10 @@ class ChatbotRepository {
     // Find By Id + Organization
     // ==========================================
 
-    async findByIdAndOrganization(id, organizationId) {
+    async findByIdAndOrganization(
+        id,
+        organizationId
+    ) {
 
         return await prisma.chatbot.findFirst({
 
@@ -63,6 +132,12 @@ class ChatbotRepository {
                 id,
 
                 organizationId
+
+            },
+
+            include: {
+
+                organization: true
 
             }
 
@@ -74,15 +149,47 @@ class ChatbotRepository {
     // Update
     // ==========================================
 
-    async update(id, data) {
+    async update(
+        id,
+        data
+    ) {
 
         return await prisma.chatbot.update({
 
             where: {
+
                 id
+
             },
 
             data
+
+        });
+
+    }
+
+    // ==========================================
+    // Update Status
+    // ==========================================
+
+    async updateStatus(
+        id,
+        isActive
+    ) {
+
+        return await prisma.chatbot.update({
+
+            where: {
+
+                id
+
+            },
+
+            data: {
+
+                isActive
+
+            }
 
         });
 
@@ -97,7 +204,9 @@ class ChatbotRepository {
         return await prisma.chatbot.delete({
 
             where: {
+
                 id
+
             }
 
         });

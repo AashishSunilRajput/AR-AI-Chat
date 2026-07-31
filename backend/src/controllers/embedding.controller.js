@@ -1,5 +1,10 @@
 import embeddingService from "../services/embedding.service.js";
 
+
+// ==========================================
+// Generate Embeddings
+// ==========================================
+
 export const generate = async (req, res, next) => {
 
     try {
@@ -9,17 +14,59 @@ export const generate = async (req, res, next) => {
                 req.params.documentId
             );
 
+
         res.json({
 
             success: true,
 
-            message: "Embeddings generated successfully",
+            message:
+                "Embeddings generated successfully",
 
             data: result
 
         });
 
-    } catch (error) {
+
+    }
+    catch (error) {
+
+        next(error);
+
+    }
+
+};
+
+
+
+// ==========================================
+// Get Embeddings By Document
+// ==========================================
+
+export const getEmbeddings = async (
+    req,
+    res,
+    next
+) => {
+
+    try {
+
+        const result =
+            await embeddingService.getByDocument(
+                req.params.documentId
+            );
+
+
+        res.json({
+
+            success: true,
+
+            data: result
+
+        });
+
+
+    }
+    catch (error) {
 
         next(error);
 

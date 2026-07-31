@@ -1,17 +1,33 @@
-function Avatar() {
-    return (
-        <div className="relative">
+function Avatar({
 
-            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center font-bold text-lg shadow-lg">
+    assistant
+
+}) {
+
+    if (assistant) {
+
+        return (
+
+            <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow">
 
                 AI
 
             </div>
 
-            <span className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full bg-green-500 border-2 border-white"></span>
+        );
+
+    }
+
+    return (
+
+        <div className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold shadow">
+
+            U
 
         </div>
+
     );
+
 }
 
 export default Avatar;

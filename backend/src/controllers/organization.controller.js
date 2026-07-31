@@ -76,6 +76,84 @@ class OrganizationController {
 
     }
 
+    async getOrganizations(req, res, next) {
+
+    try {
+
+        const organizations =
+            await organizationService.getOrganizations();
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Organizations fetched successfully",
+
+            data: organizations
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
+
+async create(req,res){
+
+
+    try {
+
+
+        const organization =
+            await organizationService.create(
+                req.body
+            );
+
+
+
+        return res.status(201).json({
+
+
+            success:true,
+
+
+            message:
+            "Organization created successfully",
+
+
+            data: organization
+
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        return res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+}
+
+
+
 }
 
 export default new OrganizationController();

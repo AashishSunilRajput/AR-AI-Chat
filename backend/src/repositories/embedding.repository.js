@@ -91,6 +91,28 @@ class EmbeddingRepository {
     }
 
     // ==========================================
+// Count By Document
+// ==========================================
+
+async countByDocument(documentId) {
+
+    return await prisma.knowledgeEmbedding.count({
+
+        where: {
+
+            chunk: {
+
+                documentId: Number(documentId)
+
+            }
+
+        }
+
+    });
+
+}
+
+    // ==========================================
     // Delete
     // ==========================================
 

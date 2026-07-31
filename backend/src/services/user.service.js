@@ -1,190 +1,449 @@
 import bcrypt from "bcrypt";
 import userRepository from "../repositories/user.repository.js";
 
+
 class UserService {
 
-    // ==============================
-    // Create User
-    // ==============================
 
-    async create(user, data) {
+// ==============================
+// Create User
+// ==============================
 
-        const {
-            name,
-            email,
-            password,
-            role
-        } = data;
+async create(user, data) {
 
-        // Check Email
-        const emailExists = await userRepository.findByEmail(email);
+    const {
+        organizationId,
+        name,
+        email,
+        password,
+        role
+    } = data;
 
-        if (emailExists) {
-            throw new Error("Email already exists");
-        }
+    // Check Email
+    const emailExists =
+        await userRepository.findByEmail(email);
 
-        // Hash Password
-        const hashedPassword = await bcrypt.hash(
+    if (emailExists) {
+
+        throw new Error(
+            "Email already exists"
+        );
+
+    }
+
+    // Hash Password
+    const hashedPassword =
+        await bcrypt.hash(
             password,
             10
         );
 
-        // Create User
-        return await userRepository.create({
+    // =================================
+    // Organization
+    // =================================
 
-            organizationId: user.organizationId,
+    let orgId;
 
-            name,
+    if (user.role === "SUPER_ADMIN") {
 
-            email,
+        if (!organizationId) {
 
-            password: hashedPassword,
-
-            role,
-
-            isActive: true
-
-        });
-
-    }
-
-    // ==============================
-    // Get All Users
-    // ==============================
-
-    async getAll(user) {
-
-        return await userRepository.getAllUsers(
-            user.organizationId
-        );
-
-    }
-
-    // ==============================
-    // Get User By Id
-    // ==============================
-
-    async getById(user, id) {
-
-        const existingUser = await userRepository.findByIdAndOrganization(
-
-            Number(id),
-
-            user.organizationId
-
-        );
-
-        if (!existingUser) {
-            throw new Error("User not found");
-        }
-
-        return existingUser;
-
-    }
-
-    // ==============================
-    // Update User
-    // ==============================
-
-    async update(user, id, data) {
-
-        const existingUser = await userRepository.findByIdAndOrganization(
-
-            Number(id),
-
-            user.organizationId
-
-        );
-
-        if (!existingUser) {
-            throw new Error("User not found");
-        }
-
-        const updateData = {
-
-            name: data.name,
-
-            email: data.email,
-
-            role: data.role
-
-        };
-
-        if (data.password && data.password.trim() !== "") {
-
-            updateData.password = await bcrypt.hash(
-                data.password,
-                10
+            throw new Error(
+                "Organization is required"
             );
 
         }
 
-        return await userRepository.update(
-
-            Number(id),
-
-            updateData
-
+        orgId = Number(
+            organizationId
         );
 
     }
+    else {
 
-    // ==============================
-    // Update Status
-    // ==============================
-
-    async updateStatus(user, id, isActive) {
-
-        const existingUser = await userRepository.findByIdAndOrganization(
-
-            Number(id),
-
-            user.organizationId
-
-        );
-
-        if (!existingUser) {
-            throw new Error("User not found");
-        }
-
-        return await userRepository.updateStatus(
-
-            Number(id),
-
-            isActive
-
-        );
+        orgId =
+            user.organizationId;
 
     }
 
-    // ==============================
-    // Delete User
-    // ==============================
+    // =================================
+    // Create User
+    // =================================
 
-    async delete(user, id) {
+    return await userRepository.create({
 
-        const existingUser = await userRepository.findByIdAndOrganization(
+        organizationId: orgId,
 
-            Number(id),
+        name,
 
-            user.organizationId
+        email,
 
-        );
+        password: hashedPassword,
 
-        if (!existingUser) {
-            throw new Error("User not found");
-        }
+        role,
 
-        await userRepository.delete(
-            Number(id)
-        );
+        isActive: true
 
-        return {
-            message: "User deleted successfully"
-        };
-
-    }
+    });
 
 }
+
+
+
+// ==============================
+// Get All Users
+// ==============================
+
+async getAll(user){
+
+
+    // =================================
+    // SUPER ADMIN
+    // All Organization Users
+    // =================================
+
+    if(user.role === "SUPER_ADMIN"){
+
+
+        return await userRepository.getAllUsers();
+
+
+    }
+
+
+
+    // =================================
+    // CLIENT ADMIN
+    // Only Own Organization Users
+    // =================================
+
+
+    return await userRepository.getUsersByOrganization(
+
+        user.organizationId
+
+    );
+
+
+}
+
+
+
+
+
+// ==============================
+// Get User By ID
+// ==============================
+
+async getById(user,id){
+
+
+    let existingUser;
+
+
+
+    // SUPER ADMIN
+
+    if(user.role === "SUPER_ADMIN"){
+
+
+        existingUser =
+        await userRepository.findById(
+
+            Number(id)
+
+        );
+
+
+    }
+    else{
+
+
+        existingUser =
+        await userRepository.findByIdAndOrganization(
+
+            Number(id),
+
+            user.organizationId
+
+        );
+
+
+    }
+
+
+
+
+    if(!existingUser){
+
+        throw new Error(
+            "User not found"
+        );
+
+    }
+
+
+
+    return existingUser;
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// Update User
+// ==============================
+
+async update(user,id,data){
+
+
+    let existingUser;
+
+
+
+    if(user.role === "SUPER_ADMIN"){
+
+
+        existingUser =
+        await userRepository.findById(
+
+            Number(id)
+
+        );
+
+
+    }
+    else{
+
+
+        existingUser =
+        await userRepository.findByIdAndOrganization(
+
+            Number(id),
+
+            user.organizationId
+
+        );
+
+
+    }
+
+
+
+    if(!existingUser){
+
+        throw new Error(
+            "User not found"
+        );
+
+    }
+
+
+
+
+    const updateData = {
+
+
+        name:data.name,
+
+        email:data.email,
+
+        role:data.role
+
+
+    };
+
+
+
+
+    if(
+        data.password &&
+        data.password.trim() !== ""
+    ){
+
+
+        updateData.password =
+        await bcrypt.hash(
+
+            data.password,
+
+            10
+
+        );
+
+
+    }
+
+
+
+    return await userRepository.update(
+
+        Number(id),
+
+        updateData
+
+    );
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// Update Status
+// ==============================
+
+async updateStatus(user,id,isActive){
+
+
+    let existingUser;
+
+
+
+    if(user.role === "SUPER_ADMIN"){
+
+
+        existingUser =
+        await userRepository.findById(
+
+            Number(id)
+
+        );
+
+
+    }
+    else{
+
+
+        existingUser =
+        await userRepository.findByIdAndOrganization(
+
+            Number(id),
+
+            user.organizationId
+
+        );
+
+
+    }
+
+
+
+
+    if(!existingUser){
+
+        throw new Error(
+            "User not found"
+        );
+
+    }
+
+
+
+
+    return await userRepository.updateStatus(
+
+        Number(id),
+
+        isActive
+
+    );
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// Delete User
+// ==============================
+
+async delete(user,id){
+
+
+    let existingUser;
+
+
+
+    if(user.role === "SUPER_ADMIN"){
+
+
+        existingUser =
+        await userRepository.findById(
+
+            Number(id)
+
+        );
+
+
+    }
+    else{
+
+
+        existingUser =
+        await userRepository.findByIdAndOrganization(
+
+            Number(id),
+
+            user.organizationId
+
+        );
+
+
+    }
+
+
+
+
+
+    if(!existingUser){
+
+        throw new Error(
+            "User not found"
+        );
+
+    }
+
+
+
+
+
+    await userRepository.delete(
+
+        Number(id)
+
+    );
+
+
+
+
+    return {
+
+        message:
+        "User deleted successfully"
+
+    };
+
+
+}
+
+
+
+
+}
+
 
 export default new UserService();

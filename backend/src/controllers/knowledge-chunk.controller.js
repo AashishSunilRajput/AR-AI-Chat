@@ -1,4 +1,5 @@
-import chunkService from "../services/chunk.service.js";
+import chunkService from "../services/knowledge-chunk.service.js";
+
 
 
 class KnowledgeChunkController {
