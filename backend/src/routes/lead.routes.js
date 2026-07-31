@@ -7,7 +7,8 @@ import {
     getLeads,
     getLead,
     updateLead,
-    deleteLead
+      deleteLead,
+    getStats
 
 } from "../controllers/lead.controller.js";
 
@@ -27,7 +28,11 @@ router.post(
     createLead
 );
 
-
+router.get(
+    "/stats",
+    authMiddleware,
+    getStats
+);
 
 // Admin lead list
 router.get(

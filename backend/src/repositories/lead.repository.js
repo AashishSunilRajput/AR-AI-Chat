@@ -14,26 +14,28 @@ class LeadRepository {
 
 
 
-    async findAll(organizationId) {
+   async findAll(organizationId = null) {
 
-        return await prisma.lead.findMany({
+    return await prisma.lead.findMany({
 
-            where:{
-                organizationId
-            },
+        where: organizationId
+            ? {
+                  organizationId: Number(organizationId)
+              }
+            : {},
 
-            include:{
-                visitor:true,
-                conversation:true
-            },
+        include: {
+            visitor: true,
+            conversation: true
+        },
 
-            orderBy:{
-                createdAt:"desc"
-            }
+        orderBy: {
+            createdAt: "desc"
+        }
 
-        });
+    });
 
-    }
+}
 
 
 
@@ -83,6 +85,93 @@ class LeadRepository {
         });
 
     }
+
+    // ==========================================
+// Lead Stats
+// ==========================================
+
+async getStats(organizationId = null) {
+
+    const where = organizationId
+        ? {
+              organizationId: Number(organizationId)
+          }
+        : {};
+
+    const [
+
+        total,
+
+        newLeads,
+
+        contacted,
+
+        qualified,
+
+        converted,
+
+        lost
+
+    ] = await Promise.all([
+
+        prisma.lead.count({
+            where
+        }),
+
+        prisma.lead.count({
+            where: {
+                ...where,
+                status: "NEW"
+            }
+        }),
+
+        prisma.lead.count({
+            where: {
+                ...where,
+                status: "CONTACTED"
+            }
+        }),
+
+        prisma.lead.count({
+            where: {
+                ...where,
+                status: "QUALIFIED"
+            }
+        }),
+
+        prisma.lead.count({
+            where: {
+                ...where,
+                status: "CONVERTED"
+            }
+        }),
+
+        prisma.lead.count({
+            where: {
+                ...where,
+                status: "LOST"
+            }
+        })
+
+    ]);
+
+    return {
+
+        total,
+
+        new: newLeads,
+
+        contacted,
+
+        qualified,
+
+        converted,
+
+        lost
+
+    };
+
+}
 
 
 }

@@ -44,43 +44,34 @@ try{
 
 
 
-export const getLeads = async(req,res)=>{
+export const getLeads = async (req, res) => {
 
-    try{
-
-
-        const organizationId =
-        req.user.organizationId;
-
-
+    try {
 
         const leads =
-        await leadService.getLeads(
-            organizationId
-        );
-
-
+            await leadService.getLeads(
+                req.user
+            );
 
         res.json({
 
-            success:true,
+            success: true,
 
-            data:leads
+            data: leads
 
         });
 
+    }
 
-    }catch(error){
-
+    catch (error) {
 
         res.status(500).json({
 
-            success:false,
+            success: false,
 
-            message:error.message
+            message: error.message
 
         });
-
 
     }
 
@@ -209,4 +200,32 @@ export const deleteLead = async(req,res)=>{
 
     }
 
+   
+
 };
+ export const getStats = async (req, res) => {
+
+    console.log("USER:", req.user);
+
+    try {
+
+        const stats = await leadService.getStats(
+            req.user
+        );
+
+        res.json({
+            success: true,
+            data: stats
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+

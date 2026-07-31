@@ -2,6 +2,7 @@ import organizationService from "../services/organization.service.js";
 
 class OrganizationController {
 
+    
     // Get Organization Profile
     async getProfile(req, res) {
 
