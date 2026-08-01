@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import leadService from "@/services/lead.service";
 
 
 interface LeadNotesCardProps {
@@ -37,45 +38,32 @@ export default function LeadNotesCard({
 
     const handleSave = async () => {
 
+    try {
 
-        try {
+        setSaving(true);
 
-
-            setSaving(true);
-
-
-            // API integration next step me add karenge
-
-            console.log({
-
-                leadId: lead.id,
-
+        await leadService.updateLead(
+            lead.id,
+            {
                 notes
+            }
+        );
 
-            });
+        alert("Notes saved successfully.");
 
+    } catch (error) {
 
+        console.error(error);
 
-        }
+        alert("Failed to save notes.");
 
-        catch(error) {
+    } finally {
 
+        setSaving(false);
 
-            console.error(error);
+    }
 
-
-        }
-
-        finally {
-
-
-            setSaving(false);
-
-
-        }
-
-
-    };
+};
 
 
 

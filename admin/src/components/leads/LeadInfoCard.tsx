@@ -1,4 +1,5 @@
 "use client";
+import LeadStatusDropdown from "./LeadStatusDropdown";
 
 interface LeadInfoCardProps {
 
@@ -16,7 +17,12 @@ interface LeadInfoCardProps {
 
         source?: string | null;
 
-        status?: string | null;
+       status:
+    | "NEW"
+    | "CONTACTED"
+    | "QUALIFIED"
+    | "CONVERTED"
+    | "LOST";
 
         createdAt?: string;
 
@@ -104,13 +110,21 @@ export default function LeadInfoCard({
                 />
 
 
-                <InfoItem
+                <div>
 
-                    label="Status"
+    <p className="text-sm text-slate-500">
+        Status
+    </p>
 
-                    value={lead.status}
+    <LeadStatusDropdown
 
-                />
+        leadId={lead.id}
+
+        status={lead.status}
+
+    />
+
+</div>
 
 
                 <InfoItem
