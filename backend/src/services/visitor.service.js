@@ -64,6 +64,60 @@ class VisitorService {
 
     }
 
+    // ==========================================
+// Get All Visitors
+// ==========================================
+
+async getVisitors(user) {
+
+    if (user.role === "SUPER_ADMIN") {
+
+        return await visitorRepository.findAll();
+
+    }
+
+    return await visitorRepository.findAll(
+
+        user.organizationId
+
+    );
+
+}
+
+// ==========================================
+// Get Visitor Details
+// ==========================================
+
+async getVisitor(id) {
+
+    return await visitorRepository.findDetails(
+
+        id
+
+    );
+
+}
+
+// ==========================================
+// Visitor Stats
+// ==========================================
+
+async getStats(user) {
+
+    if (user.role === "SUPER_ADMIN") {
+
+        return await visitorRepository.getStats();
+
+    }
+
+    return await visitorRepository.getStats(
+
+        user.organizationId
+
+    );
+
+}
+
 }
     
 export default new VisitorService();

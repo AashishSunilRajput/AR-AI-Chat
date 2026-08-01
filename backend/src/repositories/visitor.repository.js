@@ -130,6 +130,205 @@ class VisitorRepository {
 
     }
 
+    // ==========================================
+// Get All Visitors
+// ==========================================
+
+async findAll(organizationId) {
+
+    const where = organizationId
+        ? {
+            organizationId: Number(
+                organizationId
+            )
+        }
+        : {};
+
+    return await prisma.visitor.findMany({
+
+        where,
+
+        include: {
+
+            chatbot: {
+
+                select: {
+                    id: true,
+                    name: true
+                }
+
+            },
+
+            _count: {
+
+                select: {
+
+                    conversations: true,
+
+                    leads: true
+
+                }
+
+            }
+
+        },
+
+        orderBy: {
+
+            createdAt: "desc"
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// Visitor Details
+// ==========================================
+
+async findDetails(id) {
+
+    return await prisma.visitor.findUnique({
+
+        where: {
+
+            id: Number(id)
+
+        },
+
+        include: {
+
+            chatbot: true,
+
+            conversations: {
+
+                include: {
+
+                    _count: {
+
+                        select: {
+
+                            messages: true
+
+                        }
+
+                    }
+
+                },
+
+                orderBy: {
+
+                    createdAt: "desc"
+
+                }
+
+            },
+
+            leads: {
+
+                orderBy: {
+
+                    createdAt: "desc"
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+// ==========================================
+// Visitor Stats
+// ==========================================
+
+async getStats(organizationId) {
+
+    const where = organizationId
+        ? {
+            organizationId: Number(
+                organizationId
+            )
+        }
+        : {};
+
+    const today = new Date();
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+    const [
+
+        total,
+
+        active,
+
+        todayVisitors
+
+    ] = await Promise.all([
+
+        prisma.visitor.count({
+
+            where
+
+        }),
+
+        prisma.visitor.count({
+
+            where: {
+
+                ...where,
+
+                lastSeenAt: {
+
+                    gte: new Date(
+                        Date.now() -
+                        1000 * 60 * 30
+                    )
+
+                }
+
+            }
+
+        }),
+
+        prisma.visitor.count({
+
+            where: {
+
+                ...where,
+
+                createdAt: {
+
+                    gte: today
+
+                }
+
+            }
+
+        })
+
+    ]);
+
+    return {
+
+        total,
+
+        active,
+
+        today: todayVisitors
+
+    };
+
+}
+
 }
 
 export default new VisitorRepository();

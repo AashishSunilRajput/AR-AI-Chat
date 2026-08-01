@@ -123,6 +123,100 @@ class VisitorController {
 
     }
 
+    // ==========================================
+// Get All Visitors
+// ==========================================
+
+async getVisitors(req, res, next) {
+
+    try {
+
+        const visitors =
+            await visitorService.getVisitors(
+                req.user
+            );
+
+        return res.json({
+
+            success: true,
+
+            data: visitors
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
 }
 
+// ==========================================
+// Visitor Stats
+// ==========================================
+
+async getStats(req, res, next) {
+
+    try {
+
+        const stats =
+            await visitorService.getStats(
+                req.user
+            );
+
+        return res.json({
+
+            success: true,
+
+            data: stats
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
+// ==========================================
+// Visitor Detail
+// ==========================================
+
+async getVisitor(req, res, next) {
+
+    try {
+
+        const visitor =
+            await visitorService.getVisitor(
+
+                req.params.id
+
+            );
+
+        return res.json({
+
+            success: true,
+
+            data: visitor
+
+        });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
+}
 export default new VisitorController();
