@@ -440,6 +440,72 @@ async delete(user,id){
 
 }
 
+// ==============================
+// Change Password
+// ==============================
+
+async changePassword(
+    user,
+    currentPassword,
+    newPassword
+) {
+
+    const existingUser =
+        await userRepository.findById(
+            user.id
+        );
+
+    if (!existingUser) {
+
+        throw new Error(
+            "User not found"
+        );
+
+    }
+
+    const isMatch =
+        await bcrypt.compare(
+
+            currentPassword,
+
+            existingUser.password
+
+        );
+
+    if (!isMatch) {
+
+        throw new Error(
+            "Current password is incorrect"
+        );
+
+    }
+
+    const hashedPassword =
+        await bcrypt.hash(
+
+            newPassword,
+
+            10
+
+        );
+
+    await userRepository.updatePassword(
+
+        user.id,
+
+        hashedPassword
+
+    );
+
+    return {
+
+        message:
+            "Password updated successfully"
+
+    };
+
+}
+
 
 
 

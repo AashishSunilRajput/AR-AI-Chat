@@ -7,7 +7,9 @@ import authorize from "../middleware/authorize.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 import userValidation from "../validators/user.validation.js";
 
+
 const router = express.Router();
+
 
 // =====================================
 // Create User
@@ -33,6 +35,8 @@ router.post(
 
 );
 
+
+
 // =====================================
 // Get All Users
 // GET /api/users
@@ -53,6 +57,8 @@ router.get(
 
 );
 
+
+
 // =====================================
 // Get User By ID
 // GET /api/users/:id
@@ -72,6 +78,29 @@ router.get(
     userController.getById
 
 );
+
+
+
+// =====================================
+// Change Password
+// PUT /api/users/change-password
+// =====================================
+
+router.put(
+
+    "/change-password",
+
+    authMiddleware,
+
+    validate(
+        userValidation.changePassword
+    ),
+
+    userController.changePassword
+
+);
+
+
 
 // =====================================
 // Update User
@@ -97,6 +126,8 @@ router.put(
 
 );
 
+
+
 // =====================================
 // Update User Status
 // PATCH /api/users/:id/status
@@ -117,6 +148,8 @@ router.patch(
 
 );
 
+
+
 // =====================================
 // Delete User
 // DELETE /api/users/:id
@@ -136,5 +169,6 @@ router.delete(
     userController.delete
 
 );
+
 
 export default router;

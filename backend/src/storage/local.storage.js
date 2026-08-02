@@ -1,24 +1,68 @@
 import fs from "fs";
-import path from "path";
 
-const uploadPath = "src/uploads/documents";
+const documentsPath =
+    "src/uploads/documents";
 
-if (!fs.existsSync(uploadPath)) {
 
-    fs.mkdirSync(uploadPath, {
-        recursive: true
-    });
+const imagesPath =
+    "src/uploads/images";
+
+
+
+// Create Documents Folder
+
+if (!fs.existsSync(documentsPath)) {
+
+    fs.mkdirSync(
+        documentsPath,
+        {
+            recursive:true
+        }
+    );
 
 }
+
+
+
+// Create Images Folder
+
+if (!fs.existsSync(imagesPath)) {
+
+    fs.mkdirSync(
+        imagesPath,
+        {
+            recursive:true
+        }
+    );
+
+}
+
+
 
 class LocalStorage {
 
+
+    // Knowledge Base Documents
+
     getDestination() {
 
-        return uploadPath;
+        return documentsPath;
 
     }
 
+
+
+    // Organization Logo
+    // Chatbot Avatar
+
+    getImageDestination() {
+
+        return imagesPath;
+
+    }
+
+
 }
+
 
 export default new LocalStorage();

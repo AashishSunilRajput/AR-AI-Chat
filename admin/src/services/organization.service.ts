@@ -3,37 +3,41 @@ import api from "./http";
 
 export interface Organization {
 
-    id: number;
+    id:number;
 
-    name: string;
+    name:string;
 
-    email: string;
+    email:string;
 
-    phone?: string;
+    phone?:string;
 
-    website?: string;
+    website?:string;
 
-    plan: string;
+    logo?:string;
 
-    status: string;
+    plan:string;
 
-    users: number;
+    status:string;
 
-    chatbots: number;
+    users:number;
 
-    createdAt: string;
+    chatbots:number;
+
+    createdAt:string;
 
 }
 
 
+
 class OrganizationService {
+
 
 
     // =====================================
     // Get Organizations
     // =====================================
 
-    async getOrganizations() {
+    async getOrganizations(){
 
         const response = await api.get(
             "/organization/"
@@ -43,21 +47,105 @@ class OrganizationService {
 
     }
 
+
+
+
+
+    // =====================================
+    // Create Organization
+    // =====================================
+
     async create(data:any){
 
+        const response = await api.post(
+
+            "/organization",
+
+            data
+
+        );
+
+        return response.data;
+
+    }
+
+
+
+
+
+    // =====================================
+    // Upload Organization Logo
+    // SUPER ADMIN
+    // =====================================
+
+   async uploadLogo(
+    organizationId: number,
+    file: File
+) {
+
+    const formData = new FormData();
+
+    formData.append(
+        "logo",
+        file
+    );
+
     const response = await api.post(
-        "/organization",
-        data
+
+        `/organization/${organizationId}/logo`,
+
+        formData,
+
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+
     );
 
     return response.data;
 
 }
 
+    // =====================================
+// Get Organization By Id
+// =====================================
 
+async getById(id: number) {
+
+    const response = await api.get(
+        `/organization/${id}`
+    );
+
+    return response.data;
 
 }
 
+// =====================================
+// Update Organization
+// =====================================
+
+async update(
+    id: number,
+    data: any
+) {
+
+    const response =
+        await api.put(
+
+            `/organization/${id}`,
+
+            data
+
+        );
+
+    return response.data;
+
+}
+
+
+}
 
 
 

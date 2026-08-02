@@ -262,6 +262,29 @@ class UserRepository {
     }
 
 
+    // =====================================
+// CHANGE PASSWORD
+// =====================================
+
+async updatePassword(
+    id,
+    password
+) {
+
+    return await prisma.user.update({
+
+        where: {
+            id
+        },
+
+        data: {
+            password
+        }
+
+    });
+
+}
+
 }
 
 

@@ -1,6 +1,6 @@
 import organizationRepository from "../repositories/organization.repository.js";
 import bcrypt from "bcrypt";
-
+import prisma from "../config/prisma.js";
 class OrganizationService {
 
     async getProfile(user) {
@@ -97,6 +97,7 @@ class OrganizationService {
         phone: organization.phone,
 
         website: organization.website,
+         logo: organization.logo,
 
         plan: organization.plan,
 
@@ -254,7 +255,151 @@ async create(data){
 
 }
 
+// ==========================================
+// Upload Organization Logo
+// ==========================================
+
+async updateLogo(
+    organizationId,
+    logo
+) {
+
+    // Check Organization Exists
+    const organization =
+        await organizationRepository.findOrganizationById(
+            Number(organizationId)
+        );
+
+    if (!organization) {
+
+        throw new Error(
+            "Organization not found"
+        );
+
+    }
+
+    // Update Logo
+    return await organizationRepository.updateLogo(
+
+        Number(organizationId),
+
+        logo
+
+    );
 
 }
 
+async getOrganizationById(id){
+
+    const organization =
+        await organizationRepository.findOrganizationDetailsById(
+            Number(id)
+        );
+
+    if(!organization){
+
+        throw new Error(
+            "Organization not found"
+        );
+
+    }
+
+    const conversations =
+        await prisma.conversation.count({
+
+            where:{
+
+                visitor:{
+                    organizationId:Number(id)
+                }
+
+            }
+
+        });
+
+    return {
+
+        ...organization,
+
+        stats:{
+
+            users:
+                organization._count.users,
+
+            chatbots:
+                organization._count.chatbots,
+
+            knowledgeBases:
+                organization._count.knowledgeBases,
+
+            visitors:
+                organization._count.visitors,
+
+            leads:
+                organization._count.leads,
+
+            conversations
+
+        }
+
+    };
+
+}
+// ==========================================
+// Update Organization By Id
+// ==========================================
+
+async updateOrganizationById(id, data) {
+
+    const {
+
+        name,
+        email,
+        phone,
+        website,
+        plan,
+        status,
+
+        timezone,
+        language,
+
+        companyAddress,
+        companyCity,
+        companyState,
+        companyCountry
+
+    } = data;
+
+    return await organizationRepository.updateOrganizationById(
+
+        id,
+
+        {
+
+            name,
+            email,
+            phone,
+            website,
+            plan,
+            status
+
+        },
+
+        {
+
+            timezone,
+            language,
+
+            companyAddress,
+            companyCity,
+            companyState,
+            companyCountry
+
+        }
+
+    );
+
+}
+
+}
 export default new OrganizationService();

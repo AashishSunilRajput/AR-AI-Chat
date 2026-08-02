@@ -77,6 +77,64 @@ class OrganizationController {
 
     }
 
+    // ==========================================
+// Upload Organization Logo
+// ==========================================
+
+async uploadLogo(req, res) {
+
+    try {
+
+        if (!req.file) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "Logo file is required"
+
+            });
+
+        }
+
+        const logo =
+            `/uploads/images/${req.file.filename}`;
+
+        const organization =
+            await organizationService.updateLogo(
+
+                Number(req.params.id),
+
+                logo
+
+            );
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Organization logo uploaded successfully",
+
+            data: organization
+
+        });
+
+    }
+
+    catch (error) {
+
+        return res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+}
+
     async getOrganizations(req, res, next) {
 
     try {
@@ -150,6 +208,84 @@ async create(req,res){
 
     }
 
+
+}
+
+async getById(req,res){
+
+    try{
+
+        const organization =
+            await organizationService.getOrganizationById(
+                req.params.id
+            );
+
+        return res.status(200).json({
+
+            success:true,
+
+            message:"Organization fetched successfully",
+
+            data:organization
+
+        });
+
+    }
+
+    catch(error){
+
+        return res.status(404).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+    }
+
+}
+
+// ==========================================
+// Update Organization
+// ==========================================
+
+async updateById(req, res) {
+
+    try {
+
+        const organization =
+            await organizationService.updateOrganizationById(
+
+                req.params.id,
+
+                req.body
+
+            );
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Organization updated successfully",
+
+            data: organization
+
+        });
+
+    }
+
+    catch (error) {
+
+        return res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
 
 }
 

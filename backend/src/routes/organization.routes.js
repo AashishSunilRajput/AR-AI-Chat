@@ -7,6 +7,7 @@ import authorize from "../middleware/authorize.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 
 import organizationValidation from "../validators/organization.validation.js";
+import upload from "../middleware/image-upload.middleware.js";
 
 
 const router = express.Router();
@@ -97,6 +98,55 @@ router.put(
     ),
 
     organizationController.updateProfile
+
+);
+
+// =======================================
+// Upload Organization Logo
+// POST /api/organization/logo
+// SUPER ADMIN / CLIENT ADMIN
+// =======================================
+
+router.post(
+    "/:id/logo",
+    authMiddleware,
+    authorize(
+        "SUPER_ADMIN",
+        "CLIENT_ADMIN"
+    ),
+    upload.single("logo"),
+    organizationController.uploadLogo
+);
+
+router.get(
+
+"/:id",
+
+authMiddleware,
+
+authorize(
+    "SUPER_ADMIN"
+),
+
+organizationController.getById
+
+);
+
+// =======================================
+// Update Organization
+// PUT /organization/:id
+// SUPER ADMIN
+// =======================================
+
+router.put(
+
+    "/:id",
+
+    authMiddleware,
+
+    authorize("SUPER_ADMIN"),
+
+    organizationController.updateById
 
 );
 

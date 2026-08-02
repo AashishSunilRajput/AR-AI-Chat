@@ -256,6 +256,53 @@ class UserController {
 
     }
 
+    // ====================================
+// Change Password
+// ====================================
+
+async changePassword(req, res) {
+
+    try {
+
+        const result =
+            await userService.changePassword(
+
+                req.user,
+
+                req.body.currentPassword,
+
+                req.body.newPassword
+
+            );
+
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: result.message
+
+        });
+
+
+    }
+
+    catch(error) {
+
+        return res.status(400).json({
+
+            success:false,
+
+            message:error.message,
+
+            errors:null
+
+        });
+
+    }
+
+}
+
 }
 
 export default new UserController();
