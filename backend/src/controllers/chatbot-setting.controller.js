@@ -64,6 +64,59 @@ class ChatbotSettingController {
 
     }
 
+    // ==========================================
+// Upload Avatar
+// ==========================================
+
+async uploadAvatar(req, res, next) {
+
+    try {
+
+        if (!req.file) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "Avatar is required"
+
+            });
+
+        }
+
+        const avatar =
+            `/uploads/images/${req.file.filename}`;
+
+        const data =
+            await chatbotSettingService.updateAvatar(
+
+                req.params.chatbotId,
+
+                req.user,
+
+                avatar
+
+            );
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Avatar uploaded successfully",
+
+            data
+
+        });
+
+    }
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
 }
 
 export default new ChatbotSettingController();

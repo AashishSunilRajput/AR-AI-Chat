@@ -7,149 +7,231 @@ interface Props {
     form: ChatbotSetting;
 
     onChange: (
-
         e: React.ChangeEvent<
-
             HTMLInputElement |
-
             HTMLSelectElement
-
         >
-
     ) => void;
 
+    userRole: string;
+
 }
+
 
 export default function AISettingsCard({
 
     form,
 
-    onChange
+    onChange,
+
+    userRole
 
 }: Props) {
 
-    return (
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+const isClientAdmin =
+    userRole === "CLIENT_ADMIN";
 
-            <h2 className="mb-6 text-xl font-semibold">
 
-                AI Configuration
+return (
 
-            </h2>
+    <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <div className="grid gap-6 md:grid-cols-2">
 
-                <div>
+        <h2 className="mb-6 text-xl font-semibold">
 
-                    <label className="mb-2 block text-sm font-medium">
+            AI Configuration
 
-                        AI Provider
+        </h2>
 
-                    </label>
 
-                    <select
 
-                        name="aiProvider"
+        <div className="grid gap-6 md:grid-cols-2">
 
-                        value={form.aiProvider}
 
-                        onChange={onChange}
+            <div>
 
-                        className="w-full rounded-xl border p-3"
+                <label className="mb-2 block text-sm font-medium">
 
-                    >
+                    AI Provider
 
-                        <option value="OPENAI">
+                </label>
 
-                            OpenAI
 
-                        </option>
+                <select
 
-                    </select>
+                    name="aiProvider"
 
-                </div>
+                    value={form.aiProvider}
 
-                <div>
+                    onChange={onChange}
 
-                    <label className="mb-2 block text-sm font-medium">
+                    disabled={isClientAdmin}
 
-                        Model
+                    className="
+                    w-full
+                    rounded-xl
+                    border
+                    p-3
+                    disabled:bg-slate-100
+                    disabled:cursor-not-allowed
+                    "
 
-                    </label>
+                >
 
-                    <input
+                    <option value="OPENAI">
 
-                        name="model"
+                        OpenAI
 
-                        value={form.model}
+                    </option>
 
-                        onChange={onChange}
 
-                        className="w-full rounded-xl border p-3"
-
-                    />
-
-                </div>
-
-                <div>
-
-                    <label className="mb-2 block text-sm font-medium">
-
-                        Temperature
-
-                    </label>
-
-                    <input
-
-                        type="number"
-
-                        step="0.1"
-
-                        min="0"
-
-                        max="2"
-
-                        name="temperature"
-
-                        value={form.temperature}
-
-                        onChange={onChange}
-
-                        className="w-full rounded-xl border p-3"
-
-                    />
-
-                </div>
-
-                <div>
-
-                    <label className="mb-2 block text-sm font-medium">
-
-                        Max Tokens
-
-                    </label>
-
-                    <input
-
-                        type="number"
-
-                        name="maxTokens"
-
-                        value={form.maxTokens}
-
-                        onChange={onChange}
-
-                        className="w-full rounded-xl border p-3"
-
-                    />
-
-                </div>
+                </select>
 
             </div>
 
+
+
+
+            <div>
+
+                <label className="mb-2 block text-sm font-medium">
+
+                    Model
+
+                </label>
+
+
+                <input
+
+                    name="model"
+
+                    value={form.model}
+
+                    onChange={onChange}
+
+                    disabled={isClientAdmin}
+
+                    className="
+                    w-full
+                    rounded-xl
+                    border
+                    p-3
+                    disabled:bg-slate-100
+                    disabled:cursor-not-allowed
+                    "
+
+                />
+
+            </div>
+
+
+
+
+            <div>
+
+                <label className="mb-2 block text-sm font-medium">
+
+                    Temperature
+
+                </label>
+
+
+                <input
+
+                    type="number"
+
+                    step="0.1"
+
+                    min="0"
+
+                    max="2"
+
+                    name="temperature"
+
+                    value={form.temperature}
+
+                    onChange={onChange}
+
+                    disabled={isClientAdmin}
+
+                    className="
+                    w-full
+                    rounded-xl
+                    border
+                    p-3
+                    disabled:bg-slate-100
+                    disabled:cursor-not-allowed
+                    "
+
+                />
+
+            </div>
+
+
+
+
+
+            <div>
+
+                <label className="mb-2 block text-sm font-medium">
+
+                    Max Tokens
+
+                </label>
+
+
+                <input
+
+                    type="number"
+
+                    name="maxTokens"
+
+                    value={form.maxTokens}
+
+                    onChange={onChange}
+
+                    disabled={isClientAdmin}
+
+                    className="
+                    w-full
+                    rounded-xl
+                    border
+                    p-3
+                    disabled:bg-slate-100
+                    disabled:cursor-not-allowed
+                    "
+
+                />
+
+            </div>
+
+
         </div>
 
-    );
+
+        {
+            isClientAdmin &&
+
+            <div className="
+                mt-5
+                rounded-lg
+                bg-yellow-50
+                px-4
+                py-3
+                text-sm
+                text-yellow-700
+            ">
+
+                🔒 AI configuration can only be changed by Super Admin.
+
+            </div>
+
+        }
+
+
+    </div>
+
+);
 
 }

@@ -1,42 +1,56 @@
 "use client";
 
 import {
-
     ResponsiveContainer,
-
     AreaChart,
-
     Area,
-
     CartesianGrid,
-
     Tooltip,
-
     XAxis,
-
-    YAxis
-
+    YAxis,
+    Legend
 } from "recharts";
 
-const data = [
+interface Props {
 
-    { day: "Mon", conversations: 40 },
+    analytics: {
 
-    { day: "Tue", conversations: 65 },
+        leads: any[];
 
-    { day: "Wed", conversations: 52 },
+        conversations: any[];
 
-    { day: "Thu", conversations: 91 },
+    };
 
-    { day: "Fri", conversations: 110 },
+}
 
-    { day: "Sat", conversations: 82 },
+export default function AnalyticsChart({
 
-    { day: "Sun", conversations: 130 }
+    analytics
 
-];
+}: Props) {
 
-export default function AnalyticsChart() {
+    const chartData =
+        analytics.leads.map((lead: any) => {
+
+            const conversation =
+                analytics.conversations.find(
+                    (item: any) =>
+                        item.month === lead.month
+                );
+
+            return {
+
+                month: lead.month,
+
+                leads: Number(lead.total),
+
+                conversations: Number(
+                    conversation?.total || 0
+                )
+
+            };
+
+        });
 
     return (
 
@@ -44,54 +58,61 @@ export default function AnalyticsChart() {
 
             <h3 className="mb-5 text-lg font-semibold">
 
-                Weekly Conversations
+                Monthly Analytics
 
             </h3>
 
             <ResponsiveContainer
-
                 width="100%"
-
                 height={320}
-
             >
 
-                <AreaChart data={data}>
+                <AreaChart
+                    data={chartData}
+                >
 
                     <defs>
 
                         <linearGradient
-
-                            id="color"
-
+                            id="leadColor"
                             x1="0"
-
                             y1="0"
-
                             x2="0"
-
                             y2="1"
-
                         >
 
                             <stop
-
                                 offset="5%"
-
                                 stopColor="#2563eb"
-
-                                stopOpacity={0.4}
-
+                                stopOpacity={0.35}
                             />
 
                             <stop
-
                                 offset="95%"
-
                                 stopColor="#2563eb"
-
                                 stopOpacity={0}
+                            />
 
+                        </linearGradient>
+
+                        <linearGradient
+                            id="conversationColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+
+                            <stop
+                                offset="5%"
+                                stopColor="#10b981"
+                                stopOpacity={0.35}
+                            />
+
+                            <stop
+                                offset="95%"
+                                stopColor="#10b981"
+                                stopOpacity={0}
                             />
 
                         </linearGradient>
@@ -100,24 +121,28 @@ export default function AnalyticsChart() {
 
                     <CartesianGrid strokeDasharray="3 3" />
 
-                    <XAxis dataKey="day" />
+                    <XAxis dataKey="month" />
 
                     <YAxis />
 
                     <Tooltip />
 
+                    <Legend />
+
                     <Area
-
                         type="monotone"
-
-                        dataKey="conversations"
-
+                        dataKey="leads"
                         stroke="#2563eb"
-
-                        fill="url(#color)"
-
+                        fill="url(#leadColor)"
                         strokeWidth={3}
+                    />
 
+                    <Area
+                        type="monotone"
+                        dataKey="conversations"
+                        stroke="#10b981"
+                        fill="url(#conversationColor)"
+                        strokeWidth={3}
                     />
 
                 </AreaChart>

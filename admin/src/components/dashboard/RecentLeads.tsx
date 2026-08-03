@@ -1,38 +1,14 @@
-const leads = [
+interface Props {
 
-    {
+    leads: any[];
 
-        name: "Rahul Sharma",
+}
 
-        email: "rahul@gmail.com",
+export default function RecentLeads({
 
-        company: "ABC Pvt Ltd"
+    leads
 
-    },
-
-    {
-
-        name: "Amit Patel",
-
-        email: "amit@gmail.com",
-
-        company: "XYZ Infotech"
-
-    },
-
-    {
-
-        name: "Priya Shah",
-
-        email: "priya@gmail.com",
-
-        company: "Digital World"
-
-    }
-
-];
-
-export default function RecentLeads() {
+}: Props) {
 
     return (
 
@@ -48,11 +24,25 @@ export default function RecentLeads() {
 
                 {
 
-                    leads.map((lead, index) => (
+                    leads.length === 0 ?
+
+                    (
+
+                        <div className="py-8 text-center text-slate-500">
+
+                            No recent leads
+
+                        </div>
+
+                    )
+
+                    :
+
+                    leads.map((lead: any) => (
 
                         <div
 
-                            key={index}
+                            key={lead.id}
 
                             className="flex items-center justify-between border-b pb-3 last:border-none"
 
@@ -62,13 +52,13 @@ export default function RecentLeads() {
 
                                 <h4 className="font-medium">
 
-                                    {lead.name}
+                                    {lead.visitor?.name || "-"}
 
                                 </h4>
 
                                 <p className="text-sm text-slate-500">
 
-                                    {lead.email}
+                                    {lead.visitor?.email || "-"}
 
                                 </p>
 
@@ -76,7 +66,7 @@ export default function RecentLeads() {
 
                             <span className="text-sm text-slate-400">
 
-                                {lead.company}
+                                {lead.status}
 
                             </span>
 

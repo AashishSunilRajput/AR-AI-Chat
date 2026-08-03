@@ -7,11 +7,16 @@ import WidgetSettingsCard from "@/components/chatbot-settings/WidgetSettingsCard
 import SecuritySettingsCard from "@/components/chatbot-settings/SecuritySettingsCard";
 import AdvancedSettingsCard from "@/components/chatbot-settings/AdvancedSettingsCard";
 
+import AvatarSettingsCard from "@/components/chatbot-settings/AvatarSettingsCard";
+
 import chatbotSettingService, {
     ChatbotSetting
 } from "@/services/chatbot-setting.service";
 
+
 export default function ChatbotSettingsPage() {
+
+    const [userRole, setUserRole] = useState("");
 
     const params = useParams();
 
@@ -26,11 +31,23 @@ export default function ChatbotSettingsPage() {
     const [form, setForm] =
         useState<ChatbotSetting | null>(null);
 
-    useEffect(() => {
+   useEffect(() => {
 
-        loadSettings();
+    loadSettings();
 
-    }, []);
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("arai_user") || "{}"
+        );
+
+
+    setUserRole(
+        user.role || ""
+    );
+
+
+}, []);
 
     const loadSettings = async () => {
 
@@ -177,11 +194,21 @@ export default function ChatbotSettingsPage() {
             </p>
 
         </div>
+      <AvatarSettingsCard
 
-        <AISettingsCard
-            form={form}
-            onChange={handleChange}
-        />
+    chatbotId={chatbotId}
+
+    avatar={form.avatar}
+
+    onUploaded={loadSettings}
+
+/>
+
+       <AISettingsCard
+    form={form}
+    onChange={handleChange}
+    userRole={userRole}
+/>
         <WidgetSettingsCard
 
     form={form}
@@ -190,20 +217,15 @@ export default function ChatbotSettingsPage() {
 
 />
 <SecuritySettingsCard
-
     form={form}
-
     setForm={setForm}
-
     onChange={handleChange}
-
+    userRole={userRole}
 />
 <AdvancedSettingsCard
-
     form={form}
-
     onChange={handleChange}
-
+    userRole={userRole}
 />
         <div className="flex justify-end">
 

@@ -59,6 +59,29 @@ class ChatbotSettingRepository {
 
     }
 
+    // ==========================================
+// Update Avatar
+// ==========================================
+
+async updateAvatar(
+    chatbotId,
+    avatar
+) {
+
+    return await prisma.chatbotSetting.update({
+
+        where: {
+            chatbotId
+        },
+
+        data: {
+            avatar
+        }
+
+    });
+
+}
+
 }
 
 export default new ChatbotSettingRepository();

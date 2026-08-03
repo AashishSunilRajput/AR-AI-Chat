@@ -1,32 +1,14 @@
-const conversations = [
+interface Props {
 
-    {
+    conversations: any[];
 
-        user: "Ashish",
+}
 
-        message: "How much does chatbot cost?"
+export default function RecentConversations({
 
-    },
+    conversations
 
-    {
-
-        user: "Rahul",
-
-        message: "Need CRM Integration."
-
-    },
-
-    {
-
-        user: "Priya",
-
-        message: "Can you build AI Assistant?"
-
-    }
-
-];
-
-export default function RecentConversations() {
+}: Props) {
 
     return (
 
@@ -42,11 +24,25 @@ export default function RecentConversations() {
 
                 {
 
-                    conversations.map((chat, index) => (
+                    conversations.length === 0 ?
+
+                    (
+
+                        <div className="py-8 text-center text-slate-500">
+
+                            No recent conversations
+
+                        </div>
+
+                    )
+
+                    :
+
+                    conversations.map((chat: any) => (
 
                         <div
 
-                            key={index}
+                            key={chat.id}
 
                             className="border-b pb-3 last:border-none"
 
@@ -54,13 +50,13 @@ export default function RecentConversations() {
 
                             <h4 className="font-medium">
 
-                                {chat.user}
+                                {chat.visitor?.name || "Visitor"}
 
                             </h4>
 
                             <p className="text-sm text-slate-500">
 
-                                {chat.message}
+                                {chat.chatbot?.name}
 
                             </p>
 

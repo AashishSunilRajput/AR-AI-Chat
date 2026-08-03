@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 import { useWidget } from "../../context/WidgetContext";
 
+
 function ChatHeader() {
 
     const { config } = useWidget();
@@ -35,36 +36,44 @@ function ChatHeader() {
             <div className="relative flex items-center gap-4">
 
                 <motion.div
+    animate={{
+        scale: [1, 1.08, 1],
+    }}
+    transition={{
+        duration: 2,
+        repeat: Infinity,
+    }}
+    className="
+        h-12
+        w-12
+        rounded-full
+        bg-white/20
+        backdrop-blur
+        flex
+        items-center
+        justify-center
+        overflow-hidden
+    "
+>
 
-                    animate={{
-                        scale: [1, 1.08, 1]
-                    }}
+ {config?.settings?.avatar ? (
 
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity
-                    }}
+    <img
+        src={`${import.meta.env.VITE_API_URL.replace(
+            "/api",
+            ""
+        )}${config.settings.avatar}`}
+        alt="Bot Avatar"
+        className="h-full w-full object-cover"
+    />
 
-                    className="
-                        h-12
-                        w-12
+) : (
 
-                        rounded-full
+    <Bot size={24} />
 
-                        bg-white/20
+)}
 
-                        backdrop-blur
-
-                        flex
-                        items-center
-                        justify-center
-                    "
-
-                >
-
-                    <Bot size={24} />
-
-                </motion.div>
+</motion.div>
 
                 <div className="flex-1">
 

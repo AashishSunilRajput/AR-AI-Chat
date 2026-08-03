@@ -2,6 +2,8 @@ import api from "./http";
 
 export interface DashboardStats {
 
+    totalOrganizations?: number;
+
     totalUsers: number;
 
     activeUsers: number;
@@ -18,13 +20,29 @@ export interface DashboardStats {
 
 }
 
+export interface DashboardResponse {
+
+    organization: any;
+
+    stats: DashboardStats;
+
+    recentOrganizations?: any[];
+
+    recentUsers?: any[];
+
+    recentChatbots?: any[];
+
+    recentLeads?: any[];
+
+    recentConversations?: any[];
+
+}
+
 class DashboardService {
 
     async getStats() {
 
-        const response = await api.get(
-            "/dashboard"
-        );
+        const response = await api.get("/dashboard");
 
         return response.data;
 

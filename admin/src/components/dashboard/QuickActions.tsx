@@ -1,52 +1,87 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import {
-
     Bot,
-
     Plus,
-
     Users,
-
-    BookOpen
-
+    BookOpen,
+    MessageSquare,
+    Building2,
+    Settings
 } from "lucide-react";
 
-const actions = [
+interface Props {
 
-    {
+    userRole: string;
 
-        title: "New Chatbot",
+}
 
-        icon: Bot
+export default function QuickActions({
 
-    },
+    userRole
 
-    {
+}: Props) {
 
-        title: "Add Knowledge",
+    const router = useRouter();
 
-        icon: BookOpen
-
-    },
-
-    {
-
-        title: "Create Lead",
-
-        icon: Users
-
-    },
-
-    {
-
-        title: "New Organization",
-
-        icon: Plus
-
-    }
-
-];
-
-export default function QuickActions() {
+    const actions =
+        userRole === "SUPER_ADMIN"
+            ? [
+                {
+                    title: "Organizations",
+                    icon: Building2,
+                    href: "/organizations"
+                },
+                {
+                    title: "Users",
+                    icon: Users,
+                    href: "/users"
+                },
+                {
+                    title: "Chatbots",
+                    icon: Bot,
+                    href: "/chatbots"
+                },
+                {
+                    title: "Knowledge Bases",
+                    icon: BookOpen,
+                    href: "/knowledge-bases"
+                },
+                {
+                    title: "Dashboard",
+                    icon: Plus,
+                    href: "/dashboard"
+                }
+            ]
+            : [
+                {
+                    title: "Chatbots",
+                    icon: Bot,
+                    href: "/chatbots"
+                },
+                {
+                    title: "Knowledge Bases",
+                    icon: BookOpen,
+                    href: "/knowledge-bases"
+                },
+                {
+                    title: "Conversations",
+                    icon: MessageSquare,
+                    href: "/conversations"
+                },
+                {
+                    title: "Leads",
+                    icon: Users,
+                    href: "/leads"
+                },
+                {
+                    title: "Settings",
+                    icon: Settings,
+                    href: "/settings"
+                }
+            ];
 
     return (
 
@@ -60,43 +95,38 @@ export default function QuickActions() {
 
             <div className="grid grid-cols-2 gap-4">
 
-                {
+                {actions.map((action) => {
 
-                    actions.map((action) => {
+                    const Icon = action.icon;
 
-                        const Icon = action.icon;
+                    return (
 
-                        return (
+                        <button
 
-                            <button
+                            key={action.title}
 
-                                key={action.title}
+                            onClick={() => router.push(action.href)}
 
-                                className="rounded-xl border p-5 transition hover:border-blue-500 hover:bg-blue-50"
+                            className="rounded-xl border p-5 transition hover:border-blue-500 hover:bg-blue-50"
 
-                            >
+                        >
 
-                                <Icon
+                            <Icon
+                                size={28}
+                                className="mx-auto mb-3 text-blue-600"
+                            />
 
-                                    size={28}
+                            <p className="text-sm font-medium">
 
-                                    className="mx-auto mb-3 text-blue-600"
+                                {action.title}
 
-                                />
+                            </p>
 
-                                <p className="text-sm font-medium">
+                        </button>
 
-                                    {action.title}
+                    );
 
-                                </p>
-
-                            </button>
-
-                        );
-
-                    })
-
-                }
+                })}
 
             </div>
 

@@ -19,6 +19,34 @@ export default function DashboardPage() {
 
     const [organization, setOrganization] = useState<any>(null);
 
+    const [recentOrganizations, setRecentOrganizations] =
+    useState<any[]>([]);
+
+const [recentUsers, setRecentUsers] =
+    useState<any[]>([]);
+
+const [recentChatbots, setRecentChatbots] =
+    useState<any[]>([]);
+
+const [recentLeads, setRecentLeads] =
+    useState<any[]>([]);
+
+const [recentConversations, setRecentConversations] =
+    useState<any[]>([]);
+    const [analytics, setAnalytics] =
+    useState<any>({
+        leads: [],
+        conversations: []
+    });
+
+    const [userRole, setUserRole] =
+    useState("");
+
+    const [activities, setActivities] = useState<any[]>([]);
+
+    const [systemStatus, setSystemStatus] =
+    useState<any>(null);
+
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,16 +59,54 @@ export default function DashboardPage() {
 
         try {
 
+
+            const user = JSON.parse(
+    localStorage.getItem("arai_user") || "{}"
+);
+
+
+setUserRole(
+    user.role || ""
+);
             const response = await dashboardService.getStats();
 
             setStats(
                 response.data.stats
             );
+            setAnalytics(
+    response.data.analytics
+);
 
             setOrganization(
                 response.data.organization
             );
 
+            setRecentOrganizations(
+    response.data.recentOrganizations || []
+);
+
+setRecentUsers(
+    response.data.recentUsers || []
+);
+
+setRecentChatbots(
+    response.data.recentChatbots || []
+);
+
+setRecentLeads(
+    response.data.recentLeads || []
+);
+
+setRecentConversations(
+    response.data.recentConversations || []
+);
+
+setActivities(
+    response.data.activities
+);
+setSystemStatus(
+    response.data.systemStatus
+);
         }
         catch (error) {
 
@@ -103,15 +169,21 @@ export default function DashboardPage() {
 
             {/* Analytics */}
 
-            <AnalyticsChart />
+     <AnalyticsChart
+    analytics={analytics}
+/>
 
             {/* Leads & Conversations */}
 
             <div className="grid gap-6 lg:grid-cols-2">
 
-                <RecentLeads />
+               <RecentLeads
+    leads={recentLeads}
+/>
 
-                <RecentConversations />
+<RecentConversations
+    conversations={recentConversations}
+/>
 
             </div>
 
@@ -119,9 +191,13 @@ export default function DashboardPage() {
 
             <div className="grid gap-6 xl:grid-cols-2">
 
-                <QuickActions />
+                <QuickActions
+    userRole={userRole}
+/>
 
-                <ActivityTimeline />
+              <ActivityTimeline
+    activities={activities}
+/>
 
             </div>
 
@@ -131,7 +207,9 @@ export default function DashboardPage() {
 
                 <AIUsageCard />
 
-                <SystemStatus />
+                <SystemStatus 
+    status={systemStatus}
+/>
 
             </div>
 

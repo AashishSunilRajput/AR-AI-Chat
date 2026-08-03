@@ -86,82 +86,193 @@ class ChatbotSettingService {
     }
 
     // ==========================================
-    // Update Settings
-    // ==========================================
+// Update Settings
+// ==========================================
 
-    async updateSettings(
-        chatbotId,
-        user,
-        data
-    ) {
+async updateSettings(
+    chatbotId,
+    user,
+    data
+) {
 
-        let chatbot;
+    let chatbot;
 
-        // ======================================
-        // SUPER ADMIN
-        // ======================================
 
-        if (user.role === "SUPER_ADMIN") {
+    // ======================================
+    // SUPER ADMIN
+    // ======================================
 
-            chatbot =
-                await chatbotRepository.findById(
-                    Number(chatbotId)
-                );
+    if (user.role === "SUPER_ADMIN") {
 
-        }
-
-        // ======================================
-        // CLIENT ADMIN
-        // ======================================
-
-        else {
-
-            chatbot =
-                await chatbotRepository.findByIdAndOrganization(
-
-                    Number(chatbotId),
-
-                    user.organizationId
-
-                );
-
-        }
-
-        if (!chatbot) {
-
-            throw new Error(
-                "Chatbot not found"
+        chatbot =
+            await chatbotRepository.findById(
+                Number(chatbotId)
             );
 
-        }
+    }
 
-        let settings =
-            await chatbotSettingRepository.findByChatbot(
+
+    // ======================================
+    // CLIENT ADMIN
+    // ======================================
+
+    else {
+
+        chatbot =
+            await chatbotRepository.findByIdAndOrganization(
+
+                Number(chatbotId),
+
+                user.organizationId
+
+            );
+
+    }
+
+
+    if (!chatbot) {
+
+        throw new Error(
+            "Chatbot not found"
+        );
+
+    }
+
+
+
+    let settings =
+        await chatbotSettingRepository.findByChatbot(
+
+            Number(chatbotId)
+
+        );
+
+
+    if (!settings) {
+
+        settings =
+            await this.createDefault(
 
                 Number(chatbotId)
 
             );
 
-        if (!settings) {
+    }
 
-            settings =
-                await this.createDefault(
 
-                    Number(chatbotId)
 
-                );
+    // ======================================
+    // CLIENT ADMIN RESTRICTION
+    // ======================================
 
-        }
+    if (user.role === "CLIENT_ADMIN") {
 
-        return await chatbotSettingRepository.update(
 
-            Number(chatbotId),
+        // AI Configuration Lock
 
-            data
+        delete data.aiProvider;
 
+        delete data.model;
+
+        delete data.temperature;
+
+        delete data.maxTokens;
+
+
+        // AI Behaviour Lock
+
+        delete data.systemPrompt;
+
+
+        // Security Lock
+
+        delete data.allowedDomains;
+
+        delete data.isPublic;
+
+
+    }
+
+
+
+    return await chatbotSettingRepository.update(
+
+        Number(chatbotId),
+
+        data
+
+    );
+
+}
+
+    // ==========================================
+// Update Avatar
+// ==========================================
+
+async updateAvatar(
+    chatbotId,
+    user,
+    avatar
+) {
+
+    let chatbot;
+
+    if (user.role === "SUPER_ADMIN") {
+
+        chatbot =
+            await chatbotRepository.findById(
+                Number(chatbotId)
+            );
+
+    }
+    else {
+
+        chatbot =
+            await chatbotRepository.findByIdAndOrganization(
+
+                Number(chatbotId),
+
+                user.organizationId
+
+            );
+
+    }
+
+    if (!chatbot) {
+
+        throw new Error(
+            "Chatbot not found"
         );
 
     }
+
+    let settings =
+        await chatbotSettingRepository.findByChatbot(
+
+            Number(chatbotId)
+
+        );
+
+    if (!settings) {
+
+        settings =
+            await this.createDefault(
+
+                Number(chatbotId)
+
+            );
+
+    }
+
+    return await chatbotSettingRepository.updateAvatar(
+
+        Number(chatbotId),
+
+        avatar
+
+    );
+
+}
 
 }
 

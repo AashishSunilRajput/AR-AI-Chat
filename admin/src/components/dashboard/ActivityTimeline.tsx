@@ -1,40 +1,33 @@
-const timeline = [
+"use client";
 
-    {
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-        title: "New Lead Received",
+dayjs.extend(relativeTime);
 
-        time: "5 mins ago"
+interface Activity {
 
-    },
+    id: string;
 
-    {
+    type: string;
 
-        title: "Chatbot Updated",
+    title: string;
 
-        time: "30 mins ago"
+    createdAt: string;
 
-    },
+}
 
-    {
+interface Props {
 
-        title: "Knowledge Base Imported",
+    activities: Activity[];
 
-        time: "1 hour ago"
+}
 
-    },
+export default function ActivityTimeline({
 
-    {
+    activities
 
-        title: "Organization Created",
-
-        time: "Today"
-
-    }
-
-];
-
-export default function ActivityTimeline() {
+}: Props) {
 
     return (
 
@@ -50,41 +43,55 @@ export default function ActivityTimeline() {
 
                 {
 
-                    timeline.map((item, index) => (
+                    activities.length === 0 ?
 
-                        <div
+                        (
 
-                            key={index}
+                            <div className="py-8 text-center text-slate-500">
 
-                            className="flex gap-4"
-
-                        >
-
-                            <div
-
-                                className="mt-1 h-3 w-3 rounded-full bg-blue-600"
-
-                            />
-
-                            <div>
-
-                                <h4 className="font-medium">
-
-                                    {item.title}
-
-                                </h4>
-
-                                <p className="text-sm text-slate-500">
-
-                                    {item.time}
-
-                                </p>
+                                No recent activity
 
                             </div>
 
-                        </div>
+                        )
 
-                    ))
+                        :
+
+                        activities.map((item) => (
+
+                            <div
+
+                                key={item.id}
+
+                                className="flex gap-4"
+
+                            >
+
+                                <div
+
+                                    className="mt-2 h-3 w-3 rounded-full bg-blue-600"
+
+                                />
+
+                                <div>
+
+                                    <h4 className="font-medium">
+
+                                        {item.title}
+
+                                    </h4>
+
+                                    <p className="text-sm text-slate-500">
+
+                                        {dayjs(item.createdAt).fromNow()}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        ))
 
                 }
 

@@ -22,6 +22,8 @@ interface Props {
 
     ) => void;
 
+    userRole: string;
+
 }
 
 export default function SecuritySettingsCard({
@@ -30,9 +32,14 @@ export default function SecuritySettingsCard({
 
     setForm,
 
-    onChange
+    onChange,
+
+    userRole
 
 }: Props) {
+
+    const isClientAdmin =
+        userRole === "CLIENT_ADMIN";
 
     return (
 
@@ -46,7 +53,9 @@ export default function SecuritySettingsCard({
 
             <div className="space-y-6">
 
+                {/* ========================================== */}
                 {/* Public Chatbot */}
+                {/* ========================================== */}
 
                 <div className="flex items-center justify-between rounded-xl border p-4">
 
@@ -72,6 +81,8 @@ export default function SecuritySettingsCard({
 
                         checked={form.isPublic}
 
+                        disabled={isClientAdmin}
+
                         onChange={(e) =>
 
                             setForm({
@@ -85,13 +96,19 @@ export default function SecuritySettingsCard({
 
                         }
 
-                        className="h-5 w-5"
+                        className="
+                            h-5
+                            w-5
+                            disabled:cursor-not-allowed
+                        "
 
                     />
 
                 </div>
 
+                {/* ========================================== */}
                 {/* Allowed Domains */}
+                {/* ========================================== */}
 
                 <div>
 
@@ -107,13 +124,23 @@ export default function SecuritySettingsCard({
 
                         rows={4}
 
-                        placeholder="example.com&#10;demo.com"
+                        placeholder={`example.com
+demo.com`}
 
                         value={form.allowedDomains ?? ""}
 
                         onChange={onChange}
 
-                        className="w-full rounded-xl border p-3"
+                        disabled={isClientAdmin}
+
+                        className="
+                            w-full
+                            rounded-xl
+                            border
+                            p-3
+                            disabled:bg-slate-100
+                            disabled:cursor-not-allowed
+                        "
 
                     />
 
@@ -126,6 +153,34 @@ export default function SecuritySettingsCard({
                 </div>
 
             </div>
+
+            {/* ========================================== */}
+            {/* Client Admin Notice */}
+            {/* ========================================== */}
+
+            {
+
+                isClientAdmin &&
+
+                <div
+                    className="
+                        mt-6
+                        rounded-xl
+                        border
+                        border-yellow-200
+                        bg-yellow-50
+                        px-4
+                        py-3
+                        text-sm
+                        text-yellow-700
+                    "
+                >
+
+                    🔒 Security settings can only be changed by Super Admin.
+
+                </div>
+
+            }
 
         </div>
 

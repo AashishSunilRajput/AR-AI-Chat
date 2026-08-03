@@ -7,10 +7,12 @@ interface Props {
     form: ChatbotSetting;
 
     onChange: (
-
-        e: React.ChangeEvent<HTMLTextAreaElement>
-
+        e: React.ChangeEvent<
+            HTMLTextAreaElement
+        >
     ) => void;
+
+    userRole: string;
 
 }
 
@@ -18,9 +20,14 @@ export default function AdvancedSettingsCard({
 
     form,
 
-    onChange
+    onChange,
+
+    userRole
 
 }: Props) {
+
+    const isClientAdmin =
+        userRole === "CLIENT_ADMIN";
 
     return (
 
@@ -46,34 +53,56 @@ export default function AdvancedSettingsCard({
 
                     rows={10}
 
-                    value={form.systemPrompt || ""}
+                    value={form.systemPrompt ?? ""}
 
                     onChange={onChange}
 
-                    placeholder="You are a helpful AI assistant. Answer politely and accurately..."
+                    disabled={isClientAdmin}
 
-                    className="w-full rounded-xl border p-3 outline-none transition focus:border-blue-500"
+                    className="
+                        w-full
+                        rounded-xl
+                        border
+                        p-3
+                        disabled:bg-slate-100
+                        disabled:cursor-not-allowed
+                    "
+
+                    placeholder="You are a helpful AI assistant..."
 
                 />
 
                 <p className="mt-2 text-sm text-slate-500">
 
-                    This prompt controls your AI assistant's behavior, tone,
-                    personality, and response style.
+                    This prompt controls how the AI behaves during conversations.
 
                 </p>
 
-                <div className="mt-2 flex justify-end">
+            </div>
 
-                    <span className="text-xs text-slate-400">
+            {
 
-                        {(form.systemPrompt || "").length} Characters
+                isClientAdmin &&
 
-                    </span>
+                <div
+                    className="
+                        mt-6
+                        rounded-xl
+                        border
+                        border-yellow-200
+                        bg-yellow-50
+                        px-4
+                        py-3
+                        text-sm
+                        text-yellow-700
+                    "
+                >
+
+                    🔒 System Prompt can only be changed by Super Admin.
 
                 </div>
 
-            </div>
+            }
 
         </div>
 

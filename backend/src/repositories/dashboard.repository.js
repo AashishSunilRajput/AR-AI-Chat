@@ -183,6 +183,338 @@ class DashboardRepository {
 
     }
 
+    // ===========================================
+// Recent Organizations
+// ===========================================
+
+async recentOrganizations(limit = 5) {
+
+    return await prisma.organization.findMany({
+
+        orderBy: {
+            createdAt: "desc"
+        },
+
+        take: limit,
+
+        select: {
+
+            id: true,
+            name: true,
+            email: true,
+            plan: true,
+            status: true,
+            createdAt: true
+
+        }
+
+    });
+
 }
 
+// ===========================================
+// Recent Users
+// ===========================================
+
+async recentUsers(
+    organizationId = null,
+    limit = 5
+) {
+
+    return await prisma.user.findMany({
+
+        where: organizationId
+            ? {
+                organizationId
+            }
+            : {},
+
+        orderBy: {
+
+            createdAt: "desc"
+
+        },
+
+        take: limit,
+
+        include: {
+
+            organization: {
+
+                select: {
+
+                    name: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+// ===========================================
+// Recent Leads
+// ===========================================
+
+async recentLeads(organizationId = null, limit = 5) {
+
+    return await prisma.lead.findMany({
+
+        where: organizationId
+            ? {
+                  organizationId
+              }
+            : {},
+
+        take: limit,
+
+        orderBy: {
+
+            createdAt: "desc"
+
+        },
+
+        include: {
+
+            visitor: {
+
+                select: {
+
+                    name: true,
+                    email: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+// ===========================================
+// Recent Conversations
+// ===========================================
+
+async recentConversations(organizationId = null, limit = 5) {
+
+    return await prisma.conversation.findMany({
+
+        where: organizationId
+            ? {
+
+                  chatbot: {
+
+                      organizationId
+
+                  }
+
+              }
+            : {},
+
+        orderBy: {
+
+            createdAt: "desc"
+
+        },
+
+        take: limit,
+
+        include: {
+
+            visitor: {
+
+                select: {
+
+                    name: true
+
+                }
+
+            },
+
+            chatbot: {
+
+                select: {
+
+                    name: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+// ===========================================
+// Recent Chatbots
+// ===========================================
+
+async recentChatbots(organizationId = null, limit = 5) {
+
+    return await prisma.chatbot.findMany({
+
+        where: organizationId
+            ? {
+                  organizationId
+              }
+            : {},
+
+        orderBy: {
+
+            createdAt: "desc"
+
+        },
+
+        take: limit,
+
+        include: {
+
+            organization: {
+
+                select: {
+
+                    name: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+// ===========================================
+// Monthly Analytics
+// ===========================================
+
+async getMonthlyAnalytics(organizationId = null) {
+
+    // ======================================
+    // SUPER ADMIN
+    // ======================================
+
+    if (!organizationId) {
+
+        const leads = await prisma.$queryRaw`
+
+            SELECT
+                TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
+                EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
+                COUNT(*)::int AS total
+            FROM "Lead"
+            GROUP BY DATE_TRUNC('month', "createdAt"),
+                     EXTRACT(MONTH FROM "createdAt")
+            ORDER BY EXTRACT(MONTH FROM "createdAt")
+
+        `;
+
+        const conversations = await prisma.$queryRaw`
+
+            SELECT
+                TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
+                EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
+                COUNT(*)::int AS total
+            FROM "Conversation"
+            GROUP BY DATE_TRUNC('month', "createdAt"),
+                     EXTRACT(MONTH FROM "createdAt")
+            ORDER BY EXTRACT(MONTH FROM "createdAt")
+
+        `;
+
+        return {
+            leads,
+            conversations
+        };
+
+    }
+
+    // ======================================
+    // CLIENT ADMIN
+    // ======================================
+
+    const leads = await prisma.$queryRaw`
+
+        SELECT
+            TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
+            EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
+            COUNT(*)::int AS total
+        FROM "Lead"
+        WHERE "organizationId" = ${organizationId}
+        GROUP BY DATE_TRUNC('month', "createdAt"),
+                 EXTRACT(MONTH FROM "createdAt")
+        ORDER BY EXTRACT(MONTH FROM "createdAt")
+
+    `;
+
+    const conversations = await prisma.$queryRaw`
+
+        SELECT
+            TO_CHAR(DATE_TRUNC('month', c."createdAt"), 'Mon') AS month,
+            EXTRACT(MONTH FROM c."createdAt")::int AS monthNumber,
+            COUNT(*)::int AS total
+        FROM "Conversation" c
+        INNER JOIN "Chatbot" cb
+            ON cb.id = c."chatbotId"
+        WHERE cb."organizationId" = ${organizationId}
+        GROUP BY DATE_TRUNC('month', c."createdAt"),
+                 EXTRACT(MONTH FROM c."createdAt")
+        ORDER BY EXTRACT(MONTH FROM c."createdAt")
+
+    `;
+
+    return {
+        leads,
+        conversations
+    };
+
+}
+
+
+// ===========================================
+// System Status
+// ===========================================
+
+async getSystemStatus() {
+
+    let database = "DOWN";
+
+    try {
+
+        await prisma.$queryRaw`SELECT 1`;
+
+        database = "ONLINE";
+
+    }
+    catch(error) {
+
+        database = "DOWN";
+
+    }
+
+
+    return {
+
+        api: "ONLINE",
+
+        database,
+
+        aiProvider: process.env.OPENAI_API_KEY
+            ? "CONFIGURED"
+            : "NOT CONFIGURED",
+
+        storage: "ONLINE"
+
+    };
+
+}
+
+}
 export default new DashboardRepository();

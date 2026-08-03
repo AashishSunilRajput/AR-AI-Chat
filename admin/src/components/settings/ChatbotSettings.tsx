@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import settingService from "@/services/setting.service";
+import AvatarSettingsCard from "@/components/chatbot-settings/AvatarSettingsCard";
 import { toast } from "sonner";
 interface Props {
     chatbot: any;
@@ -105,6 +106,16 @@ export default function ChatbotSettings({
                 Chatbot Settings
 
             </h2>
+
+            <AvatarSettingsCard
+
+    chatbotId={chatbot.id}
+
+    avatar={settings?.avatar}
+
+    onUploaded={onUpdated}
+
+/>
 
             <div className="grid gap-5 md:grid-cols-2">
 
