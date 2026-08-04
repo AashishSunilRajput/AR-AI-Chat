@@ -72,22 +72,29 @@ class LeadService {
 
 }
  // ==========================================
+// ==========================================
 // Get All Leads
 // ==========================================
 
-async getLeads(user) {
+async getLeads(user, filters = {}) {
 
     if (user.role === "SUPER_ADMIN") {
 
-        return await leadRepository.findAll();
+        return await leadRepository.findAll({
+
+            ...filters
+
+        });
 
     }
 
-    return await leadRepository.findAll(
+    return await leadRepository.findAll({
 
-        user.organizationId
+        ...filters,
 
-    );
+        organizationId: user.organizationId
+
+    });
 
 }
 
@@ -152,5 +159,43 @@ async getStats(user) {
     );
 
 }
+
+
+// ==========================================
+// Export Leads
+// ==========================================
+
+// ==========================================
+// Export Leads
+// ==========================================
+
+async exportLeads(user, filters = {}) {
+
+
+    if (user.role === "SUPER_ADMIN") {
+
+
+        return await leadRepository.findAll({
+
+            ...filters
+
+        });
+
+
+    }
+
+
+    return await leadRepository.findAll({
+
+        ...filters,
+
+        organizationId:
+            user.organizationId
+
+    });
+
+
+}
+
 }
 export default new LeadService();

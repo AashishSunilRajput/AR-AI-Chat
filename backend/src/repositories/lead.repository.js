@@ -14,26 +14,257 @@ class LeadRepository {
 
 
 
-   async findAll(organizationId = null) {
+// ==========================================
+// Get All Leads (Filters + Pagination)
+// ==========================================
 
-    return await prisma.lead.findMany({
+async findAll(filters = {}) {
 
-        where: organizationId
-            ? {
-                  organizationId: Number(organizationId)
-              }
-            : {},
+    const {
 
-        include: {
-            visitor: true,
-            conversation: true
-        },
+        organizationId,
 
-        orderBy: {
-            createdAt: "desc"
+        search,
+
+        status,
+
+        source,
+
+        from,
+
+        to,
+
+        page = 1,
+
+        limit = 20
+
+    } = filters;
+
+
+
+    const where = {};
+
+
+
+    // Organization
+
+    if (organizationId) {
+
+        where.organizationId =
+            Number(organizationId);
+
+    }
+
+
+
+    // Status
+
+    if (
+
+        status &&
+
+        status !== "ALL"
+
+    ) {
+
+        where.status = status;
+
+    }
+
+
+
+    // Source
+
+    if (
+
+        source &&
+
+        source !== "ALL"
+
+    ) {
+
+        where.source = source;
+
+    }
+
+
+
+    // Date Range
+
+    if (from || to) {
+
+        where.createdAt = {};
+
+
+        if (from) {
+
+            where.createdAt.gte =
+                new Date(from);
+
         }
 
-    });
+
+        if (to) {
+
+            where.createdAt.lte =
+                new Date(to);
+
+        }
+
+    }
+
+
+
+    // Search
+
+    if (search) {
+
+        where.OR = [
+
+            {
+                name: {
+
+                    contains: search,
+
+                    mode: "insensitive"
+
+                }
+
+            },
+
+
+            {
+                email: {
+
+                    contains: search,
+
+                    mode: "insensitive"
+
+                }
+
+            },
+
+
+            {
+                phone: {
+
+                    contains: search,
+
+                    mode: "insensitive"
+
+                }
+
+            },
+
+
+            {
+                company: {
+
+                    contains: search,
+
+                    mode: "insensitive"
+
+                }
+
+            }
+
+        ];
+
+    }
+
+
+
+    // Pagination
+
+    const pageNumber =
+        Number(page);
+
+
+    const limitNumber =
+        Number(limit);
+
+
+
+    const skip =
+        (pageNumber - 1)
+        *
+        limitNumber;
+
+
+
+    const [
+        leads,
+        total
+    ] = await Promise.all([
+
+
+        prisma.lead.findMany({
+
+            where,
+
+
+            skip,
+
+
+            take: limitNumber,
+
+
+            include: {
+
+                visitor:true,
+
+                conversation:true
+
+            },
+
+
+            orderBy: {
+
+                createdAt:"desc"
+
+            }
+
+        }),
+
+
+
+        prisma.lead.count({
+
+            where
+
+        })
+
+    ]);
+
+
+
+    return {
+
+
+        data: leads,
+
+
+        pagination: {
+
+
+            total,
+
+
+            page: pageNumber,
+
+
+            limit: limitNumber,
+
+
+            totalPages:
+                Math.ceil(
+                    total /
+                    limitNumber
+                )
+
+        }
+
+    };
 
 }
 

@@ -36,6 +36,8 @@ import settingRoutes from "./routes/setting.routes.js";
 
 import errorHandler from "./middleware/error.middleware.js";
 
+import exportRoutes from "./routes/export.routes.js";
+
 
 const app = express();
 
@@ -316,7 +318,14 @@ app.use(
     "/api",
     testRoutes
 );
+// ==========================================
+// Export Routes
+// ==========================================
 
+app.use(
+    "/api/export",
+    exportRoutes
+);
 
 
 // ==========================================

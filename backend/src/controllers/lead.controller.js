@@ -1,77 +1,50 @@
 import leadService from "../services/lead.service.js";
 
 
+// ==========================================
+// Create Lead
+// ==========================================
 
 export const createLead = async(req,res)=>{
 
-try{
-
-    console.log("LEAD REQUEST BODY:", req.body);
+    try{
 
 
-    const lead =
-    await leadService.createLead(
-        req.body
-    );
+        console.log(
+            "LEAD REQUEST BODY:",
+            req.body
+        );
 
 
-    res.status(201).json({
-
-        success:true,
-
-        message:"Lead created successfully",
-
-        data:lead
-
-    });
-
-
-}catch(error){
-
-    res.status(500).json({
-
-        success:false,
-
-        message:error.message
-
-    });
-
-}
-
-};
-
-
-
-
-
-export const getLeads = async (req, res) => {
-
-    try {
-
-        const leads =
-            await leadService.getLeads(
-                req.user
+        const lead =
+            await leadService.createLead(
+                req.body
             );
 
-        res.json({
 
-            success: true,
+        res.status(201).json({
 
-            data: leads
+            success:true,
+
+            message:"Lead created successfully",
+
+            data:lead
 
         });
 
-    }
 
-    catch (error) {
+    }
+    catch(error){
+
 
         res.status(500).json({
 
-            success: false,
+            success:false,
 
-            message: error.message
+            message:error.message
 
         });
+
 
     }
 
@@ -80,16 +53,118 @@ export const getLeads = async (req, res) => {
 
 
 
+// ==========================================
+// Get All Leads With Filters + Pagination
+// ==========================================
+
+export const getLeads = async(req,res)=>{
+
+
+    try{
+
+
+        const filters = {
+
+
+            search:
+                req.query.search,
+
+
+            status:
+                req.query.status,
+
+
+            source:
+                req.query.source,
+
+
+            from:
+                req.query.from,
+
+
+            to:
+                req.query.to,
+
+
+            page:
+                req.query.page || 1,
+
+
+            limit:
+                req.query.limit || 10
+
+
+        };
+
+
+
+        const leads =
+
+            await leadService.getLeads(
+
+                req.user,
+
+                filters
+
+            );
+
+
+
+        res.json({
+
+            success:true,
+
+
+            data:leads.data,
+
+
+            pagination:
+                leads.pagination
+
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+};
+
+
+
+
+// ==========================================
+// Get Single Lead
+// ==========================================
 
 export const getLead = async(req,res)=>{
 
+
     try{
 
 
         const lead =
-        await leadService.getLeadById(
-            Number(req.params.id)
-        );
+
+            await leadService.getLeadById(
+
+                Number(req.params.id)
+
+            );
+
 
 
         res.json({
@@ -101,7 +176,8 @@ export const getLead = async(req,res)=>{
         });
 
 
-    }catch(error){
+    }
+    catch(error){
 
 
         res.status(500).json({
@@ -115,25 +191,32 @@ export const getLead = async(req,res)=>{
 
     }
 
+
 };
 
 
 
 
+// ==========================================
+// Update Lead
+// ==========================================
 
 export const updateLead = async(req,res)=>{
 
+
     try{
 
 
         const lead =
-        await leadService.updateLead(
 
-            Number(req.params.id),
+            await leadService.updateLead(
 
-            req.body
+                Number(req.params.id),
 
-        );
+                req.body
+
+            );
+
 
 
         res.json({
@@ -145,7 +228,8 @@ export const updateLead = async(req,res)=>{
         });
 
 
-    }catch(error){
+    }
+    catch(error){
 
 
         res.status(500).json({
@@ -159,13 +243,18 @@ export const updateLead = async(req,res)=>{
 
     }
 
+
 };
 
 
 
 
+// ==========================================
+// Delete Lead
+// ==========================================
 
 export const deleteLead = async(req,res)=>{
+
 
     try{
 
@@ -177,6 +266,7 @@ export const deleteLead = async(req,res)=>{
         );
 
 
+
         res.json({
 
             success:true,
@@ -186,7 +276,9 @@ export const deleteLead = async(req,res)=>{
         });
 
 
-    }catch(error){
+
+    }
+    catch(error){
 
 
         res.status(500).json({
@@ -200,32 +292,62 @@ export const deleteLead = async(req,res)=>{
 
     }
 
-   
 
 };
- export const getStats = async (req, res) => {
 
-    console.log("USER:", req.user);
 
-    try {
 
-        const stats = await leadService.getStats(
+
+// ==========================================
+// Lead Stats
+// ==========================================
+
+export const getStats = async(req,res)=>{
+
+
+    try{
+
+
+        console.log(
+            "USER:",
             req.user
         );
 
+
+        const stats =
+
+            await leadService.getStats(
+
+                req.user
+
+            );
+
+
+
         res.json({
-            success: true,
-            data: stats
+
+            success:true,
+
+            data:stats
+
         });
 
-    } catch (error) {
+
+
+    }
+    catch(error){
+
 
         res.status(500).json({
-            success: false,
-            message: error.message
+
+            success:false,
+
+            message:error.message
+
         });
+
 
     }
 
-};
 
+};

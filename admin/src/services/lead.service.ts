@@ -1,7 +1,6 @@
 import api from "./api";
 
 export interface Lead {
-
     id: number;
 
     organizationId: number;
@@ -42,7 +41,6 @@ export interface Lead {
     conversation?: {
         id: number;
     };
-
 }
 
 export interface LeadStats {
@@ -58,6 +56,43 @@ export interface LeadStats {
     converted: number;
 
     lost: number;
+}
+
+export interface LeadFilters {
+
+    search?: string;
+
+    status?: string;
+
+    source?: string;
+
+    from?: string;
+
+    to?: string;
+
+    page?: number;
+
+    limit?: number;
+
+}
+
+export interface Pagination {
+
+    total: number;
+
+    page: number;
+
+    limit: number;
+
+    totalPages: number;
+
+}
+
+export interface LeadListResponse {
+
+    data: Lead[];
+
+    pagination: Pagination;
 
 }
 
@@ -67,14 +102,30 @@ class LeadService {
     // Get All Leads
     // ===============================
 
-    async getLeads() {
+// ===============================
+// Get All Leads
+// ===============================
 
-        const response =
-            await api.get("/leads");
+async getLeads(
+    filters?: LeadFilters
+): Promise<LeadListResponse> {
 
-        return response.data;
+    const response = await api.get(
 
-    }
+        "/leads",
+
+        {
+
+            params: filters
+
+        }
+
+    );
+
+
+    return response.data;
+
+}
 
     // ===============================
     // Get Lead Stats
@@ -113,15 +164,17 @@ class LeadService {
 
         const response =
             await api.put(
+
                 `/leads/${id}`,
+
                 data
+
             );
 
         return response.data;
 
     }
 
-    
     // ===============================
     // Delete Lead
     // ===============================
@@ -130,7 +183,9 @@ class LeadService {
 
         const response =
             await api.delete(
+
                 `/leads/${id}`
+
             );
 
         return response.data;
