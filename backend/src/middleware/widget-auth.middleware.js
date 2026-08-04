@@ -1,5 +1,6 @@
 import widgetRepository from "../repositories/widget.repository.js";
 
+
 const widgetAuth = async (req, res, next) => {
 
     try {
@@ -12,11 +13,8 @@ const widgetAuth = async (req, res, next) => {
         if (!chatbot) {
 
             return res.status(404).json({
-
                 success: false,
-
                 message: "Invalid widget key"
-
             });
 
         }
@@ -24,49 +22,39 @@ const widgetAuth = async (req, res, next) => {
         if (!chatbot.isActive) {
 
             return res.status(403).json({
-
                 success: false,
-
                 message: "Chatbot is inactive"
-
             });
 
         }
 
-        /**
-         * Domain Validation
-         */
+       const origin = (req.headers.origin || "").replace(/\/$/, "");
 
-        const allowedDomains =
-            chatbot.allowedDomains;
+const allowedDomains =
+    (chatbot.allowedDomains || []).map(domain =>
+        domain.replace(/\/$/, "")
+    );
+
+        console.log("==================================");
+        console.log("Widget Key:", widgetKey);
+        console.log("Origin:", origin);
+        console.log("Allowed Domains:", allowedDomains);
+        console.log("==================================");
 
         if (
-
             allowedDomains &&
-
             Array.isArray(allowedDomains) &&
-
             allowedDomains.length > 0
-
         ) {
 
-            const origin =
-                req.headers.origin;
-
             if (
-
                 !origin ||
-
                 !allowedDomains.includes(origin)
-
             ) {
 
                 return res.status(403).json({
-
                     success: false,
-
                     message: "Domain not allowed"
-
                 });
 
             }
@@ -78,7 +66,6 @@ const widgetAuth = async (req, res, next) => {
         next();
 
     }
-
     catch (error) {
 
         next(error);
@@ -88,3 +75,4 @@ const widgetAuth = async (req, res, next) => {
 };
 
 export default widgetAuth;
+

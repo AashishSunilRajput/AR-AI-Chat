@@ -9,77 +9,82 @@ import { useWidget } from "../../context/WidgetContext";
 
 function ChatWindow({ onClose }) {
 
-    const {
+   const {
 
-        showLeadForm,
+    showLeadForm,
 
-        setShowLeadForm,
+    setShowLeadForm,
 
-        setLeadSubmitted,
+    setLeadSubmitted,
 
-        visitor,
+    visitor,
 
-        conversationId
+    conversationId,
 
-    } = useWidget();
+    increaseUnread
+
+} = useWidget();
 
     return (
 
-        <motion.div
+       <motion.div
 
-            initial={{
-                opacity: 0,
-                scale: 0.92,
-                y: 20
-            }}
+    initial={{
+        opacity: 0,
+        scale: 0.88,
+        y: 35
+    }}
 
-            animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0
-            }}
+    animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0
+    }}
 
-            exit={{
-                opacity: 0,
-                scale: 0.92,
-                y: 20
-            }}
+    exit={{
+        opacity: 0,
+        scale: 0.92,
+        y: 20
+    }}
 
-            transition={{
-                duration: 0.25
-            }}
+    transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 24
+    }}
 
-            className="
-                relative
+    className="
+        relative
 
-                w-[390px]
-                h-[650px]
+        w-[390px]
+        h-[650px]
 
-                max-w-[calc(100vw-20px)]
-                max-h-[calc(100vh-110px)]
+        max-w-[calc(100vw-20px)]
+        max-h-[calc(100vh-110px)]
 
-                bg-white
+        bg-white
 
-                rounded-3xl
+        rounded-3xl
 
-                overflow-hidden
+        overflow-hidden
 
-                border
-                border-slate-200
+        border
+        border-slate-200
 
-                shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+        shadow-[0_25px_70px_rgba(15,23,42,0.20)]
 
-                flex
-                flex-col
+        flex
+        flex-col
 
-                mb-4
+        mb-4
 
-                max-sm:w-[calc(100vw-20px)]
-                max-sm:h-[calc(100vh-100px)]
-                max-sm:rounded-2xl
-            "
+        backdrop-blur-sm
 
-        >
+        max-sm:w-[calc(100vw-20px)]
+        max-sm:h-[calc(100vh-100px)]
+        max-sm:rounded-2xl
+    "
+>
 
             <ChatHeader onClose={onClose} />
 

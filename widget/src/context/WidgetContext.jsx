@@ -3,17 +3,53 @@ import { createContext, useContext, useEffect, useState } from "react";
 import widgetService from "../services/widget.service";
 import visitorService from "../services/visitor.service";
 
+
 const WidgetContext = createContext();
+
+
 
 export function WidgetProvider({ children }) {
 
+
     const [loading, setLoading] = useState(true);
+
 
     const [config, setConfig] = useState(null);
 
+
     const [visitor, setVisitor] = useState(null);
 
+
     const [conversationId, setConversationId] = useState(null);
+
+
+
+    // ==========================================
+    // Unread Notification
+    // ==========================================
+
+    const [unreadCount, setUnreadCount] = useState(0);
+
+
+
+    function increaseUnread(){
+
+        setUnreadCount(
+            prev => prev + 1
+        );
+
+    }
+
+
+
+    function clearUnread(){
+
+        setUnreadCount(0);
+
+    }
+
+
+
 
     // ==========================================
     // Lead Capture
@@ -21,11 +57,16 @@ export function WidgetProvider({ children }) {
 
     const [showLeadForm, setShowLeadForm] = useState(false);
 
+
     const [leadSubmitted, setLeadSubmitted] = useState(
 
-        localStorage.getItem("arai_lead_submitted") === "true"
+        localStorage.getItem(
+            "arai_lead_submitted"
+        ) === "true"
 
     );
+
+
 
     useEffect(() => {
 
@@ -33,9 +74,15 @@ export function WidgetProvider({ children }) {
 
     }, []);
 
+
+
+
+
     async function initialize() {
 
+
         try {
+
 
             // ==========================================
             // Widget Config
@@ -44,7 +91,14 @@ export function WidgetProvider({ children }) {
             const widgetResponse =
                 await widgetService.getConfig();
 
-            setConfig(widgetResponse.data);
+
+            setConfig(
+                widgetResponse.data
+            );
+
+
+
+
 
             // ==========================================
             // Visitor Session
@@ -53,13 +107,24 @@ export function WidgetProvider({ children }) {
             const visitorResponse =
                 await visitorService.startSession();
 
-            setVisitor(visitorResponse.data);
+
+
+            setVisitor(
+                visitorResponse.data
+            );
+
+
 
             setConversationId(
 
                 visitorResponse.data.conversationId
 
             );
+
+
+
+
+
 
             // ==========================================
             // Check Local Storage
@@ -70,66 +135,113 @@ export function WidgetProvider({ children }) {
                     "arai_lead_submitted"
                 );
 
-            if (submitted) {
+
+
+            if(submitted){
 
                 setLeadSubmitted(true);
 
             }
 
+
+
         }
 
-        catch (error) {
+
+        catch(error){
 
             console.error(error);
 
         }
 
-        finally {
+
+        finally{
 
             setLoading(false);
 
         }
 
+
     }
+
+
+
+
 
     return (
 
         <WidgetContext.Provider
 
+
             value={{
+
 
                 loading,
 
+
                 config,
+
 
                 visitor,
 
+
                 conversationId,
 
+
+
+                // ==================================
+                // Unread Notification
+                // ==================================
+
+                unreadCount,
+
+                increaseUnread,
+
+                clearUnread,
+
+
+
+
+
+                // ==================================
                 // Lead Capture
+                // ==================================
 
                 showLeadForm,
 
                 setShowLeadForm,
 
+
                 leadSubmitted,
 
                 setLeadSubmitted
 
+
+
             }}
+
+
 
         >
 
+
             {children}
 
+
         </WidgetContext.Provider>
+
 
     );
 
 }
 
-export function useWidget() {
 
-    return useContext(WidgetContext);
+
+
+export function useWidget(){
+
+    return useContext(
+        WidgetContext
+    );
 
 }

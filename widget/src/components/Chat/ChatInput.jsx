@@ -17,13 +17,18 @@ function ChatInput() {
 
     } = useMessages();
 
-    const {
+ const {
 
-        leadSubmitted,
+    config,
 
-        setShowLeadForm
+    leadSubmitted,
 
-    } = useWidget();
+    setShowLeadForm
+
+} = useWidget();
+
+const primaryColor =
+    config?.settings?.primaryColor || "#2563EB";
 
     const [text, setText] = useState("");
 
@@ -214,7 +219,9 @@ function ChatInput() {
                     }
 
                     onClick={submit}
-
+style={{
+    background: primaryColor
+}}
                     className="
 
                         h-12
@@ -222,10 +229,7 @@ function ChatInput() {
 
                         rounded-2xl
 
-                        bg-gradient-to-r
-
-                        from-blue-600
-                        to-indigo-600
+                       
 
                         text-white
 
@@ -253,12 +257,12 @@ function ChatInput() {
                             ?
 
                             <Loader2
-
-                                className="animate-spin"
-
-                                size={20}
-
-                            />
+    className="animate-spin"
+    size={20}
+    style={{
+        color: "#fff"
+    }}
+/>
 
                             :
 

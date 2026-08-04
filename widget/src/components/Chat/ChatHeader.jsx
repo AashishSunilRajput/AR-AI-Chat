@@ -7,9 +7,12 @@ import { useWidget } from "../../context/WidgetContext";
 function ChatHeader() {
 
     const { config } = useWidget();
+    const primaryColor =
+    config?.settings?.primaryColor || "#2563EB";
 
     return (
 
+        
         <div
  className="
  relative
@@ -19,10 +22,13 @@ function ChatHeader() {
  py-4
  rounded-t-3xl
  "
- style={{
-   background:
-     "linear-gradient(90deg,#2563eb,#4f46e5,#7c3aed)"
- }}
+style={{
+    background: `linear-gradient(
+        90deg,
+        ${primaryColor},
+        ${primaryColor}
+    )`
+}}
 >
 
             <div className="absolute inset-0 opacity-10">
@@ -75,35 +81,39 @@ function ChatHeader() {
 
 </motion.div>
 
-                <div className="flex-1">
+             <div className="flex-1">
 
-                    <h2 className="text-lg font-bold">
+    <h2 className="text-lg font-bold">
+        {
+            config?.chatbotName ||
+            "AI Assistant"
+        }
+    </h2>
 
-                        {
 
-                            config?.chatbotName ||
+    <p className="text-xs opacity-80">
+        {
+            config?.organizationName ||
+            "AR AI"
+        }
+    </p>
 
-                            "AI Assistant"
 
-                        }
+    <div className="mt-1 flex items-center gap-2 text-sm">
 
-                    </h2>
+        <span className="relative flex h-3 w-3">
 
-                    <div className="mt-1 flex items-center gap-2 text-sm">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-70"></span>
 
-                        <span className="relative flex h-3 w-3">
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-green-400"></span>
 
-                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-70"></span>
+        </span>
 
-                            <span className="relative inline-flex h-3 w-3 rounded-full bg-green-400"></span>
+        Online
 
-                        </span>
+    </div>
 
-                        Online
-
-                    </div>
-
-                </div>
+</div>
 
             </div>
 

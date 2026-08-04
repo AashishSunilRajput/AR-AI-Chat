@@ -1,16 +1,31 @@
 function Avatar({
-
-    assistant
-
+    assistant = false,
+    avatar = null
 }) {
+
+
+    const avatarUrl = avatar
+        ? `http://localhost:5000${avatar}`
+        : null;
+
 
     if (assistant) {
 
         return (
 
-            <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow">
+            <div className="w-9 h-9 rounded-full overflow-hidden bg-blue-600 text-white flex items-center justify-center font-bold shadow">
 
-                AI
+                {
+                    avatarUrl
+                    ?
+                    <img
+                        src={avatarUrl}
+                        alt="AI Avatar"
+                        className="w-full h-full object-cover"
+                    />
+                    :
+                    "AI"
+                }
 
             </div>
 
@@ -18,16 +33,14 @@ function Avatar({
 
     }
 
+
     return (
-
         <div className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold shadow">
-
             U
-
         </div>
-
     );
 
 }
+
 
 export default Avatar;

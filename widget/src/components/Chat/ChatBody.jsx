@@ -2,20 +2,38 @@ import { useEffect, useRef } from "react";
 
 import useMessages from "../../hooks/useMessages";
 import MessageBubble from "./MessageBubble";
+import Avatar from "../Common/Avatar";
+import { useWidget } from "../../context/WidgetContext";
+
 
 function ChatBody() {
 
+
     const {
-
         messages,
-
         loading,
-
         sending
-
     } = useMessages();
 
+
+    const { config } = useWidget();
+
+
     const bottomRef = useRef(null);
+
+
+    const chatbotName =
+        config?.chatbotName || "AI Assistant";
+
+
+    const organizationName =
+        config?.organizationName || "Our Company";
+
+
+    const avatar =
+        config?.settings?.avatar || null;
+
+
 
     useEffect(() => {
 
@@ -26,6 +44,8 @@ function ChatBody() {
         });
 
     }, [messages, sending]);
+
+
 
     if (loading) {
 
@@ -51,6 +71,8 @@ function ChatBody() {
 
     }
 
+
+
     return (
 
         <div
@@ -58,101 +80,191 @@ function ChatBody() {
             className="
                 flex-1
                 overflow-y-auto
-
-                bg-slate-50
-
+                bg-gradient-to-b
+                from-slate-50
+                to-white
                 px-5
                 py-6
-
-                space-y-2
+                space-y-3
+                scroll-smooth
+                scrollbar-thin
+                scrollbar-thumb-slate-300
+                scrollbar-track-transparent
             "
 
         >
 
-            {
 
+            {
                 messages.length === 0
 
-                    ?
+                ?
 
-                    <div className="h-full flex flex-col items-center justify-center text-center">
+                <div className="
+                    h-full
+                    flex
+                    flex-col
+                    items-center
+                    justify-center
+                    text-center
+                ">
 
-                        <div className="text-6xl">
 
-                            🤖
+                    <Avatar
+                        assistant
+                        avatar={avatar}
+                    />
 
-                        </div>
 
-                        <h3 className="mt-5 text-xl font-bold text-slate-700">
+                    <h3 className="
+                        mt-4
+                        text-xl
+                        font-bold
+                        text-slate-800
+                    ">
 
-                            Welcome 👋
+                        Welcome 👋
 
-                        </h3>
+                    </h3>
 
-                        <p className="mt-2 text-slate-500 max-w-xs leading-7">
 
-                            Ask me anything about our services.
 
-                            I'm here to help you.
+                    <h4 className="
+                        mt-1
+                        text-base
+                        font-semibold
+                        text-slate-700
+                    ">
 
-                        </p>
+                        {chatbotName}
 
-                    </div>
+                    </h4>
 
-                    :
 
-                    messages.map(message => (
 
-                        <MessageBubble
+                    <p className="
+                        mt-2
+                        text-sm
+                        text-slate-500
+                        max-w-xs
+                        leading-7
+                    ">
 
-                            key={message.id}
+                        {
+                            config?.settings?.welcomeMessage ||
 
-                            role={message.role}
+                            "Ask me anything about our services. I'm here to help you."
+                        }
 
-                            message={message.message}
+                    </p>
 
-                        />
 
-                    ))
+
+                    <span className="
+                        mt-3
+                        text-xs
+                        text-slate-400
+                    ">
+
+                        {organizationName}
+
+                    </span>
+
+
+                </div>
+
+
+                :
+
+
+                messages.map(message => (
+
+                    <MessageBubble
+
+                        key={message.id}
+
+                        role={message.role}
+
+                        message={message.message}
+
+                    />
+
+                ))
 
             }
 
-            {
 
+
+            {
                 sending &&
 
-                <div className="flex gap-3 items-end">
 
-                    <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                <div className="flex items-end gap-3">
 
-                        🤖
 
-                    </div>
+                    <Avatar
+                        assistant
+                        avatar={avatar}
+                    />
 
-                    <div className="bg-white border border-slate-200 rounded-2xl px-5 py-3 shadow-sm">
 
-                        <div className="flex gap-1">
 
-                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce"></span>
+                    <div
 
-                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.15s]"></span>
+                        className="
+                            rounded-3xl
+                            rounded-bl-md
+                            border
+                            border-slate-200
+                            bg-white
+                            px-4
+                            py-3
+                            shadow-sm
+                        "
 
-                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.3s]"></span>
+                    >
+
+
+                        <div className="mb-2 text-xs text-slate-400">
+
+                            {chatbotName} is typing...
 
                         </div>
 
+
+
+                        <div className="flex gap-1">
+
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce"></span>
+
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]"></span>
+
+
+                            <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]"></span>
+
+
+                        </div>
+
+
                     </div>
+
 
                 </div>
 
             }
 
+
+
             <div ref={bottomRef} />
+
 
         </div>
 
     );
 
 }
+
 
 export default ChatBody;

@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 
 import { createLead } from "../services/lead.service";
+import { useWidget } from "../context/WidgetContext";
+
 
 function LeadCapture({
 
@@ -17,6 +19,15 @@ function LeadCapture({
     onSuccess
 
 }) {
+
+
+    const { config } = useWidget();
+
+
+    const primaryColor =
+        config?.settings?.primaryColor || "#2563EB";
+
+
 
     const [loading, setLoading] = useState(false);
 
@@ -36,6 +47,8 @@ function LeadCapture({
 
     });
 
+
+
     function handleChange(e) {
 
         setForm({
@@ -48,47 +61,46 @@ function LeadCapture({
 
     }
 
+
+
     function closeForm() {
 
         localStorage.setItem(
-
             "arai_lead_closed",
-
             "true"
-
         );
 
         onSuccess?.();
 
     }
 
+
+
     async function submit() {
 
         setError("");
 
+
         if (
-
             !form.name ||
-
             !form.email ||
-
             !form.phone
-
         ) {
 
             setError(
-
                 "Please fill all required fields."
-
             );
 
             return;
 
         }
 
+
         try {
 
+
             setLoading(true);
+
 
             await createLead({
 
@@ -100,15 +112,15 @@ function LeadCapture({
 
             });
 
+
             setSuccess(true);
 
+
             localStorage.setItem(
-
                 "arai_lead_submitted",
-
                 "true"
-
             );
+
 
             setTimeout(() => {
 
@@ -116,17 +128,19 @@ function LeadCapture({
 
             }, 2000);
 
+
         }
 
         catch (err) {
 
+
             console.error(err);
 
+
             setError(
-
                 "Unable to submit your request."
-
             );
+
 
         }
 
@@ -138,7 +152,47 @@ function LeadCapture({
 
     }
 
+
+
+    function handleFocus(e) {
+
+        e.target.style.borderColor = primaryColor;
+
+    }
+
+
+    function handleBlur(e) {
+
+        e.target.style.borderColor = "#e2e8f0";
+
+    }
+
+
+
+    const inputClass = `
+
+        w-full
+
+        rounded-lg
+
+        border
+
+        px-3
+
+        py-2
+
+        text-sm
+
+        outline-none
+
+        transition
+
+    `;
+
+
+
     if (success) {
+
 
         return (
 
@@ -152,11 +206,6 @@ function LeadCapture({
                 animate={{
                     opacity: 1,
                     y: 0
-                }}
-
-                exit={{
-                    opacity: 0,
-                    y: 30
                 }}
 
                 transition={{
@@ -178,6 +227,7 @@ function LeadCapture({
 
             >
 
+
                 <CheckCircle2
 
                     size={54}
@@ -191,6 +241,7 @@ function LeadCapture({
                     "
 
                 />
+
 
                 <h3
 
@@ -210,39 +261,20 @@ function LeadCapture({
 
                 </h3>
 
-                <p
 
-                    className="
-
-                        mt-2
-
-                        text-sm
-
-                        text-slate-600
-
-                    "
-
-                >
+                <p className="mt-2 text-sm text-slate-600">
 
                     Your information has been submitted successfully.
 
                 </p>
 
-                <p
 
-                    className="
-
-                        text-sm
-
-                        text-slate-600
-
-                    "
-
-                >
+                <p className="text-sm text-slate-600">
 
                     Our team will contact you shortly.
 
                 </p>
+
 
             </motion.div>
 
@@ -250,9 +282,13 @@ function LeadCapture({
 
     }
 
+
+
     return (
 
+
         <motion.div
+
 
             initial={{
                 opacity: 0,
@@ -264,14 +300,10 @@ function LeadCapture({
                 y: 0
             }}
 
-            exit={{
-                opacity: 0,
-                y: 40
-            }}
-
             transition={{
                 duration: 0.30
             }}
+
 
             className="
 
@@ -288,55 +320,31 @@ function LeadCapture({
 
         >
 
-            <div
 
-                className="
 
-                    flex
+            <div className="flex items-center justify-between">
 
-                    items-center
-
-                    justify-between
-
-                "
-
-            >
 
                 <div>
 
-                    <h3
 
-                        className="
-
-                            text-lg
-
-                            font-semibold
-
-                        "
-
-                    >
+                    <h3 className="text-lg font-semibold">
 
                         Get in Touch
 
                     </h3>
 
-                    <p
 
-                        className="
-
-                            text-sm
-
-                            text-slate-500
-
-                        "
-
-                    >
+                    <p className="text-sm text-slate-500">
 
                         Leave your details and we'll contact you.
 
                     </p>
 
+
                 </div>
+
+
 
                 <button
 
@@ -364,7 +372,11 @@ function LeadCapture({
 
                 </button>
 
+
             </div>
+
+
+
 
             <input
 
@@ -376,27 +388,16 @@ function LeadCapture({
 
                 onChange={handleChange}
 
-                className="
+                onFocus={handleFocus}
 
-                    w-full
+                onBlur={handleBlur}
 
-                    rounded-lg
-
-                    border
-
-                    px-3
-
-                    py-2
-
-                    text-sm
-
-                    outline-none
-
-                    focus:border-blue-500
-
-                "
+                className={inputClass}
 
             />
+
+
+
 
             <input
 
@@ -410,27 +411,16 @@ function LeadCapture({
 
                 onChange={handleChange}
 
-                className="
+                onFocus={handleFocus}
 
-                    w-full
+                onBlur={handleBlur}
 
-                    rounded-lg
-
-                    border
-
-                    px-3
-
-                    py-2
-
-                    text-sm
-
-                    outline-none
-
-                    focus:border-blue-500
-
-                "
+                className={inputClass}
 
             />
+
+
+
 
             <input
 
@@ -442,27 +432,16 @@ function LeadCapture({
 
                 onChange={handleChange}
 
-                className="
+                onFocus={handleFocus}
 
-                    w-full
+                onBlur={handleBlur}
 
-                    rounded-lg
-
-                    border
-
-                    px-3
-
-                    py-2
-
-                    text-sm
-
-                    outline-none
-
-                    focus:border-blue-500
-
-                "
+                className={inputClass}
 
             />
+
+
+
 
             <input
 
@@ -474,43 +453,22 @@ function LeadCapture({
 
                 onChange={handleChange}
 
-                className="
+                onFocus={handleFocus}
 
-                    w-full
+                onBlur={handleBlur}
 
-                    rounded-lg
-
-                    border
-
-                    px-3
-
-                    py-2
-
-                    text-sm
-
-                    outline-none
-
-                    focus:border-blue-500
-
-                "
+                className={inputClass}
 
             />
+
+
+
 
             {
 
                 error && (
 
-                    <p
-
-                        className="
-
-                            text-sm
-
-                            text-red-600
-
-                        "
-
-                    >
+                    <p className="text-sm text-red-600">
 
                         {error}
 
@@ -520,11 +478,24 @@ function LeadCapture({
 
             }
 
+
+
+
+
             <button
+
 
                 onClick={submit}
 
                 disabled={loading}
+
+
+                style={{
+
+                    backgroundColor: primaryColor
+
+                }}
+
 
                 className="
 
@@ -540,8 +511,6 @@ function LeadCapture({
 
                     rounded-lg
 
-                    bg-blue-600
-
                     py-3
 
                     text-white
@@ -550,46 +519,52 @@ function LeadCapture({
 
                     transition
 
-                    hover:bg-blue-700
+                    hover:opacity-90
 
                     disabled:opacity-60
 
                 "
 
+
             >
+
 
                 {
 
                     loading
 
-                        ?
+                    ?
 
-                        <>
+                    <>
 
-                            <Loader2
+                        <Loader2
 
-                                size={18}
+                            size={18}
 
-                                className="animate-spin"
+                            className="animate-spin"
 
-                            />
+                        />
 
-                            Submitting...
+                        Submitting...
 
-                        </>
+                    </>
 
-                        :
+                    :
 
-                        "Submit"
+                    "Submit"
 
                 }
 
+
             </button>
+
+
 
         </motion.div>
 
     );
 
 }
+
 
 export default LeadCapture;

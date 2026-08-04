@@ -6,7 +6,7 @@ const API_BASE_URL =
 const WIDGET_KEY =
     window.ARAI_WIDGET_CONFIG?.widgetKey ||
     import.meta.env.VITE_WIDGET_KEY ||
-    "ar_live_test123456789";
+    "ar_live_XaFBsPGhB2H_KCO6";
 
 export {
     API_BASE_URL,
