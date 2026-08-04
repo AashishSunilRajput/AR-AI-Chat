@@ -7,17 +7,22 @@ interface Props {
     form: ChatbotSetting;
 
     onChange: (
-
         e: React.ChangeEvent<
-
             HTMLInputElement |
-
             HTMLSelectElement |
-
             HTMLTextAreaElement
-
         >
+    ) => void;
 
+    onSuggestedQuestionChange: (
+        index: number,
+        value: string
+    ) => void;
+
+    addSuggestedQuestion: () => void;
+
+    removeSuggestedQuestion: (
+        index: number
     ) => void;
 
 }
@@ -26,13 +31,21 @@ export default function WidgetSettingsCard({
 
     form,
 
-    onChange
+    onChange,
+
+    onSuggestedQuestionChange,
+
+    addSuggestedQuestion,
+
+    removeSuggestedQuestion
 
 }: Props) {
 
     return (
+        
 
         <div className="rounded-2xl border bg-white p-6 shadow-sm">
+            
 
             <h2 className="mb-6 text-xl font-semibold">
 
@@ -68,7 +81,7 @@ export default function WidgetSettingsCard({
 
                 </div>
 
-                {/* Color */}
+                {/* Primary Color */}
 
                 <div>
 
@@ -147,6 +160,139 @@ export default function WidgetSettingsCard({
                         </option>
 
                     </select>
+
+                </div>
+
+                {/* Suggested Questions */}
+
+                <div>
+
+                    <div className="mb-3 flex items-center justify-between">
+
+                        <label className="text-sm font-medium">
+
+                            Suggested Questions
+
+                        </label>
+
+                        <button
+
+                            type="button"
+
+                            onClick={addSuggestedQuestion}
+
+                            disabled={
+                                (form.suggestedQuestions?.length || 0) >= 8
+                            }
+
+                            className="
+                                rounded-lg
+                                bg-blue-600
+                                px-3
+                                py-2
+                                text-sm
+                                text-white
+                                hover:bg-blue-700
+                                disabled:cursor-not-allowed
+                                disabled:opacity-50
+                            "
+
+                        >
+
+                            + Add Question
+
+                        </button>
+
+                    </div>
+
+                    <div className="space-y-3">
+
+                        {
+
+                            (form.suggestedQuestions || []).map(
+
+                                (question, index) => (
+
+                                    <div
+
+                                        key={index}
+
+                                        className="flex items-center gap-2"
+
+                                    >
+
+                                        <input
+
+                                            type="text"
+
+                                            value={question}
+
+                                            placeholder={`Question ${index + 1}`}
+
+                                            onChange={(e) =>
+
+                                                onSuggestedQuestionChange(
+
+                                                    index,
+
+                                                    e.target.value
+
+                                                )
+
+                                            }
+
+                                            className="
+                                                flex-1
+                                                rounded-xl
+                                                border
+                                                p-3
+                                            "
+
+                                        />
+
+                                        <button
+
+                                            type="button"
+
+                                            onClick={() =>
+
+                                                removeSuggestedQuestion(index)
+
+                                            }
+
+                                            className="
+                                                rounded-xl
+                                                border
+                                                border-red-200
+                                                px-4
+                                                py-3
+                                                text-red-600
+                                                transition
+                                                hover:bg-red-50
+                                            "
+
+                                        >
+
+                                            ✕
+
+                                        </button>
+
+                                    </div>
+
+                                )
+
+                            )
+
+                        }
+
+                    </div>
+
+                    <p className="mt-2 text-xs text-slate-500">
+
+                        These questions will appear when the widget opens.
+                        Maximum 8 questions.
+
+                    </p>
 
                 </div>
 

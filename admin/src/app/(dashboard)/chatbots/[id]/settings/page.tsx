@@ -103,6 +103,78 @@ export default function ChatbotSettingsPage() {
 
     };
 
+    const addSuggestedQuestion = () => {
+
+    if (!form) return;
+
+    setForm({
+
+        ...form,
+
+        suggestedQuestions: [
+
+            ...(form.suggestedQuestions || []),
+
+            ""
+
+        ]
+
+    });
+
+};
+
+const removeSuggestedQuestion = (
+
+    index: number
+
+) => {
+
+    if (!form) return;
+
+    setForm({
+
+        ...form,
+
+        suggestedQuestions:
+
+            (form.suggestedQuestions || []).filter(
+
+                (_, i) => i !== index
+
+            )
+
+    });
+
+};
+
+const onSuggestedQuestionChange = (
+
+    index: number,
+
+    value: string
+
+) => {
+
+    if (!form) return;
+
+    const questions = [
+
+        ...(form.suggestedQuestions || [])
+
+    ];
+
+    questions[index] = value;
+
+    setForm({
+
+        ...form,
+
+        suggestedQuestions: questions
+
+    });
+
+};
+
     const saveSettings = async () => {
 
         if (!form) return;
@@ -209,11 +281,17 @@ export default function ChatbotSettingsPage() {
     onChange={handleChange}
     userRole={userRole}
 />
-        <WidgetSettingsCard
+      <WidgetSettingsCard
 
     form={form}
 
     onChange={handleChange}
+
+    onSuggestedQuestionChange={onSuggestedQuestionChange}
+
+    addSuggestedQuestion={addSuggestedQuestion}
+
+    removeSuggestedQuestion={removeSuggestedQuestion}
 
 />
 <SecuritySettingsCard

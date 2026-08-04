@@ -5,35 +5,30 @@ import MessageBubble from "./MessageBubble";
 import Avatar from "../Common/Avatar";
 import { useWidget } from "../../context/WidgetContext";
 
-
 function ChatBody() {
-
 
     const {
         messages,
         loading,
-        sending
+        sending,
+        sendMessage
     } = useMessages();
-
 
     const { config } = useWidget();
 
-
     const bottomRef = useRef(null);
-
 
     const chatbotName =
         config?.chatbotName || "AI Assistant";
 
-
     const organizationName =
         config?.organizationName || "Our Company";
-
 
     const avatar =
         config?.settings?.avatar || null;
 
-
+    const suggestedQuestions =
+        config?.settings?.suggestedQuestions || [];
 
     useEffect(() => {
 
@@ -44,8 +39,6 @@ function ChatBody() {
         });
 
     }, [messages, sending]);
-
-
 
     if (loading) {
 
@@ -71,8 +64,6 @@ function ChatBody() {
 
     }
 
-
-
     return (
 
         <div
@@ -94,120 +85,202 @@ function ChatBody() {
 
         >
 
-
             {
+
                 messages.length === 0
 
-                ?
+                    ?
 
-                <div className="
-                    h-full
-                    flex
-                    flex-col
-                    items-center
-                    justify-center
-                    text-center
-                ">
+                    <div
 
+                        className="
+                            h-full
+                            flex
+                            flex-col
+                            items-center
+                            justify-center
+                            text-center
+                        "
 
-                    <Avatar
-                        assistant
-                        avatar={avatar}
-                    />
+                    >
 
+                        <Avatar
 
-                    <h3 className="
-                        mt-4
-                        text-xl
-                        font-bold
-                        text-slate-800
-                    ">
+                            assistant
 
-                        Welcome 👋
+                            avatar={avatar}
 
-                    </h3>
+                        />
 
+                        <h3
 
+                            className="
+                                mt-4
+                                text-xl
+                                font-bold
+                                text-slate-800
+                            "
 
-                    <h4 className="
-                        mt-1
-                        text-base
-                        font-semibold
-                        text-slate-700
-                    ">
+                        >
 
-                        {chatbotName}
+                            Welcome 👋
 
-                    </h4>
+                        </h3>
 
+                        <h4
 
+                            className="
+                                mt-1
+                                text-base
+                                font-semibold
+                                text-slate-700
+                            "
 
-                    <p className="
-                        mt-2
-                        text-sm
-                        text-slate-500
-                        max-w-xs
-                        leading-7
-                    ">
+                        >
+
+                            {chatbotName}
+
+                        </h4>
+
+                        <p
+
+                            className="
+                                mt-2
+                                text-sm
+                                text-slate-500
+                                max-w-xs
+                                leading-7
+                            "
+
+                        >
+
+                            {
+
+                                config?.settings?.welcomeMessage ||
+
+                                "Ask me anything about our services. I'm here to help you."
+
+                            }
+
+                        </p>
+
+                        <span
+
+                            className="
+                                mt-3
+                                text-xs
+                                text-slate-400
+                            "
+
+                        >
+
+                            {organizationName}
+
+                        </span>
 
                         {
-                            config?.settings?.welcomeMessage ||
 
-                            "Ask me anything about our services. I'm here to help you."
+                            suggestedQuestions.length > 0 && (
+
+                                <div className="mt-8 w-full max-w-sm">
+
+                                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+
+                                        Suggested Questions
+
+                                    </p>
+
+                                    <div className="flex flex-wrap justify-center gap-2">
+
+                                        {
+
+                                            suggestedQuestions.map(
+
+                                                (question, index) => (
+
+                                                    <button
+
+                                                        key={index}
+
+                                                        onClick={() =>
+
+                                                            sendMessage(question)
+
+                                                        }
+
+                                                        disabled={sending}
+
+                                                        className="
+                                                            rounded-full
+                                                            border
+                                                            border-slate-200
+                                                            bg-white
+                                                            px-4
+                                                            py-2
+                                                            text-sm
+                                                            text-slate-700
+                                                            shadow-sm
+                                                            transition-all
+                                                            hover:border-blue-500
+                                                            hover:bg-blue-50
+                                                            hover:text-blue-600
+                                                            disabled:cursor-not-allowed
+                                                            disabled:opacity-50
+                                                        "
+
+                                                    >
+
+                                                        {question}
+
+                                                    </button>
+
+                                                )
+
+                                            )
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            )
+
                         }
 
-                    </p>
+                    </div>
 
+                    :
 
+                    messages.map(message => (
 
-                    <span className="
-                        mt-3
-                        text-xs
-                        text-slate-400
-                    ">
+                        <MessageBubble
 
-                        {organizationName}
+                            key={message.id}
 
-                    </span>
+                            role={message.role}
 
+                            message={message.message}
 
-                </div>
+                        />
 
-
-                :
-
-
-                messages.map(message => (
-
-                    <MessageBubble
-
-                        key={message.id}
-
-                        role={message.role}
-
-                        message={message.message}
-
-                    />
-
-                ))
+                    ))
 
             }
 
-
-
             {
-                sending &&
 
+                sending &&
 
                 <div className="flex items-end gap-3">
 
-
                     <Avatar
+
                         assistant
+
                         avatar={avatar}
+
                     />
-
-
 
                     <div
 
@@ -224,47 +297,34 @@ function ChatBody() {
 
                     >
 
-
                         <div className="mb-2 text-xs text-slate-400">
 
                             {chatbotName} is typing...
 
                         </div>
 
-
-
                         <div className="flex gap-1">
-
 
                             <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce"></span>
 
-
                             <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:150ms]"></span>
-
 
                             <span className="h-2 w-2 rounded-full bg-slate-400 animate-bounce [animation-delay:300ms]"></span>
 
-
                         </div>
 
-
                     </div>
-
 
                 </div>
 
             }
 
-
-
             <div ref={bottomRef} />
-
 
         </div>
 
     );
 
 }
-
 
 export default ChatBody;

@@ -7,15 +7,27 @@ class ChatbotSettingService {
     // Create Default Settings
     // ==========================================
 
-    async createDefault(chatbotId) {
+  async createDefault(chatbotId) {
 
-        return await chatbotSettingRepository.create({
+    return await chatbotSettingRepository.create({
 
-            chatbotId
+        chatbotId,
 
-        });
+        suggestedQuestions: [
 
-    }
+            "What services do you provide?",
+
+            "What are your pricing plans?",
+
+            "Book a demo",
+
+            "Talk to support"
+
+        ]
+
+    });
+
+}
 
     // ==========================================
     // Get Settings

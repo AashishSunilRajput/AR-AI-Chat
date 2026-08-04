@@ -22,6 +22,8 @@ export interface ChatbotSetting {
 
     createdAt: string;
     updatedAt: string;
+      suggestedQuestions: string[];
+    
 }
 
 class ChatbotSettingService {
@@ -84,6 +86,8 @@ class ChatbotSettingService {
         return response.data;
 
     }
+
+    
 
 }
 

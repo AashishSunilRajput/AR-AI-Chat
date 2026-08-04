@@ -39,10 +39,17 @@ export const updateChatbotSettingSchema = z.object({
         "BOTTOM_LEFT"
     ]).optional(),
 
-    allowedDomains: z.array(
-        z.string()
-    ).optional(),
+   allowedDomains: z.array(
+    z.string()
+).optional(),
 
-    isPublic: z.boolean().optional()
+suggestedQuestions: z.array(
+    z.string()
+        .trim()
+        .min(1)
+        .max(100)
+).max(8).optional(),
+
+isPublic: z.boolean().optional()
 
 });

@@ -28,71 +28,79 @@ class WidgetService {
 
             settings:{
 
+    welcomeMessage:
 
-                welcomeMessage:
+        chatbot.settings?.welcomeMessage ||
 
-                    chatbot.settings?.welcomeMessage ||
-
-                    "Hi 👋 How can I help you today?",
-
+        "Hi 👋 How can I help you today?",
 
 
-                theme:
+    theme:
 
-                    chatbot.settings?.theme ||
+        chatbot.settings?.theme ||
 
-                    "LIGHT",
-
-
-
-                primaryColor:
-
-                    chatbot.settings?.primaryColor ||
-
-                    "#2563EB",
+        "LIGHT",
 
 
+    primaryColor:
 
-                position:
+        chatbot.settings?.primaryColor ||
 
-                    chatbot.settings?.position ||
-
-                    "BOTTOM_RIGHT",
-
+        "#2563EB",
 
 
-                avatar:
+    position:
 
-                    chatbot.settings?.avatar ||
+        chatbot.settings?.position ||
 
-                    null,
-
-
-
-                model:
-
-                    chatbot.settings?.model ||
-
-                    "gpt-5-mini",
+        "BOTTOM_RIGHT",
 
 
+    avatar:
 
-                temperature:
+        chatbot.settings?.avatar ||
 
-                    chatbot.settings?.temperature ??
-
-                    0.7,
-
+        null,
 
 
-                maxTokens:
+    model:
 
-                    chatbot.settings?.maxTokens ??
+        chatbot.settings?.model ||
 
-                    1000
+        "gpt-5-mini",
 
 
-            }
+    temperature:
+
+        chatbot.settings?.temperature ??
+
+        0.7,
+
+
+    maxTokens:
+
+        chatbot.settings?.maxTokens ??
+
+        1000,
+
+
+    suggestedQuestions:
+
+        chatbot.settings?.suggestedQuestions ||
+
+        [
+
+            "What services do you provide?",
+
+            "What are your pricing plans?",
+
+            "Book a demo",
+
+            "Talk to support"
+
+        ]
+
+}
 
 
         };

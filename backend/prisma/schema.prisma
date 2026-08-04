@@ -260,6 +260,9 @@ model ChatbotSetting {
 
   avatar String?
 
+  // NEW
+  suggestedQuestions Json?
+
   theme WidgetTheme @default(LIGHT)
 
   position WidgetPosition @default(BOTTOM_RIGHT)
