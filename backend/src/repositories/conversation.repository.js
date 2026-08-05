@@ -130,83 +130,329 @@ async close(id) {
 }
 
     
-async findAll() {
+// ==========================================
+// Get All Conversations
+// ==========================================
 
-    return await prisma.conversation.findMany({
+async findAll(filters = {}) {
 
-        include: {
+    const {
 
-            visitor: true,
+        search,
 
-            chatbot: true,
+        page = 1,
 
-            _count: {
+        limit = 10
 
-                select: {
+    } = filters;
 
-                    messages: true
+    const where = {};
+
+    if (search) {
+
+        where.OR = [
+
+            {
+
+                visitor: {
+
+                    name: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
+
+                }
+
+            },
+
+            {
+
+                visitor: {
+
+                    email: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
+
+                }
+
+            },
+
+            {
+
+                chatbot: {
+
+                    name: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
 
                 }
 
             }
 
-        },
+        ];
 
-        orderBy: {
+    }
 
-            id: "desc"
+    const skip =
+        (Number(page) - 1) *
+        Number(limit);
+
+    const [
+
+        conversations,
+
+        total
+
+    ] = await Promise.all([
+
+        prisma.conversation.findMany({
+
+            where,
+
+            skip,
+
+            take: Number(limit),
+
+            include: {
+
+                visitor: true,
+
+                chatbot: true,
+
+                _count: {
+
+                    select: {
+
+                        messages: true
+
+                    }
+
+                }
+
+            },
+
+            orderBy: {
+
+                id: "desc"
+
+            }
+
+        }),
+
+        prisma.conversation.count({
+
+            where
+
+        })
+
+    ]);
+
+    return {
+
+        data: conversations,
+
+        pagination: {
+
+            total,
+
+            page: Number(page),
+
+            limit: Number(limit),
+
+            totalPages: Math.ceil(
+
+                total /
+
+                Number(limit)
+
+            )
 
         }
 
-    });
+    };
 
 }
+
+// ==========================================
+// Get Conversations By Organization
+// ==========================================
 
 async findAllByOrganization(
-    organizationId
+
+    organizationId,
+
+    filters = {}
+
 ) {
 
-    return await prisma.conversation.findMany({
+    const {
 
-        where: {
+        search,
 
-            chatbot: {
+        page = 1,
 
-                organizationId:
-                    Number(organizationId)
+        limit = 10
 
-            }
+    } = filters;
 
-        },
+    const where = {
 
-        include: {
+        chatbot: {
 
-            visitor: true,
+            organizationId:
 
-            chatbot: true,
+                Number(organizationId)
 
-            _count: {
+        }
 
-                select: {
+    };
 
-                    messages: true
+    if (search) {
+
+        where.OR = [
+
+            {
+
+                visitor: {
+
+                    name: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
+
+                }
+
+            },
+
+            {
+
+                visitor: {
+
+                    email: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
+
+                }
+
+            },
+
+            {
+
+                chatbot: {
+
+                    name: {
+
+                        contains: search,
+
+                        mode: "insensitive"
+
+                    }
 
                 }
 
             }
 
-        },
+        ];
 
-        orderBy: {
+    }
 
-            id: "desc"
+    const skip =
+        (Number(page) - 1) *
+        Number(limit);
+
+    const [
+
+        conversations,
+
+        total
+
+    ] = await Promise.all([
+
+        prisma.conversation.findMany({
+
+            where,
+
+            skip,
+
+            take: Number(limit),
+
+            include: {
+
+                visitor: true,
+
+                chatbot: true,
+
+                _count: {
+
+                    select: {
+
+                        messages: true
+
+                    }
+
+                }
+
+            },
+
+            orderBy: {
+
+                id: "desc"
+
+            }
+
+        }),
+
+        prisma.conversation.count({
+
+            where
+
+        })
+
+    ]);
+
+    return {
+
+        data: conversations,
+
+        pagination: {
+
+            total,
+
+            page: Number(page),
+
+            limit: Number(limit),
+
+            totalPages: Math.ceil(
+
+                total /
+
+                Number(limit)
+
+            )
 
         }
 
-    });
+    };
 
 }
-
 // ==========================================
 // Find By Id + Organization  
 // ==========================================

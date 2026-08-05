@@ -9,6 +9,9 @@ import visitorService, {
 
 import VisitorStatsGrid from "@/components/visitors/VisitorStatsGrid";
 import VisitorTable from "@/components/visitors/VisitorTable";
+import Pagination from "@/components/common/Pagination";
+import ExportButton from "@/components/common/ExportButton";
+import exportService from "@/services/export.service";
 
 export default function VisitorsPage() {
 
@@ -27,50 +30,145 @@ export default function VisitorsPage() {
     const [filter, setFilter] =
         useState("ALL");
 
-    const loadData = async () => {
+        const [page,setPage] =
+useState(1);
 
-        try {
 
-            const [
-                visitorsRes,
-                statsRes
-            ] = await Promise.all([
+const [pagination,setPagination] =
+useState({
 
-                visitorService.getVisitors(),
+    total:0,
 
-                visitorService.getStats()
+    page:1,
 
-            ]);
+    limit:10,
 
-            setVisitors(
-                visitorsRes.data
-            );
+    totalPages:1
 
-            setStats(
-                statsRes.data
-            );
+});
 
-        }
+const [exportLoading, setExportLoading] =
+useState(false);
 
-        catch (error) {
+const handleExport = async (
 
-            console.error(error);
+    format:"csv"|"xlsx"|"pdf"
 
-        }
+)=>{
 
-        finally {
+    try{
 
-            setLoading(false);
+        setExportLoading(true);
 
-        }
+        await exportService.exportVisitors(
 
-    };
+            format,
 
-    useEffect(() => {
+            {
 
-        loadData();
+                search
 
-    }, []);
+            }
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("Export failed");
+
+    }
+
+    finally{
+
+        setExportLoading(false);
+
+    }
+
+};
+
+
+
+
+   const loadData = async()=>{
+
+try{
+
+
+const [
+ visitorsRes,
+ statsRes
+]=await Promise.all([
+
+
+visitorService.getVisitors({
+
+    search,
+
+    page,
+
+    limit:10
+
+}),
+
+
+visitorService.getStats()
+
+
+]);
+
+
+
+setVisitors(
+
+    visitorsRes.data
+
+);
+
+
+
+setPagination(
+
+    visitorsRes.pagination
+
+);
+
+
+
+setStats(
+
+    statsRes.data
+
+);
+
+
+
+}
+catch(error){
+
+console.error(error);
+
+}
+finally{
+
+setLoading(false);
+
+}
+
+
+};
+
+   useEffect(()=>{
+
+loadData();
+
+},[
+search,
+page
+]);
 
     const filteredVisitors = useMemo(() => {
 
@@ -134,6 +232,7 @@ export default function VisitorsPage() {
         filter
 
     ]);
+    
 
     if (loading) {
 
@@ -153,21 +252,33 @@ export default function VisitorsPage() {
 
         <div className="space-y-6 p-6">
 
-            <div>
+          <div className="flex items-center justify-between">
 
-                <h1 className="text-3xl font-bold">
+    <div>
 
-                    Visitors
+        <h1 className="text-3xl font-bold">
 
-                </h1>
+            Visitors
 
-                <p className="text-slate-500">
+        </h1>
 
-                    Manage all website visitors
+        <p className="text-slate-500">
 
-                </p>
+            Manage all website visitors
 
-            </div>
+        </p>
+
+    </div>
+
+    <ExportButton
+
+        onExport={handleExport}
+
+        loading={exportLoading}
+
+    />
+
+</div>
 
             {
 
@@ -248,6 +359,15 @@ export default function VisitorsPage() {
                 visitors={filteredVisitors}
 
             />
+            <Pagination
+
+currentPage={pagination.page}
+    
+                    totalPages={pagination.totalPages}
+    
+                    onPageChange={setPage}
+
+/>
 
         </div>
 

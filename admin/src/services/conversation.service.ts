@@ -41,16 +41,65 @@ export interface ConversationStats {
     today: number;
 }
 
+export interface ConversationFilters {
+
+    search?: string;
+
+    status?: string;
+
+    page?: number;
+
+    limit?: number;
+
+}
+
+export interface Pagination {
+
+    total: number;
+
+    page: number;
+
+    limit: number;
+
+    totalPages: number;
+
+}
+
+export interface ConversationListResponse {
+
+    data: Conversation[];
+
+    pagination: Pagination;
+
+}
+
 class ConversationService {
 
-    // ======================================
-    // Get All Conversations
-    // ======================================
+  // ======================================
+// Get All Conversations
+// ======================================
 
-    async getConversations() {
-        const response = await api.get("/conversations");
-        return response.data;
-    }
+async getConversations(
+
+    filters?: ConversationFilters
+
+): Promise<ConversationListResponse> {
+
+    const response = await api.get(
+
+        "/conversations",
+
+        {
+
+            params: filters
+
+        }
+
+    );
+
+    return response.data;
+
+}
 
     // ======================================
     // Get Conversation Stats
@@ -93,6 +142,61 @@ class ConversationService {
 
         return response.data;
     }
+
+    // ======================================
+// Export Conversations
+// ======================================
+
+async exportConversations(
+
+    format: "csv" | "xlsx" | "pdf",
+
+    filters?: ConversationFilters
+
+) {
+
+    const response = await api.get(
+
+        "/export/conversations",
+
+        {
+
+            params: {
+
+                format,
+
+                ...filters
+
+            },
+
+            responseType: "blob"
+
+        }
+
+    );
+
+    const blob = new Blob([response.data]);
+
+    const url =
+        window.URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        `conversations.${format}`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+
+}
 }
 
 export default new ConversationService();

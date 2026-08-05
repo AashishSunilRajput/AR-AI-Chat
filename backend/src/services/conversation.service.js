@@ -126,21 +126,38 @@ async get(
 
 
 
+
 // ==========================================
-// Get All
+// Get All Conversations
 // ==========================================
 
-async getAll(user) {
+async getAll(
 
-    if (user.role === "SUPER_ADMIN") {
+    user,
 
-        return await conversationRepository.findAll();
+    filters = {}
+
+) {
+
+    if (
+
+        user.role === "SUPER_ADMIN"
+
+    ) {
+
+        return await conversationRepository.findAll(
+
+            filters
+
+        );
 
     }
 
     return await conversationRepository.findAllByOrganization(
 
-        user.organizationId
+        user.organizationId,
+
+        filters
 
     );
 

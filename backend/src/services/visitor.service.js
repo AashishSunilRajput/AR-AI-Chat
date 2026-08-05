@@ -68,19 +68,35 @@ class VisitorService {
 // Get All Visitors
 // ==========================================
 
-async getVisitors(user) {
+async getVisitors(
+    user,
+    filters = {}
+) {
 
-    if (user.role === "SUPER_ADMIN") {
 
-        return await visitorRepository.findAll();
+    if(user.role==="SUPER_ADMIN"){
+
+
+        return await visitorRepository.findAll(
+
+            null,
+
+            filters
+
+        );
+
 
     }
 
+
     return await visitorRepository.findAll(
 
-        user.organizationId
+        user.organizationId,
+
+        filters
 
     );
+
 
 }
 

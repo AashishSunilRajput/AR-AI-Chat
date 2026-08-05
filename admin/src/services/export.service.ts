@@ -154,6 +154,66 @@ class ExportService {
 
     }
 
+    // ==================================
+// Export Visitors
+// ==================================
+
+async exportVisitors(
+
+    format: "csv" | "xlsx" | "pdf",
+
+    filters?: {
+
+        search?: string;
+
+    }
+
+) {
+
+    const response = await api.get(
+
+        "/export/visitors",
+
+        {
+
+            params: {
+
+                format,
+
+                ...filters
+
+            },
+
+            responseType: "blob"
+
+        }
+
+    );
+
+    const blob =
+        new Blob([response.data]);
+
+    const url =
+        window.URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        `visitors.${format}`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+
+}
+
 
 }
 

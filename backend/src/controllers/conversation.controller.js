@@ -39,6 +39,8 @@ class ConversationController {
 
     
 
+
+
 // ==========================================
 // Get All Conversations
 // ==========================================
@@ -47,16 +49,35 @@ async getAll(req, res, next) {
 
     try {
 
+        const filters = {
+
+            search: req.query.search,
+
+            status: req.query.status,
+
+            page: req.query.page || 1,
+
+            limit: req.query.limit || 10
+
+        };
+
         const conversations =
             await conversationService.getAll(
-                req.user
+
+                req.user,
+
+                filters
+
             );
 
         return res.status(200).json({
 
             success: true,
 
-            data: conversations
+            data: conversations.data,
+
+            pagination:
+                conversations.pagination
 
         });
 

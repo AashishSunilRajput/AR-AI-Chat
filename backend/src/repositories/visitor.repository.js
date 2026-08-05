@@ -134,52 +134,155 @@ class VisitorRepository {
 // Get All Visitors
 // ==========================================
 
-async findAll(organizationId) {
+// ==========================================
+// Get All Visitors With Pagination
+// ==========================================
 
-    const where = organizationId
-        ? {
-            organizationId: Number(
-                organizationId
-            )
-        }
-        : {};
+async findAll(
+    organizationId,
+    filters = {}
+) {
 
-    return await prisma.visitor.findMany({
+    const {
 
-        where,
+        page = 1,
 
-        include: {
+        limit = 10,
 
-            chatbot: {
+        search
 
-                select: {
-                    id: true,
-                    name: true
+    } = filters;
+
+
+    const where = {};
+
+
+    if (organizationId) {
+
+        where.organizationId =
+            Number(organizationId);
+
+    }
+
+
+    if (search) {
+
+        where.OR = [
+
+            {
+                name:{
+                    contains:search,
+                    mode:"insensitive"
+                }
+            },
+
+            {
+                email:{
+                    contains:search,
+                    mode:"insensitive"
+                }
+            }
+
+        ];
+
+    }
+
+
+    const skip =
+        (Number(page)-1)
+        *
+        Number(limit);
+
+
+
+    const [
+        visitors,
+        total
+    ] = await Promise.all([
+
+
+        prisma.visitor.findMany({
+
+            where,
+
+            skip,
+
+            take:Number(limit),
+
+
+            include: {
+
+                chatbot: {
+
+                    select:{
+                        id:true,
+                        name:true
+                    }
+
+                },
+
+                _count: {
+
+                    select: {
+
+                        conversations:true,
+
+                        leads:true
+
+                    }
+
                 }
 
             },
 
-            _count: {
 
-                select: {
+            orderBy:{
 
-                    conversations: true,
-
-                    leads: true
-
-                }
+                createdAt:"desc"
 
             }
 
-        },
 
-        orderBy: {
+        }),
 
-            createdAt: "desc"
+
+
+        prisma.visitor.count({
+
+            where
+
+        })
+
+
+    ]);
+
+
+
+    return {
+
+        data: visitors,
+
+        pagination:{
+
+
+            total,
+
+
+            page:Number(page),
+
+
+            limit:Number(limit),
+
+
+            totalPages:
+                Math.ceil(
+                    total /
+                    Number(limit)
+                )
 
         }
 
-    });
+    };
 
 }
 

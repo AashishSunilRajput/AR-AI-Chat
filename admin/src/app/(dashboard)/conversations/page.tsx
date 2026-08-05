@@ -5,17 +5,22 @@ import { useEffect, useState } from "react";
 import conversationService, {
     Conversation,
     ConversationStats as ConversationStatsType,
+    Pagination,
 } from "@/services/conversation.service";
 
 import ConversationStats from "@/components/conversations/ConversationStats";
 import ConversationFilters from "@/components/conversations/ConversationFilters";
 import ConversationTable from "@/components/conversations/ConversationTable";
+import PaginationComponent from "@/components/common/Pagination";
+import ExportButton from "@/components/common/ExportButton";
 
 export default function ConversationsPage() {
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [conversations, setConversations] =
+        useState<Conversation[]>([]);
 
     const [stats, setStats] =
         useState<ConversationStatsType>({
@@ -25,7 +30,50 @@ export default function ConversationsPage() {
             today: 0,
         });
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] =
+        useState("");
+
+    const [page, setPage] =
+        useState(1);
+
+    const [pagination, setPagination] =
+        useState<Pagination>({
+            total: 0,
+            page: 1,
+            limit: 10,
+            totalPages: 1,
+        });
+        const [exportLoading, setExportLoading] =
+    useState(false);
+
+    const handleExport = async (
+    format: "csv" | "xlsx" | "pdf"
+) => {
+
+    try {
+
+        setExportLoading(true);
+
+        await conversationService.exportConversations(
+            format,
+            {
+                search
+            }
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Export failed");
+
+    } finally {
+
+        setExportLoading(false);
+
+    }
+
+};
 
     // ======================================
     // Load Data
@@ -38,11 +86,22 @@ export default function ConversationsPage() {
             setLoading(true);
 
             const [
+
                 conversationsResponse,
+
                 statsResponse,
+
             ] = await Promise.all([
 
-                conversationService.getConversations(),
+                conversationService.getConversations({
+
+                    search,
+
+                    page,
+
+                    limit: 10,
+
+                }),
 
                 conversationService.getStats(),
 
@@ -52,16 +111,22 @@ export default function ConversationsPage() {
                 conversationsResponse.data
             );
 
+            setPagination(
+                conversationsResponse.pagination
+            );
+
             setStats(
                 statsResponse.data
             );
 
         }
+
         catch (error) {
 
             console.error(error);
 
         }
+
         finally {
 
             setLoading(false);
@@ -74,72 +139,85 @@ export default function ConversationsPage() {
 
         loadData();
 
-    }, []);
+    }, [
 
-    // ======================================
-    // Search
-    // ======================================
+        search,
 
-    const filteredConversations =
-        conversations.filter((conversation) => {
+        page
 
-            const keyword =
-                search.toLowerCase();
-
-            return (
-
-                conversation.visitor?.name
-                    ?.toLowerCase()
-                    .includes(keyword)
-
-                ||
-
-                conversation.visitor?.email
-                    ?.toLowerCase()
-                    .includes(keyword)
-
-                ||
-
-                conversation.chatbot?.name
-                    ?.toLowerCase()
-                    .includes(keyword)
-
-            );
-
-        });
+    ]);
 
     return (
 
         <div className="space-y-6">
 
-            <div>
+            {/* Header */}
 
-                <h1 className="text-3xl font-bold">
+            <div className="flex items-center justify-between">
 
-                    Conversations
+    <div>
 
-                </h1>
+        <h1 className="text-3xl font-bold">
+            Conversations
+        </h1>
 
-                <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-slate-500">
+            Manage all visitor conversations
+        </p>
 
-                    Manage all visitor conversations
+    </div>
 
-                </p>
+    <ExportButton
+        onExport={handleExport}
+        loading={exportLoading}
+    />
 
-            </div>
+</div>
+
+            {/* Stats */}
 
             <ConversationStats
+
                 stats={stats}
+
             />
+
+            {/* Search */}
 
             <ConversationFilters
+
                 search={search}
-                onSearchChange={setSearch}
+
+                onSearchChange={(value) => {
+
+                    setSearch(value);
+
+                    setPage(1);
+
+                }}
+
             />
 
+            {/* Table */}
+
             <ConversationTable
+
                 loading={loading}
-                conversations={filteredConversations}
+
+                conversations={conversations}
+
+            />
+
+            {/* Pagination */}
+
+            <PaginationComponent
+
+                currentPage={pagination.page}
+
+                totalPages={pagination.totalPages}
+
+                onPageChange={setPage}
+
             />
 
         </div>

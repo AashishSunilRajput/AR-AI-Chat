@@ -372,16 +372,14 @@ setStats(
 
 <Pagination
 
-    page={pagination.page}
-
-    totalPages={pagination.totalPages}
-
-    onPageChange={(newPage)=>{
-
-        setPage(newPage);
-
-    }}
-
+    
+    
+                    currentPage={pagination.page}
+    
+                    totalPages={pagination.totalPages}
+    
+                    onPageChange={setPage}
+    
 />
 
         </div>

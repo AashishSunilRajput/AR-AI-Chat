@@ -127,30 +127,58 @@ class VisitorController {
 // Get All Visitors
 // ==========================================
 
-async getVisitors(req, res, next) {
+async getVisitors(req,res,next){
 
-    try {
+try{
 
-        const visitors =
-            await visitorService.getVisitors(
-                req.user
-            );
 
-        return res.json({
+    const filters={
 
-            success: true,
 
-            data: visitors
+        search:req.query.search,
 
-        });
 
-    }
+        page:req.query.page || 1,
 
-    catch (error) {
 
-        next(error);
+        limit:req.query.limit || 10
 
-    }
+
+    };
+
+
+
+    const visitors =
+
+        await visitorService.getVisitors(
+
+            req.user,
+
+            filters
+
+        );
+
+
+
+    return res.json({
+
+        success:true,
+
+        data:visitors.data,
+
+        pagination:
+            visitors.pagination
+
+    });
+
+
+}
+catch(error){
+
+    next(error);
+
+}
+
 
 }
 
@@ -207,6 +235,182 @@ async getVisitor(req, res, next) {
             data: visitor
 
         });
+
+    }
+
+    catch (error) {
+
+        next(error);
+
+    }
+
+}
+
+// ==========================================
+// Export Visitors
+// ==========================================
+
+async exportVisitors(req, res, next) {
+
+    try {
+
+        const format =
+            (req.query.format || "csv")
+            .toLowerCase();
+
+        const filters = {
+
+            search: req.query.search
+
+        };
+
+        const visitors =
+            await visitorService.getVisitors(
+
+                req.user,
+
+                filters
+
+            );
+
+        const data = visitors.data.map(visitor => ({
+
+            id: visitor.id,
+
+            name: visitor.name || "",
+
+            email: visitor.email || "",
+
+            chatbot:
+                visitor.chatbot?.name || "",
+
+            conversations:
+                visitor._count?.conversations || 0,
+
+            leads:
+                visitor._count?.leads || 0,
+
+            ipAddress:
+                visitor.ipAddress || "",
+
+            lastSeen:
+                visitor.lastSeenAt
+                    ? new Date(
+                        visitor.lastSeenAt
+                    ).toLocaleString()
+                    : "",
+
+            createdAt:
+                new Date(
+                    visitor.createdAt
+                ).toLocaleString()
+
+        }));
+
+        const headers = [
+
+            {
+                id: "id",
+                title: "ID"
+            },
+
+            {
+                id: "name",
+                title: "Name"
+            },
+
+            {
+                id: "email",
+                title: "Email"
+            },
+
+            {
+                id: "chatbot",
+                title: "Chatbot"
+            },
+
+            {
+                id: "conversations",
+                title: "Conversations"
+            },
+
+            {
+                id: "leads",
+                title: "Leads"
+            },
+
+            {
+                id: "ipAddress",
+                title: "IP Address"
+            },
+
+            {
+                id: "lastSeen",
+                title: "Last Seen"
+            },
+
+            {
+                id: "createdAt",
+                title: "Created At"
+            }
+
+        ];
+
+        switch (format) {
+
+            case "csv":
+
+                return await exportService.exportCSV(
+
+                    res,
+
+                    "Visitors",
+
+                    headers,
+
+                    data
+
+                );
+
+            case "xlsx":
+
+                return await exportService.exportExcel(
+
+                    res,
+
+                    "Visitors",
+
+                    headers,
+
+                    data
+
+                );
+
+            case "pdf":
+
+                return await exportService.exportPDF(
+
+                    res,
+
+                    "Visitors",
+
+                    headers,
+
+                    data
+
+                );
+
+            default:
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message: "Invalid format"
+
+                });
+
+        }
 
     }
 

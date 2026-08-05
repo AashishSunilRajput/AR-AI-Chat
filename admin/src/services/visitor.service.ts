@@ -75,7 +75,26 @@ export interface Visitor {
     }>;
 
 }
+export interface VisitorPagination {
 
+    total:number;
+
+    page:number;
+
+    limit:number;
+
+    totalPages:number;
+
+}
+
+
+export interface VisitorListResponse {
+
+    data:Visitor[];
+
+    pagination:VisitorPagination;
+
+}
 export interface VisitorStats {
 
     total: number;
@@ -85,6 +104,11 @@ export interface VisitorStats {
     today: number;
 
 }
+export interface VisitorFilters {
+
+    search?: string;
+
+}
 
 class VisitorService {
 
@@ -92,14 +116,35 @@ class VisitorService {
     // Get Visitors
     // ===============================
 
-    async getVisitors() {
+   async getVisitors(
+    params?:{
 
-        const response =
-            await api.get("/visitors");
+        search?:string;
 
-        return response.data;
+        page?:number;
+
+        limit?:number;
 
     }
+) {
+
+
+const response =
+await api.get(
+
+    "/visitors",
+
+    {
+        params
+    }
+
+);
+
+
+return response.data;
+
+
+}
 
     // ===============================
     // Get Visitor

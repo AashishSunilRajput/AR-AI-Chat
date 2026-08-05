@@ -1,88 +1,89 @@
 "use client";
 
-
 interface Props {
 
-    page:number;
+    currentPage: number;
 
-    totalPages:number;
+    totalPages: number;
 
-    onPageChange:(page:number)=>void;
+    onPageChange: (page: number) => void;
 
 }
 
-
 export default function Pagination({
 
-    page,
+    currentPage,
 
     totalPages,
 
     onPageChange
 
-}:Props){
+}: Props) {
 
+    if (totalPages <= 1) {
 
-return (
+        return null;
 
-<div className="flex items-center justify-center gap-3 mt-6">
+    }
 
+    return (
 
-<button
+        <div className="flex items-center justify-center gap-4">
 
-disabled={page===1}
+            <button
 
-onClick={()=>onPageChange(page-1)}
+                disabled={currentPage === 1}
 
-className="
-px-4
-py-2
-border
-rounded-lg
-disabled:opacity-50
-"
+                onClick={() =>
+                    onPageChange(currentPage - 1)
+                }
 
->
+                className="
+                    px-4
+                    py-2
+                    border
+                    rounded-lg
+                    disabled:opacity-50
+                "
 
-Previous
+            >
 
-</button>
+                Previous
 
+            </button>
 
+            <span className="font-medium">
 
-<span className="px-4">
+                Page {currentPage} of {totalPages}
 
-{page} / {totalPages}
+            </span>
 
-</span>
+            <button
 
+                disabled={
+                    currentPage === totalPages
+                }
 
+                onClick={() =>
+                    onPageChange(currentPage + 1)
+                }
 
-<button
+                className="
+                    px-4
+                    py-2
+                    border
+                    rounded-lg
+                    disabled:opacity-50
+                "
 
-disabled={page===totalPages}
+            >
 
-onClick={()=>onPageChange(page+1)}
+                Next
 
-className="
-px-4
-py-2
-border
-rounded-lg
-disabled:opacity-50
-"
+            </button>
 
->
+        </div>
 
-Next
-
-</button>
-
-
-
-</div>
-
-)
-
+    );
 
 }

@@ -19,5 +19,20 @@ router.get(
     exportController.exportLeads
 
 );
+router.get(
+
+    "/visitors",
+
+    authenticate,
+
+    exportController.exportVisitors
+
+);
+
+router.get(
+    "/conversations",
+    authenticate,
+    exportController.exportConversations
+);
 
 export default router;
