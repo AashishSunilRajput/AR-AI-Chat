@@ -11,6 +11,8 @@ import {
 
 interface Props {
 
+    title?: string;
+
     onExport: (
         format: "csv" | "xlsx" | "pdf"
     ) => void | Promise<void>;
@@ -20,6 +22,8 @@ interface Props {
 }
 
 export default function ExportButton({
+
+    title = "Export",
 
     onExport,
 
@@ -127,7 +131,7 @@ export default function ExportButton({
 
                 <Download size={18} />
 
-                Export
+                 {title}
 
                 <ChevronDown size={16} />
 

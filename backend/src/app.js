@@ -37,6 +37,7 @@ import settingRoutes from "./routes/setting.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 
 import exportRoutes from "./routes/export.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 
 
 const app = express();
@@ -325,6 +326,15 @@ app.use(
 app.use(
     "/api/export",
     exportRoutes
+);
+
+
+// ==========================================
+// Notifications
+// ==========================================
+app.use(
+    "/api/notifications",
+    notificationRoutes
 );
 
 

@@ -92,6 +92,29 @@ enum DocumentSourceType {
   TEXT
   FAQ
 }
+
+enum NotificationType {
+
+  NEW_LEAD
+
+  NEW_VISITOR
+
+  NEW_CONVERSATION
+
+  KNOWLEDGE_IMPORTED
+
+  KNOWLEDGE_FAILED
+
+  CHATBOT_UPDATED
+
+  CHATBOT_DISABLED
+
+  USER_CREATED
+
+  ORGANIZATION_CREATED
+
+  SYSTEM
+}
 //
 // ORGANIZATION
 //
@@ -113,6 +136,7 @@ model Organization {
   knowledgeBases KnowledgeBase[]
   visitors       Visitor[]
   leads          Lead[]
+    notifications Notification[]
   settings       OrganizationSetting?
 
   createdAt DateTime @default(now())
@@ -139,7 +163,7 @@ model User {
 
   refreshTokens RefreshToken[]
   sessions      Session[]
-
+  notifications Notification[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -514,4 +538,26 @@ model Lead {
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
+}
+model Notification {
+
+  id              Int      @id @default(autoincrement())
+
+  organizationId  Int?
+  organization    Organization? @relation(fields: [organizationId], references: [id])
+
+  userId          Int?
+  user            User? @relation(fields: [userId], references: [id])
+
+  title           String
+  message         String
+
+  type            NotificationType
+
+  entityType      String?
+  entityId        Int?
+
+  isRead          Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
 }
