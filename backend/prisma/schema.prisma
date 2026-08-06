@@ -115,6 +115,16 @@ enum NotificationType {
 
   SYSTEM
 }
+
+enum NotificationEntityType {
+  LEAD
+  CONVERSATION
+  VISITOR
+  CHATBOT
+  KNOWLEDGE_DOCUMENT
+  USER
+  ORGANIZATION
+}
 //
 // ORGANIZATION
 //
@@ -554,10 +564,11 @@ model Notification {
 
   type            NotificationType
 
-  entityType      String?
+  entityType NotificationEntityType?
   entityId        Int?
 
   isRead          Boolean  @default(false)
 
   createdAt       DateTime @default(now())
+  readAt DateTime?
 }

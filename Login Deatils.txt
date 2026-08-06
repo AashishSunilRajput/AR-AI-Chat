@@ -1,0 +1,29 @@
+Super Admin
+{
+    "email": "admin@araichat.com",
+    "password": "Admin@123"
+}
+
+Orgenization 1
+
+{
+  "email": "admin@artech.com",
+  "password": "123456"
+}
+
+Orgenization 2
+{
+  "email": "testadmin@gmail.com",
+  "password": "123456"
+}
+
+
+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
+
+https://platform.openai.com/settings/organization/billing/overview
+
+
+gpt-5-mini
+
+
+aritsolutions.tech@gmail.com

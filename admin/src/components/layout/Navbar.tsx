@@ -17,6 +17,7 @@ DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import authService from "@/services/auth.service";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 
 interface NavbarProps {
@@ -166,11 +167,7 @@ export default function Navbar({
             <div className="flex items-center gap-4">
 
 
-                <button className="rounded-xl p-2 hover:bg-slate-100">
-
-                    <Bell size={20}/>
-
-                </button>
+               <NotificationBell />
 
 
 

@@ -2,62 +2,173 @@ import prisma from "../config/prisma.js";
 
 class NotificationRepository {
 
-    // ==========================================
-    // Create Notification
-    // ==========================================
 
-    async create(data) {
+// ==========================================
+// Create Notification
+// ==========================================
 
-        return await prisma.notification.create({
+async create(data) {
 
-            data,
+    return await prisma.notification.create({
 
-            include: {
+        data,
 
-                organization: {
+        include: {
 
-                    select: {
+            organization: {
 
-                        id: true,
-                        name: true
+                select: {
 
-                    }
-
-                },
-
-                user: {
-
-                    select: {
-
-                        id: true,
-                       
-                       name: true,
-                        email: true
-
-                    }
+                    id: true,
+                    name: true
 
                 }
-
-            }
-
-        });
-
-    }
-
-    // ==========================================
-    // Get Notification By Id
-    // ==========================================
-
-    async findById(id) {
-
-        return await prisma.notification.findUnique({
-
-            where: {
-
-                id: Number(id)
 
             },
 
+            user: {
+
+                select: {
+
+                    id: true,
+                    name: true,
+                    email: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+// ==========================================
+// Get Notification By Id
+// ==========================================
+
+async findById(id) {
+
+    return await prisma.notification.findUnique({
+
+        where: {
+
+            id: Number(id)
+
+        },
+
+        include: {
+
+            organization: {
+
+                select: {
+
+                    id: true,
+                    name: true
+
+                }
+
+            },
+
+            user: {
+
+                select: {
+
+                    id: true,
+                    name: true,
+                    email: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+
+// ==========================================
+// Get All Notifications (SUPER ADMIN)
+// ==========================================
+
+async findAll(filters = {}) {
+
+
+    const {
+
+        page = 1,
+
+        limit = 10,
+
+        type,
+
+        isRead
+
+    } = filters;
+
+
+    const where = {};
+
+
+
+    // Type Filter
+
+    if (
+        type &&
+        type !== "ALL"
+    ) {
+
+        where.type = type;
+
+    }
+
+
+
+    // Read Filter
+
+    if (
+        isRead &&
+        isRead !== "ALL"
+    ) {
+
+        where.isRead =
+            isRead === "true";
+
+    }
+
+
+
+    const skip =
+
+        (Number(page) - 1) *
+
+        Number(limit);
+
+
+
+    const [
+
+        notifications,
+
+        total
+
+    ] = await Promise.all([
+
+
+
+        prisma.notification.findMany({
+
+            where,
+
+            skip,
+
+            take: Number(limit),
+
+
             include: {
 
                 organization: {
@@ -76,130 +187,57 @@ class NotificationRepository {
                     select: {
 
                         id: true,
-                       name: true,
-                        email: true
+                        name: true
 
                     }
 
                 }
+
+            },
+
+
+            orderBy: {
+
+                createdAt: "desc"
 
             }
 
-        });
+        }),
 
-    }
 
-    // ==========================================
-    // Get All Notifications
-    // ==========================================
 
-    async findAll(filters = {}) {
+        prisma.notification.count({
 
-        const {
+            where
 
-            page = 1,
+        })
 
-            limit = 10,
 
-            type,
+    ]);
 
-            isRead
 
-        } = filters;
 
-        const where = {};
+    return {
 
-        if (type && type !== "ALL") {
 
-            where.type = type;
+        data: notifications,
 
-        }
 
-        if (isRead !== undefined) {
+        pagination: {
 
-            where.isRead =
 
-                isRead === "true";
+            total,
 
-        }
 
-        const skip =
+            page: Number(page),
 
-            (Number(page) - 1) *
 
-            Number(limit);
+            limit: Number(limit),
 
-        const [
 
-            notifications,
+            totalPages:
 
-            total
-
-        ] = await Promise.all([
-
-            prisma.notification.findMany({
-
-                where,
-
-                skip,
-
-                take: Number(limit),
-
-                include: {
-
-                    organization: {
-
-                        select: {
-
-                            id: true,
-                            name: true
-
-                        }
-
-                    },
-
-                    user: {
-
-                        select: {
-
-                            id: true,
-                           name: true
-
-                        }
-
-                    }
-
-                },
-
-                orderBy: {
-
-                    createdAt: "desc"
-
-                }
-
-            }),
-
-            prisma.notification.count({
-
-                where
-
-            })
-
-        ]);
-
-        return {
-
-            data: notifications,
-
-            pagination: {
-
-                total,
-
-                page: Number(page),
-
-                limit: Number(limit),
-
-                totalPages: Math.ceil(
+                Math.ceil(
 
                     total /
 
@@ -207,304 +245,437 @@ class NotificationRepository {
 
                 )
 
-            }
+        }
 
-        };
+    };
 
-    }
+}
 
-    // ==========================================
-    // Get Organization Notifications
-    // ==========================================
 
-    async findByOrganization(
 
-        organizationId,
+// ==========================================
+// Get Organization Notifications
+// ==========================================
 
-        filters = {}
+async findByOrganization(
+
+    organizationId,
+
+    filters = {}
+
+) {
+
+
+    const {
+
+        page = 1,
+
+        limit = 10,
+
+        type,
+
+        isRead
+
+    } = filters;
+
+
+
+    const where = {
+
+
+        organizationId:
+
+            Number(organizationId)
+
+    };
+
+
+
+
+    // Type Filter
+
+    if (
+
+        type &&
+
+        type !== "ALL"
 
     ) {
 
-        const {
+        where.type = type;
 
-            page = 1,
+    }
 
-            limit = 10,
 
-            type,
 
-            isRead
 
-        } = filters;
+    // Read Filter
 
-        const where = {
+    if (
+
+        isRead &&
+
+        isRead !== "ALL"
+
+    ) {
+
+        where.isRead =
+
+            isRead === "true";
+
+    }
+
+
+
+
+    const skip =
+
+        (Number(page) - 1) *
+
+        Number(limit);
+
+
+
+    const [
+
+        notifications,
+
+        total
+
+    ] = await Promise.all([
+
+
+
+        prisma.notification.findMany({
+
+
+            where,
+
+
+            skip,
+
+
+            take: Number(limit),
+
+
+
+            include: {
+
+
+                organization: {
+
+
+                    select: {
+
+
+                        id: true,
+
+                        name: true
+
+
+                    }
+
+                },
+
+
+                user: {
+
+
+                    select: {
+
+
+                        id: true,
+
+                        name: true
+
+
+                    }
+
+                }
+
+
+            },
+
+
+
+            orderBy: {
+
+
+                createdAt: "desc"
+
+
+            }
+
+
+        }),
+
+
+
+        prisma.notification.count({
+
+
+            where
+
+
+        })
+
+
+    ]);
+
+
+
+    return {
+
+
+        data: notifications,
+
+
+        pagination: {
+
+
+            total,
+
+
+            page: Number(page),
+
+
+            limit: Number(limit),
+
+
+            totalPages:
+
+                Math.ceil(
+
+                    total /
+
+                    Number(limit)
+
+                )
+
+        }
+
+    };
+
+}
+
+
+
+// ==========================================
+// Mark As Read
+// ==========================================
+
+async markAsRead(id) {
+
+
+    return await prisma.notification.update({
+
+
+        where: {
+
+
+            id: Number(id)
+
+
+        },
+
+
+        data: {
+
+
+            isRead: true,
+
+
+            readAt: new Date()
+
+
+        }
+
+
+    });
+
+
+}
+
+
+
+// ==========================================
+// Mark All As Read
+// ==========================================
+
+async markAllAsRead(
+
+    organizationId = null
+
+) {
+
+
+    const where = organizationId
+
+        ? {
+
+            organizationId:
+
+                Number(organizationId),
+
+            isRead: false
+
+        }
+
+        : {
+
+
+            isRead: false
+
+        };
+
+
+
+    return await prisma.notification.updateMany({
+
+
+        where,
+
+
+        data: {
+
+
+            isRead: true,
+
+
+            readAt: new Date()
+
+
+        }
+
+
+    });
+
+
+}
+
+
+
+// ==========================================
+// Delete Notification
+// ==========================================
+
+async delete(id) {
+
+
+    return await prisma.notification.delete({
+
+
+        where: {
+
+
+            id: Number(id)
+
+
+        }
+
+
+    });
+
+
+}
+
+
+
+// ==========================================
+// Notification Stats
+// ==========================================
+
+async getStats(
+
+    organizationId = null
+
+) {
+
+
+    const where = organizationId
+
+        ? {
 
             organizationId:
 
                 Number(organizationId)
 
-        };
-
-        if (type && type !== "ALL") {
-
-            where.type = type;
-
         }
 
-        if (isRead !== undefined) {
+        : {};
 
-            where.isRead =
 
-                isRead === "true";
 
-        }
+    const [
 
-        const skip =
+        total,
 
-            (Number(page) - 1) *
+        unread,
 
-            Number(limit);
+        read
 
-        const [
+    ] = await Promise.all([
 
-            notifications,
 
-            total
 
-        ] = await Promise.all([
+        prisma.notification.count({
 
-            prisma.notification.findMany({
+            where
 
-                where,
+        }),
 
-                skip,
 
-                take: Number(limit),
 
-                include: {
-
-                    organization: {
-
-                        select: {
-
-                            id: true,
-                            name: true
-
-                        }
-
-                    },
-
-                    user: {
-
-                        select: {
-
-                            id: true,
-                           name: true
-
-                        }
-
-                    }
-
-                },
-
-                orderBy: {
-
-                    createdAt: "desc"
-
-                }
-
-            }),
-
-            prisma.notification.count({
-
-                where
-
-            })
-
-        ]);
-
-        return {
-
-            data: notifications,
-
-            pagination: {
-
-                total,
-
-                page: Number(page),
-
-                limit: Number(limit),
-
-                totalPages: Math.ceil(
-
-                    total /
-
-                    Number(limit)
-
-                )
-
-            }
-
-        };
-
-    }
-
-    // ==========================================
-    // Mark As Read
-    // ==========================================
-
-    async markAsRead(id) {
-
-        return await prisma.notification.update({
+        prisma.notification.count({
 
             where: {
 
-                id: Number(id)
+                ...where,
 
-            },
-
-            data: {
-
-                isRead: true,
-
-                readAt: new Date()
+                isRead: false
 
             }
 
-        });
+        }),
 
-    }
 
-    // ==========================================
-    // Mark All As Read
-    // ==========================================
 
-    async markAllAsRead(organizationId = null) {
-
-        const where = organizationId
-
-            ? {
-
-                  organizationId:
-
-                      Number(organizationId),
-
-                  isRead: false
-
-              }
-
-            : {
-
-                  isRead: false
-
-              };
-
-        return await prisma.notification.updateMany({
-
-            where,
-
-            data: {
-
-                isRead: true,
-
-                readAt: new Date()
-
-            }
-
-        });
-
-    }
-
-    // ==========================================
-    // Delete Notification
-    // ==========================================
-
-    async delete(id) {
-
-        return await prisma.notification.delete({
+        prisma.notification.count({
 
             where: {
 
-                id: Number(id)
+                ...where,
+
+                isRead: true
 
             }
 
-        });
+        })
 
-    }
 
-    // ==========================================
-    // Notification Stats
-    // ==========================================
+    ]);
 
-    async getStats(organizationId = null) {
 
-        const where = organizationId
 
-            ? {
+    return {
 
-                  organizationId:
 
-                      Number(organizationId)
+        total,
 
-              }
 
-            : {};
+        unread,
 
-        const [
 
-            total,
+        read
 
-            unread,
 
-            read
+    };
 
-        ] = await Promise.all([
-
-            prisma.notification.count({
-
-                where
-
-            }),
-
-            prisma.notification.count({
-
-                where: {
-
-                    ...where,
-
-                    isRead: false
-
-                }
-
-            }),
-
-            prisma.notification.count({
-
-                where: {
-
-                    ...where,
-
-                    isRead: true
-
-                }
-
-            })
-
-        ]);
-
-        return {
-
-            total,
-
-            unread,
-
-            read
-
-        };
-
-    }
 
 }
+
+
+}
+
 
 export default new NotificationRepository();

@@ -4,6 +4,7 @@ import NotificationTypeBadge from "./NotificationTypeBadge";
 import NotificationActions from "./NotificationActions";
 
 import { Notification } from "@/services/notification.service";
+import Link from "next/link";
 
 interface Props {
 
@@ -100,12 +101,16 @@ export default function NotificationTable({
                             Date
 
                         </th>
+                        <th className="px-6 py-3 text-center text-sm font-semibold">
+    Open
+</th>
 
                         <th className="px-6 py-3 text-right text-sm font-semibold">
 
                             Actions
 
                         </th>
+                        
 
                     </tr>
 
@@ -212,20 +217,85 @@ export default function NotificationTable({
                                     }
 
                                 </td>
+                             <td className="px-6 py-4 text-center">
 
-                                {/* Actions */}
+    {notification.entityType === "LEAD" && (
+        <Link
+            href={`/leads/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                <td className="px-6 py-4 text-right">
+    {notification.entityType === "CONVERSATION" && (
+        <Link
+            href={`/conversations/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                    <NotificationActions
+    {notification.entityType === "VISITOR" && (
+        <Link
+            href={`/visitors/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                        notification={notification}
+    {notification.entityType === "CHATBOT" && (
+        <Link
+            href={`/chatbots/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                        onRefresh={onRefresh}
+    {notification.entityType === "KNOWLEDGE" && (
+        <Link
+            href={`/knowledge-documents/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                    />
+    {notification.entityType === "USER" && (
+        <Link
+            href={`/users/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
 
-                                </td>
+    {notification.entityType === "ORGANIZATION" && (
+        <Link
+            href={`/organizations/${notification.entityId}`}
+            className="text-blue-600 hover:underline"
+        >
+            Open
+        </Link>
+    )}
+
+    {!notification.entityType && (
+        <span className="text-slate-400">-</span>
+    )}
+
+</td>
+
+<td className="px-6 py-4 text-right">
+    <NotificationActions
+        notification={notification}
+        onRefresh={onRefresh}
+    />
+</td>
+
+                               
 
                             </tr>
 

@@ -1,5 +1,7 @@
 import leadRepository from "../repositories/lead.repository.js";
 import visitorRepository from "../repositories/visitor.repository.js";
+import notificationService from "./notification.service.js";
+import conversationRepository from "../repositories/conversation.repository.js";
 
 class LeadService {
 
@@ -9,66 +11,77 @@ class LeadService {
 
     async createLead(data) {
 
-    console.log("LEAD SERVICE DATA:", data);
+   // ==========================================
+// Create Lead
+// ==========================================
 
+console.log("LEAD SERVICE DATA:", data);
 
-    const lead = await leadRepository.create(data);
+const lead = await leadRepository.create(data);
 
+console.log("LEAD CREATED:", lead);
 
-    console.log("LEAD CREATED:", lead);
+// ==========================================
+// Create Notification
+// ==========================================
 
+try {
 
-    if (data.visitorId) {
+    console.log("Lead ConversationId:", lead.conversationId);
 
-        console.log(
-            "VISITOR UPDATE START:",
-            data.visitorId
-        );
+    if (lead.conversationId) {
 
+        const conversation =
+            await conversationRepository.findById(
+                lead.conversationId
+            );
 
-        const updateData = {};
+        console.log("Conversation:", conversation);
 
+        if (conversation?.chatbot) {
 
-        if (data.name) {
+            const notification =
+                await notificationService.create({
 
-            updateData.name = data.name;
+                    title: "New Lead",
 
-        }
+                    message:
+                        `${lead.name || "Anonymous"} submitted a new lead.`,
 
+                    type: "NEW_LEAD",
 
-        if (data.email) {
+                    organizationId:
+                        conversation.chatbot.organizationId,
+                           entityType: "LEAD",
+                     entityId: lead.id
 
-            updateData.email = data.email;
-
-        }
-
-
-        console.log(
-            "VISITOR UPDATE DATA:",
-            updateData
-        );
-
-
-        if (Object.keys(updateData).length > 0) {
-
-            const visitor =
-                await visitorRepository.update(
-                    data.visitorId,
-                    updateData
-                );
-
+                });
 
             console.log(
-                "VISITOR UPDATED:",
-                visitor
+                "Notification Created:",
+                notification
             );
 
         }
 
+    } else {
+
+        console.log(
+            "ConversationId not found."
+        );
+
     }
 
+}
 
-    return lead;
+catch (error) {
+
+    console.error(
+        "Notification Error:",
+        error
+    );
+
+}
 
 }
  // ==========================================

@@ -1,27 +1,78 @@
 import api from "./api";
 
 export interface Notification {
+
     id: number;
 
-    organizationId?: number | null;
+    organizationId: number | null;
 
-    userId?: number | null;
+    userId: number | null;
 
     title: string;
 
     message: string;
 
     type:
-        | "INFO"
-        | "SUCCESS"
-        | "WARNING"
-        | "ERROR";
+        | "NEW_LEAD"
+        | "NEW_VISITOR"
+        | "NEW_CONVERSATION"
+        | "KNOWLEDGE_IMPORTED"
+        | "KNOWLEDGE_FAILED"
+        | "CHATBOT_UPDATED"
+        | "CHATBOT_DISABLED"
+        | "USER_CREATED"
+        | "ORGANIZATION_CREATED"
+        | "SYSTEM";
+
+    entityType?:
+        | "LEAD"
+        | "CONVERSATION"
+        | "VISITOR"
+        | "KNOWLEDGE"
+        | "CHATBOT"
+        | "USER"
+        | "ORGANIZATION"
+        | "SYSTEM"
+        | null;
+
+    entityId?: number | null;
 
     isRead: boolean;
 
     createdAt: string;
 
-    updatedAt: string;
+    organization?: {
+
+        id: number;
+
+        name: string;
+
+    };
+
+    user?: {
+
+        id: number;
+
+        name: string;
+
+        email: string;
+
+    } | null;
+
+}
+
+export interface NotificationFilters {
+
+    page?: number;
+
+    limit?: number;
+
+    search?: string;
+
+    type?: string;
+
+    isRead?: "ALL" | "true" | "false";
+
 }
 
 export interface NotificationStats {
@@ -30,12 +81,7 @@ export interface NotificationStats {
     read: number;
 }
 
-export interface NotificationFilters {
-    page?: number;
-    limit?: number;
-    search?: string;
-    isRead?: boolean;
-}
+
 
 export interface Pagination {
     total: number;
@@ -51,6 +97,7 @@ export interface NotificationListResponse {
 
 class NotificationService {
 
+
     // ======================================
     // Get Notifications
     // ======================================
@@ -58,6 +105,13 @@ class NotificationService {
     async getNotifications(
         filters?: NotificationFilters
     ): Promise<NotificationListResponse> {
+
+
+        console.log(
+            "FILTERS:",
+            filters
+        );
+
 
         const response =
             await api.get(
@@ -67,8 +121,12 @@ class NotificationService {
                 }
             );
 
+
         return response.data;
+
     }
+
+
 
     // ======================================
     // Notification Stats
@@ -79,27 +137,37 @@ class NotificationService {
         data: NotificationStats;
     }> {
 
+
         const response =
             await api.get(
                 "/notifications/stats"
             );
 
+
         return response.data;
+
     }
+
+
 
     // ======================================
     // Mark As Read
     // ======================================
 
-    async markAsRead(id: number) {
+    async markAsRead(id:number) {
+
 
         const response =
             await api.patch(
                 `/notifications/${id}/read`
             );
 
+
         return response.data;
+
     }
+
+
 
     // ======================================
     // Mark All As Read
@@ -107,29 +175,39 @@ class NotificationService {
 
     async markAllAsRead() {
 
+
         const response =
             await api.patch(
                 "/notifications/read-all"
             );
 
+
         return response.data;
+
     }
+
+
 
     // ======================================
     // Delete Notification
     // ======================================
 
-    async deleteNotification(id: number) {
+    async deleteNotification(id:number) {
+
 
         const response =
             await api.delete(
                 `/notifications/${id}`
             );
 
+
         return response.data;
+
     }
 
-    
-}
+
+} // <-- ye class closing bracket hai
+
 
 export default new NotificationService();
+

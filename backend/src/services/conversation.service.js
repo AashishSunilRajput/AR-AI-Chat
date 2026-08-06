@@ -1,42 +1,82 @@
 import conversationRepository from "../repositories/conversation.repository.js";
 
+import notificationService from "./notification.service.js";
+
 class ConversationService {
 
-    // ==========================================
-    // Create / Get Active Conversation
-    // ==========================================
+     // ==========================================
+// Create / Get Active Conversation
+// ==========================================
 
-    async create(visitor) {
+async create(visitor) {
 
-        let conversation =
-            await conversationRepository.findActive(
+    let conversation =
+        await conversationRepository.findActive(
+            visitor.id,
+            visitor.chatbotId
+        );
 
-                visitor.id,
-
-                visitor.chatbotId
-
-            );
-
-        if (conversation) {
-
-            return conversation;
-
-        }
-
-        conversation =
-            await conversationRepository.create({
-
-                visitorId: visitor.id,
-
-                chatbotId: visitor.chatbotId,
-
-                status: "ACTIVE"
-
-            });
-
+    if (conversation) {
         return conversation;
+    }
+
+    conversation =
+        await conversationRepository.create({
+
+            visitorId: visitor.id,
+
+            chatbotId: visitor.chatbotId,
+
+            status: "ACTIVE"
+
+        });
+
+    const fullConversation =
+        await conversationRepository.findById(
+            conversation.id
+        );
+
+    // ==========================================
+    // Create Notification
+    // ==========================================
+
+    try {
+
+        await notificationService.create({
+
+            title: "New Conversation",
+
+            message: "A visitor started a new conversation.",
+
+            type: "NEW_CONVERSATION",
+
+            organizationId:
+                fullConversation.chatbot.organizationId,
+
+            entityType: "CONVERSATION",
+
+            entityId: conversation.id
+
+        });
+
+        console.log(
+            "Conversation Notification Created"
+        );
 
     }
+
+    catch (error) {
+
+        console.error(
+            "Conversation Notification Error:",
+            error
+        );
+
+    }
+
+    return conversation;
+
+}
 
 // ==========================================
 // Get By Id

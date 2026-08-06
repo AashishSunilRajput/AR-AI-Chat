@@ -1,17 +1,23 @@
-import mockAIService from "./mock-ai.service.js";
+import openAIService from "./openai.service.js";
+
 
 class AIService {
 
+
     async generateReply(message) {
 
-        return await mockAIService.generateReply(
+
+        return await openAIService.generateReply({
 
             message
 
-        );
+        });
+
 
     }
 
+
 }
+
 
 export default new AIService();

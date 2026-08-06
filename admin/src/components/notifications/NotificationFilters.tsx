@@ -8,13 +8,13 @@ interface Props {
 
     type: string;
 
-    isRead: string;
+    isRead: "ALL" | "true" | "false";
 
     onSearchChange: (value: string) => void;
 
     onTypeChange: (value: string) => void;
 
-    onReadChange: (value: string) => void;
+    onReadChange: (value: "ALL" | "true" | "false") => void;
 
 }
 
@@ -49,13 +49,7 @@ export default function NotificationFilters({
                     value={search}
 
                     onChange={(e) =>
-
-                        onSearchChange(
-
-                            e.target.value
-
-                        )
-
+                        onSearchChange(e.target.value)
                     }
 
                     placeholder="Search notifications..."
@@ -71,48 +65,34 @@ export default function NotificationFilters({
                     value={type}
 
                     onChange={(e) =>
-
-                        onTypeChange(
-
-                            e.target.value
-
-                        )
-
+                        onTypeChange(e.target.value)
                     }
 
                     className="rounded-lg border px-4 py-2"
 
                 >
 
-                    <option value="ALL">
+                    <option value="ALL">All Types</option>
 
-                        All Types
+                    <option value="NEW_LEAD">New Lead</option>
 
-                    </option>
+                    <option value="NEW_VISITOR">New Visitor</option>
 
-                    <option value="INFO">
+                    <option value="NEW_CONVERSATION">New Conversation</option>
 
-                        Info
+                    <option value="KNOWLEDGE_IMPORTED">Knowledge Imported</option>
 
-                    </option>
+                    <option value="KNOWLEDGE_FAILED">Knowledge Failed</option>
 
-                    <option value="SUCCESS">
+                    <option value="CHATBOT_UPDATED">Chatbot Updated</option>
 
-                        Success
+                    <option value="CHATBOT_DISABLED">Chatbot Disabled</option>
 
-                    </option>
+                    <option value="USER_CREATED">User Created</option>
 
-                    <option value="WARNING">
+                    <option value="ORGANIZATION_CREATED">Organization Created</option>
 
-                        Warning
-
-                    </option>
-
-                    <option value="ERROR">
-
-                        Error
-
-                    </option>
+                    <option value="SYSTEM">System</option>
 
                 </select>
 
@@ -123,36 +103,20 @@ export default function NotificationFilters({
                     value={isRead}
 
                     onChange={(e) =>
-
                         onReadChange(
-
-                            e.target.value
-
+                            e.target.value as "ALL" | "true" | "false"
                         )
-
                     }
 
                     className="rounded-lg border px-4 py-2"
 
                 >
 
-                    <option value="ALL">
+                    <option value="ALL">All</option>
 
-                        All
+                    <option value="false">Unread</option>
 
-                    </option>
-
-                    <option value="false">
-
-                        Unread
-
-                    </option>
-
-                    <option value="true">
-
-                        Read
-
-                    </option>
+                    <option value="true">Read</option>
 
                 </select>
 
@@ -161,8 +125,6 @@ export default function NotificationFilters({
             {/* Export */}
 
             <ExportButton
-
-                title="Export"
 
                 onExport={(format) => {
 

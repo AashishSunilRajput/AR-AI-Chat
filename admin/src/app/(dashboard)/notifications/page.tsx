@@ -34,7 +34,7 @@ export default function NotificationsPage() {
         useState("ALL");
 
     const [isRead, setIsRead] =
-        useState("ALL");
+    useState<"ALL" | "true" | "false">("ALL");
 
     const [page, setPage] =
         useState(1);
@@ -82,6 +82,7 @@ export default function NotificationsPage() {
                 notificationService.getStats(),
 
             ]);
+            
 
             setNotifications(
                 notificationsResponse.data

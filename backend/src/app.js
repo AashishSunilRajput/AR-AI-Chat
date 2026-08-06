@@ -38,7 +38,7 @@ import errorHandler from "./middleware/error.middleware.js";
 
 import exportRoutes from "./routes/export.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
-
+import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
@@ -335,6 +335,12 @@ app.use(
 app.use(
     "/api/notifications",
     notificationRoutes
+);
+
+
+app.use(
+    "/api/ai",
+    aiRoutes
 );
 
 

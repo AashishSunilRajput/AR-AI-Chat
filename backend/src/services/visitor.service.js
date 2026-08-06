@@ -1,4 +1,5 @@
 import visitorRepository from "../repositories/visitor.repository.js";
+import notificationService from "./notification.service.js";
 import sessionToken from "../utils/session-token.js";
 
 class VisitorService {
@@ -30,6 +31,45 @@ class VisitorService {
                     req.headers["user-agent"]
 
             });
+
+        // ==========================================
+        // Create Notification
+        // ==========================================
+
+        try {
+
+            await notificationService.create({
+
+                title: "New Visitor",
+
+                message:
+                    "A new visitor visited your website.",
+
+                type: "NEW_VISITOR",
+
+                organizationId:
+                    chatbot.organizationId,
+
+                entityType: "VISITOR",
+
+                entityId: visitor.id
+
+            });
+
+            console.log(
+                "Visitor Notification Created"
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Visitor Notification Error:",
+                error
+            );
+
+        }
 
         return visitor;
 
@@ -65,75 +105,74 @@ class VisitorService {
     }
 
     // ==========================================
-// Get All Visitors
-// ==========================================
+    // Get All Visitors
+    // ==========================================
 
-async getVisitors(
-    user,
-    filters = {}
-) {
+    async getVisitors(
+        user,
+        filters = {}
+    ) {
 
+        if (
+            user.role === "SUPER_ADMIN"
+        ) {
 
-    if(user.role==="SUPER_ADMIN"){
+            return await visitorRepository.findAll(
 
+                null,
+
+                filters
+
+            );
+
+        }
 
         return await visitorRepository.findAll(
 
-            null,
+            user.organizationId,
 
             filters
 
         );
 
+    }
+
+    // ==========================================
+    // Get Visitor Details
+    // ==========================================
+
+    async getVisitor(id) {
+
+        return await visitorRepository.findDetails(
+
+            id
+
+        );
 
     }
 
+    // ==========================================
+    // Visitor Stats
+    // ==========================================
 
-    return await visitorRepository.findAll(
+    async getStats(user) {
 
-        user.organizationId,
+        if (
+            user.role === "SUPER_ADMIN"
+        ) {
 
-        filters
+            return await visitorRepository.getStats();
 
-    );
+        }
 
+        return await visitorRepository.getStats(
 
-}
+            user.organizationId
 
-// ==========================================
-// Get Visitor Details
-// ==========================================
-
-async getVisitor(id) {
-
-    return await visitorRepository.findDetails(
-
-        id
-
-    );
-
-}
-
-// ==========================================
-// Visitor Stats
-// ==========================================
-
-async getStats(user) {
-
-    if (user.role === "SUPER_ADMIN") {
-
-        return await visitorRepository.getStats();
+        );
 
     }
 
-    return await visitorRepository.getStats(
-
-        user.organizationId
-
-    );
-
 }
 
-}
-    
 export default new VisitorService();
