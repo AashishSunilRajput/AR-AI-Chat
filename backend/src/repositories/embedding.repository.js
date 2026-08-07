@@ -130,6 +130,50 @@ async countByDocument(documentId) {
 
     }
 
+    // ==========================================
+// Find All By Chatbot
+// ==========================================
+
+async findByChatbot(chatbotId) {
+
+    return await prisma.knowledgeEmbedding.findMany({
+
+        where: {
+
+            chunk: {
+
+                document: {
+
+                    knowledgeBase: {
+
+                        chatbotId: Number(chatbotId)
+
+                    }
+
+                }
+
+            }
+
+        },
+
+        include: {
+
+            chunk: {
+
+                include: {
+
+                    document: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
 }
 
 export default new EmbeddingRepository();

@@ -1,23 +1,29 @@
 import openAIService from "./openai.service.js";
 
-
 class AIService {
 
+    async generateReply({
 
-    async generateReply(message) {
+        message,
 
+        context,
+
+        history = []
+
+    }) {
 
         return await openAIService.generateReply({
 
-            message
+            message,
+
+            context,
+
+            history
 
         });
 
-
     }
 
-
 }
-
 
 export default new AIService();

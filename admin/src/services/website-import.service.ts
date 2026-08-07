@@ -1,8 +1,6 @@
 import api from "./api";
 
-
 class WebsiteImportService {
-
 
     async importWebsite(
         data: {
@@ -12,23 +10,19 @@ class WebsiteImportService {
         }
     ) {
 
-
         const response = await api.post(
 
-            "/knowledge-documents/import-website",
+            "/website-import/import-website",
 
             data
 
         );
 
-
         return response.data;
-
 
     }
 
-
 }
 
-
 export default new WebsiteImportService();
+

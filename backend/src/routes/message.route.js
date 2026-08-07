@@ -1,42 +1,44 @@
 import express from "express";
-import messageController from "../controllers/message.controller.js";
+
+import messageController 
+from "../controllers/message.controller.js";
+
+import widgetAuth 
+from "../middleware/widget-auth.middleware.js";
+
 
 const router = express.Router();
 
+
 // ==========================================
-// Send Message
+// Send Message From Widget
 // ==========================================
 
 router.post(
-
-    "/send",
-
+    "/:widgetKey",
+    widgetAuth,
     messageController.send
-
 );
+
 
 // ==========================================
 // Conversation History
 // ==========================================
 
 router.get(
-
     "/conversation/:conversationId",
-
     messageController.history
-
 );
+
 
 // ==========================================
 // Delete Message
 // ==========================================
 
 router.delete(
-
-    "/:id",
-
+    "/message/:id",
     messageController.delete
-
 );
+
 
 export default router;

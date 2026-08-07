@@ -14,25 +14,30 @@ class OpenAIEmbeddingProvider {
 
         if (!client) {
 
-            return {
-
-                success: false,
-
-                message: "OpenAI API Key not configured",
-
-                embedding: []
-
-            };
+            throw new Error(
+                "OpenAI API Key not configured"
+            );
 
         }
+
+        const response =
+            await client.embeddings.create({
+
+                model: "text-embedding-3-small",
+
+                input: text
+
+            });
 
         return {
 
             success: true,
 
-            message: "Embedding Provider Ready",
+            embedding:
+                response.data[0].embedding,
 
-            embedding: []
+            usage:
+                response.usage
 
         };
 

@@ -804,11 +804,11 @@ function ContactSection({
             <div className="mt-8 space-y-4 text-sm text-slate-700">
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <Mail className="mt-0.5 h-4 w-4 text-sky-600" />
-                <span>hello@arai-chat.com</span>
+                <span>aritsolutions.tech@gmail.com</span>
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <PhoneCall className="mt-0.5 h-4 w-4 text-sky-600" />
-                <span>+1 (800) 555-0148</span>
+                <span>9960811224</span>
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <MapPin className="mt-0.5 h-4 w-4 text-sky-600" />
