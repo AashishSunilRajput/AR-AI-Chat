@@ -1,0 +1,20 @@
+<svg width="520" height="128" viewBox="0 0 520 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brand" x1="12" y1="12" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="0.55" stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#2563EB" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M19 58C19 33.7 38.7 14 63 14H66C90.3 14 110 33.7 110 58V62C110 86.3 90.3 106 66 106H57L37 119L40 101C27.6 93.3 19 79.4 19 62V58Z" fill="url(#brand)"/>
+    <path d="M29 58C29 39.2 44.2 24 63 24H66C84.8 24 100 39.2 100 58V62C100 80.8 84.8 96 66 96H54L47 101L49 91C37.2 85.2 29 74.2 29 62V58Z" fill="#071A3D"/>
+    <text x="44" y="76" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="37" font-weight="800" letter-spacing="-2">TT</text>
+    <circle cx="88" cy="38" r="5" fill="#67E8F9"/>
+  </g>
+  <text x="132" y="68" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="47" font-weight="800" letter-spacing="-1.8">TT Chat</text>
+  <text x="134" y="94" fill="#CBD5E1" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="1.2">BY TOMAR TECHWORKS</text>
+</svg>

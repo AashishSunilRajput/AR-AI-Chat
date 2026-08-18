@@ -152,40 +152,40 @@ function LandingHeader() {
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ease-out ${
           isScrolled
-            ? "border-b border-slate-200/80 bg-white/80 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.35)] backdrop-blur-xl"
-            : "border-b border-transparent bg-transparent shadow-none backdrop-blur-none"
+            ? "border-b border-white/10 bg-[#071A3D]/95 shadow-[0_14px_45px_-25px_rgba(2,6,23,0.8)] backdrop-blur-xl"
+            : "border-b border-white/10 bg-[#071A3D] shadow-none"
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-3 sm:px-8 lg:px-12 lg:py-4">
      <a
   href="#hero"
   className="flex shrink-0 items-center"
-  aria-label="AR AI Chat Home"
+  aria-label="TT Chat home"
 >
   <img
-    src="/ar-ai-chat-logo.png"
-    alt="AR AI Chat"
-    className="h-16 w-auto object-contain sm:h-[72px]"
+    src="/tt-chat-logo-white.svg"
+    alt="TT Chat"
+    className="h-14 w-auto object-contain sm:h-16"
   />
 </a>
 
-          <nav aria-label="Primary" className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-            <a href="#features" className="transition hover:text-slate-950">Features</a>
-            <a href="#pricing" className="transition hover:text-slate-950">Pricing</a>
-            <a href="#faq" className="transition hover:text-slate-950">FAQ</a>
-            <a href="#contact" className="transition hover:text-slate-950">Contact</a>
+          <nav aria-label="Primary" className="hidden items-center gap-8 text-sm font-medium text-slate-300 lg:flex">
+            <a href="#features" className="transition hover:text-white">Features</a>
+            <a href="#pricing" className="transition hover:text-white">Pricing</a>
+            <a href="#faq" className="transition hover:text-white">FAQ</a>
+            <a href="#contact" className="transition hover:text-white">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
             <a
               href="#contact"
-              className="hidden rounded-full bg-slate-950 px-3 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-sky-600 sm:px-4 lg:inline-flex"
+              className="hidden rounded-full bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_12px_30px_-14px_rgba(37,99,235,0.8)] transition hover:-translate-y-0.5 hover:bg-cyan-500 sm:px-5 lg:inline-flex"
             >
               Book Demo
             </a>
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-800 shadow-sm transition hover:border-sky-200 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-sm transition hover:border-cyan-300/50 hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 lg:hidden"
               aria-label="Open navigation menu"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -193,9 +193,9 @@ function LandingHeader() {
             >
               <span className="sr-only">Menu</span>
               <div className="flex flex-col gap-1.5">
-                <span className={`h-0.5 w-5 rounded-full bg-slate-900 transition ${isMobileMenuOpen ? "translate-y-2 rotate-45" : ""}`} />
-                <span className={`h-0.5 w-5 rounded-full bg-slate-900 transition ${isMobileMenuOpen ? "opacity-0" : "opacity-100"}`} />
-                <span className={`h-0.5 w-5 rounded-full bg-slate-900 transition ${isMobileMenuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
+                <span className={`h-0.5 w-5 rounded-full bg-white transition ${isMobileMenuOpen ? "translate-y-2 rotate-45" : ""}`} />
+                <span className={`h-0.5 w-5 rounded-full bg-white transition ${isMobileMenuOpen ? "opacity-0" : "opacity-100"}`} />
+                <span className={`h-0.5 w-5 rounded-full bg-white transition ${isMobileMenuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
               </div>
             </button>
           </div>
@@ -222,15 +222,16 @@ function LandingHeader() {
               className="fixed right-0 top-0 z-[70] flex h-full w-[86vw] max-w-[320px] flex-col border-l border-slate-200 bg-white/95 px-5 py-5 shadow-[0_20px_60px_-25px_rgba(15,23,42,0.45)] lg:hidden"
             >
               <div className="flex items-center justify-between">
-                <a href="#hero" className="flex items-center gap-3 text-lg font-semibold tracking-tight" onClick={closeMobileMenu}>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-lg shadow-sky-500/20">
-                    <Bot className="h-5 w-5" />
-                  </div>
-                  <span className="text-[0.95rem]">AR AI Chat</span>
+                <a href="#hero" className="flex items-center" onClick={closeMobileMenu} aria-label="TT Chat home">
+                  <img
+                    src="/tt-chat-logo.svg"
+                    alt="TT Chat"
+                    className="h-11 w-auto object-contain"
+                  />
                 </a>
                 <button
                   type="button"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-sky-200 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-blue-200 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                   aria-label="Close navigation menu"
                   onClick={closeMobileMenu}
                 >
@@ -255,7 +256,7 @@ function LandingHeader() {
               <a
                 href="#contact"
                 onClick={closeMobileMenu}
-                className="rounded-full bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-sky-600"
+                className="rounded-full bg-slate-950 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-600"
               >
                 Book Demo
               </a>
@@ -273,126 +274,73 @@ type HeroSectionProps = {
 
 function HeroSection({ shouldReduceMotion }: HeroSectionProps) {
   return (
-    <SectionWrapper>
-      <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+    <section id="hero" className="relative overflow-hidden bg-[#071A3D] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(37,99,235,0.32),transparent_32%),radial-gradient(circle_at_85%_20%,rgba(6,182,212,0.24),transparent_28%),radial-gradient(circle_at_70%_90%,rgba(139,92,246,0.22),transparent_34%)]" />
+      <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-blue-600/20 blur-3xl" />
+      <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-cyan-400/15 blur-3xl" />
+
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-8 sm:py-20 lg:grid-cols-[1.02fr_0.98fr] lg:gap-16 lg:px-12 lg:py-24">
         <motion.div
           initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-2xl"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur">
-            <Sparkles className="h-4 w-4 text-sky-600" />
-            AI Chatbot for Modern Businesses
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100 backdrop-blur">
+            <Sparkles className="h-4 w-4 text-cyan-300" />
+            AI CUSTOMER SUPPORT
           </div>
-          <h1 className="mt-8 text-[2.2rem] font-semibold leading-[1.02] tracking-[-0.03em] text-slate-950 sm:text-[3rem] lg:text-[4.25rem]">
-            AI Chatbot That Works Like Your Best Employee
+          <h1 className="mt-7 text-[2.5rem] font-bold leading-[1.02] tracking-[-0.045em] sm:text-[3.5rem] lg:text-[4.5rem]">
+            Turn Your Website into an <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">AI-Powered Assistant</span>
           </h1>
-          <p className="mt-7 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg lg:text-xl">
-            Train your chatbot with documents, websites, and FAQs. Generate leads and answer customer questions 24/7 with a premium AI experience.
+          <p className="mt-7 max-w-xl text-base leading-8 text-slate-300 sm:text-lg lg:text-xl">
+            TT Chat answers customer questions instantly, captures leads, and helps businesses deliver better support around the clock.
           </p>
-          <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-start">
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-sky-600 px-6 py-3.5 text-base font-semibold text-white shadow-[0_12px_35px_-12px_rgba(14,165,233,0.55)] transition duration-200 hover:-translate-y-0.5 hover:bg-sky-700 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
-            >
-              Book Demo <ArrowRight className="h-4 w-4" />
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#contact" className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-3.5 text-base font-semibold text-white shadow-[0_18px_45px_-18px_rgba(37,99,235,0.9)] transition hover:-translate-y-0.5 hover:bg-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300">
+              Book a Demo <ArrowRight className="h-4 w-4" />
             </a>
-            <a
-              href="#features"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition duration-200 hover:-translate-y-0.5 hover:border-sky-200 hover:text-sky-700 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
-            >
-              <CirclePlay className="h-4 w-4" /> View Features
+            <a href="#features" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-base font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+              <CirclePlay className="h-4 w-4" /> See How It Works
             </a>
           </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-600 sm:justify-start">
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">⚡ No-code setup</span>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">🔒 Enterprise-ready</span>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">📈 Live analytics</span>
-          </div>
-          <div className="mt-10 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur">
-              <p className="text-2xl font-semibold text-slate-950">24/7</p>
-              <p className="mt-1 text-sm text-slate-600">Always-on support</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur">
-              <p className="text-2xl font-semibold text-slate-950">96.4%</p>
-              <p className="mt-1 text-sm text-slate-600">Answer accuracy</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm backdrop-blur">
-              <p className="text-2xl font-semibold text-slate-950">5 min</p>
-              <p className="mt-1 text-sm text-slate-600">To launch</p>
-            </div>
+
+          <div className="mt-8 flex flex-wrap gap-5 text-sm text-slate-300">
+            <span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-cyan-300" /> 24/7 Support</span>
+            <span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-cyan-300" /> More Leads</span>
+            <span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-cyan-300" /> Happy Customers</span>
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: shouldReduceMotion ? 1 : 0, x: shouldReduceMotion ? 0 : 20 }}
+          initial={{ opacity: shouldReduceMotion ? 1 : 0, x: shouldReduceMotion ? 0 : 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-[640px]"
+          className="relative mx-auto w-full max-w-[620px]"
         >
-          <div className="absolute inset-0 rounded-[32px] bg-[radial-gradient(circle_at_top_left,_rgba(6,182,212,0.25),_transparent_45%),radial-gradient(circle_at_bottom_right,_rgba(37,99,235,0.24),_transparent_45%)] blur-3xl" />
-          <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-slate-950 p-3 shadow-[0_30px_100px_-30px_rgba(2,6,23,0.45)] sm:p-5">
-            <div className="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <div className="rounded-[20px] bg-white p-4 shadow-xl">
-                <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">AR AI Chat Dashboard</p>
-                    <p className="text-sm text-slate-500">Live insights and conversations</p>
-                  </div>
-                  <div className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
-                    +24% leads
-                  </div>
+          <div className="absolute -inset-8 rounded-[40px] bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.3),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(139,92,246,0.28),transparent_40%)] blur-2xl" />
+          <div className="relative rounded-[30px] border border-white/15 bg-white/10 p-3 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.7)] backdrop-blur-xl sm:p-5">
+            <div className="rounded-[24px] bg-white p-4 text-slate-900 shadow-2xl sm:p-5">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 text-white"><Bot className="h-5 w-5" /></div>
+                  <div><p className="font-semibold">TT Chat</p><p className="text-xs text-emerald-600">● Online · AI Assistant</p></div>
                 </div>
-                <div className="mt-4 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-950 p-4 text-white">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-slate-300">Today’s conversations</p>
-                      <LayoutDashboard className="h-5 w-5 text-sky-400" />
-                    </div>
-                    <p className="mt-4 text-3xl font-semibold">1,248</p>
-                    <p className="mt-2 text-sm text-slate-400">Auto-resolved support requests</p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Lead capture</p>
-                      <p className="mt-2 text-2xl font-semibold text-slate-900">87</p>
-                    </div>
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Accuracy</p>
-                      <p className="mt-2 text-2xl font-semibold text-slate-900">96.4%</p>
-                    </div>
-                  </div>
-                </div>
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">AI Powered</span>
               </div>
-            </div>
-            <div className="absolute -left-2 top-8 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block sm:-left-4 sm:top-10">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-sky-100 p-2 text-sky-700">
-                  <MessagesSquare className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Live chat ready</p>
-                  <p className="text-sm text-slate-500">Instant responses</p>
-                </div>
+              <div className="mt-5 space-y-3">
+                <div className="max-w-[82%] rounded-2xl rounded-tl-md bg-slate-100 px-4 py-3 text-sm leading-6">Hi! 👋<br />How can I help you today?</div>
+                <div className="ml-auto max-w-[78%] rounded-2xl rounded-tr-md bg-blue-600 px-4 py-3 text-sm leading-6 text-white">What are your services?</div>
+                <div className="max-w-[86%] rounded-2xl rounded-tl-md bg-slate-100 px-4 py-3 text-sm leading-6">We provide web development, eCommerce, and AI solutions.<br /><br />Would you like a free consultation?</div>
               </div>
-            </div>
-            <div className="absolute -bottom-4 right-3 hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-xl sm:block sm:-bottom-5 sm:right-4">
-              <div className="flex items-center gap-3">
-                <div className="rounded-xl bg-emerald-100 p-2 text-emerald-700">
-                  <BrainCircuit className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Train once</p>
-                  <p className="text-sm text-slate-500">Answer forever</p>
-                </div>
-              </div>
+              <div className="mt-5 flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-400"><span className="flex-1">Type your message...</span><div className="rounded-xl bg-blue-600 p-2 text-white"><ArrowRight className="h-4 w-4" /></div></div>
+              <p className="mt-3 text-center text-[11px] text-slate-400">Powered by TT Chat</p>
             </div>
           </div>
         </motion.div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 }
 
@@ -403,7 +351,7 @@ type TrustedSectionProps = {
 function TrustedSection({ logos }: TrustedSectionProps) {
   return (
     <SectionWrapper>
-      <div className="rounded-[32px] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-sky-50 px-6 py-10 sm:px-10">
+      <div className="rounded-[32px] border border-slate-200 bg-gradient-to-r from-slate-50 via-white to-blue-50 px-6 py-10 sm:px-10">
         <p className="text-center text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
           Trusted by forward-thinking teams
         </p>
@@ -430,7 +378,7 @@ function FeaturesSection({ features, shouldReduceMotion }: FeaturesSectionProps)
       <SectionHeading
         eyebrow="Features"
         title="Everything you need to turn support into growth"
-        description="From onboarding to intelligent insights, AR AI Chat helps teams serve visitors faster while capturing more opportunities."
+        description="From onboarding to intelligent insights, TT Chat helps teams serve visitors faster while capturing more opportunities."
       />
       <div className="mt-14 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         {features.map((feature, index) => (
@@ -474,7 +422,7 @@ function HowItWorksSection({ steps, shouldReduceMotion }: HowItWorksSectionProps
               transition={{ duration: 0.35, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
               className="rounded-3xl border border-white/10 bg-white/10 p-6 text-center"
             >
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-300">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/20 text-blue-300">
                 <span className="text-lg font-semibold">0{index + 1}</span>
               </div>
               <h3 className="mt-5 text-lg font-semibold">{step}</h3>
@@ -502,7 +450,7 @@ function IndustriesSection({ industries, shouldReduceMotion }: IndustriesSection
       <SectionHeading
         eyebrow="Industries"
         title="Built to fit the way modern businesses operate"
-        description="Whether you run a clinic, a campus, or a hotel, AR AI Chat adapts to your audience and workflows."
+        description="Whether you run a clinic, a campus, or a hotel, TT Chat adapts to your audience and workflows."
       />
       <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {industries.map((industry, index) => (
@@ -543,7 +491,7 @@ function DashboardPreviewSection({ shouldReduceMotion }: DashboardPreviewSection
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           className="rounded-[32px] border border-slate-200 bg-slate-50 p-8 sm:p-10"
         >
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600">Dashboard preview</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">Dashboard preview</p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
             A command center for every conversation
           </h2>
@@ -554,7 +502,7 @@ function DashboardPreviewSection({ shouldReduceMotion }: DashboardPreviewSection
             <div className="rounded-[20px] bg-slate-950 p-5 text-white">
               <p className="text-sm text-slate-400">Knowledge base health</p>
               <div className="mt-3 h-2.5 rounded-full bg-white/10">
-                <div className="h-2.5 w-[84%] rounded-full bg-sky-400" />
+                <div className="h-2.5 w-[84%] rounded-full bg-blue-400" />
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl bg-white/10 p-3">
@@ -582,7 +530,7 @@ function DashboardPreviewSection({ shouldReduceMotion }: DashboardPreviewSection
         >
           <BrowserMockup
             src="/images/widget.png"
-            alt="AR AI Chat widget preview"
+            alt="TT Chat widget preview"
             title="Widget preview"
             subtitle="Launch a branded chat experience that feels native to your website."
           />
@@ -652,7 +600,7 @@ function FaqSection({ faqs, activeFaq, setActiveFaq, shouldReduceMotion }: FaqSe
       <SectionHeading
         eyebrow="FAQ"
         title="Common questions, answered clearly"
-        description="Everything you need to know before your team goes live with AR AI Chat."
+        description="Everything you need to know before your team goes live with TT Chat."
       />
       <div className="mt-12 space-y-4">
         {faqs.map((item, index) => {
@@ -726,14 +674,14 @@ function BookDemoSection({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.25 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden rounded-[40px] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-sky-900 px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-12 lg:py-12"
+        className="overflow-hidden rounded-[40px] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-900 px-6 py-8 text-white sm:px-8 sm:py-10 lg:px-12 lg:py-12"
       >
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-10">
           <div className="flex flex-col justify-between rounded-[30px] border border-white/10 bg-white/10 p-7 shadow-[0_20px_60px_-35px_rgba(15,23,42,0.35)] backdrop-blur sm:p-8 lg:p-10">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-300">Book free demo</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-300">Book free demo</p>
               <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
-                See how AR AI Chat can elevate support, sales, and service in one live walkthrough.
+                See how TT Chat can elevate support, sales, and service in one live walkthrough.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
                 Join a no-obligation session with our team to explore your goals, review the product, and leave with a clear path forward.
@@ -748,7 +696,7 @@ function BookDemoSection({
                 "No obligation to continue",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-sky-300" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none text-blue-300" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -761,7 +709,7 @@ function BookDemoSection({
   className="rounded-[30px] border border-slate-200 bg-white/95 p-6 text-slate-900 shadow-[0_30px_90px_-35px_rgba(15,23,42,0.45)] sm:p-7 lg:p-8"
 >
   <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-    <Sparkles className="h-4 w-4 text-sky-600" />
+    <Sparkles className="h-4 w-4 text-blue-600" />
     Premium booking form
   </div>
 
@@ -964,7 +912,7 @@ function BookDemoSection({
             industry: undefined,
           }));
         }}
-        className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+        className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
       >
         <option value="">Select industry</option>
         <option value="Healthcare">Healthcare</option>
@@ -1009,7 +957,7 @@ function BookDemoSection({
             teamSize: undefined,
           }));
         }}
-        className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+        className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
       >
         <option value="">Select size</option>
         <option value="1-10">1–10</option>
@@ -1069,7 +1017,7 @@ function BookDemoSection({
   <button
     type="submit"
     disabled={demoStatus === "loading"}
-    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-sky-600 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_15px_35px_-12px_rgba(14,165,233,0.55)] transition hover:-translate-y-0.5 hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_15px_35px_-12px_rgba(37,99,235,0.55)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
   >
     {demoStatus === "loading"
       ? "Sending…"
@@ -1143,7 +1091,7 @@ function ContactSection({
       >
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
           <div className="rounded-[30px] border border-slate-200 bg-slate-50 p-7 sm:p-8 lg:p-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600">Contact us</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">Contact us</p>
             <h2 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               Reach our team for support, partnerships, or questions.
             </h2>
@@ -1153,19 +1101,19 @@ function ContactSection({
 
             <div className="mt-8 space-y-4 text-sm text-slate-700">
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <Mail className="mt-0.5 h-4 w-4 text-sky-600" />
+                <Mail className="mt-0.5 h-4 w-4 text-blue-600" />
                 <span>aritsolutions.tech@gmail.com</span>
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <PhoneCall className="mt-0.5 h-4 w-4 text-sky-600" />
+                <PhoneCall className="mt-0.5 h-4 w-4 text-blue-600" />
                 <span>9960811224</span>
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <MapPin className="mt-0.5 h-4 w-4 text-sky-600" />
+                <MapPin className="mt-0.5 h-4 w-4 text-blue-600" />
                 <span>540 Market Street, San Francisco, CA 94105</span>
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
-                <Clock3 className="mt-0.5 h-4 w-4 text-sky-600" />
+                <Clock3 className="mt-0.5 h-4 w-4 text-blue-600" />
                 <span>Mon–Fri • 9:00 AM – 6:00 PM PST</span>
               </div>
             </div>
@@ -1175,11 +1123,11 @@ function ContactSection({
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
                 <Globe2 className="h-4 w-4" />
                 LinkedIn
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-200 hover:text-blue-700">
                 <Globe2 className="h-4 w-4" />
                 Instagram
               </a>
@@ -1191,7 +1139,7 @@ function ContactSection({
   className="rounded-[30px] border border-slate-200 bg-slate-950 p-7 text-white shadow-[0_30px_90px_-35px_rgba(15,23,42,0.45)] sm:p-8 lg:p-10"
 >
   <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
-    <Globe2 className="h-4 w-4 text-sky-300" />
+    <Globe2 className="h-4 w-4 text-blue-300" />
     Contact form
   </div>
 
@@ -1328,7 +1276,7 @@ function ContactSection({
   <button
     type="submit"
     disabled={contactStatus === "loading"}
-    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-5 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-70"
+    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-5 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-70"
   >
     {contactStatus === "loading"
       ? "Sending…"
@@ -1342,7 +1290,7 @@ function ContactSection({
 
   {/* FEEDBACK */}
   {contactFeedback ? (
-    <p className="mt-4 text-sm text-sky-300">
+    <p className="mt-4 text-sm text-blue-300">
       {contactFeedback}
     </p>
   ) : null}
@@ -1373,42 +1321,43 @@ function WhatsAppButton() {
 
 function LandingFooter() {
   return (
-    <footer className="border-t border-slate-200 bg-[linear-gradient(180deg,#f8fbff_0%,#f8fafc_100%)]">
+    <footer className="border-t border-white/10 bg-[#071A3D] text-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-12 sm:px-8 lg:flex-row lg:justify-between lg:px-12">
         <div className="max-w-sm">
-          <a href="#hero" className="flex items-center gap-3 text-lg font-semibold tracking-tight text-slate-900">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white">
-              <Bot className="h-5 w-5" />
-            </div>
-            <span>AR AI Chat</span>
+          <a href="#hero" className="flex items-center" aria-label="TT Chat home">
+            <img
+              src="/tt-chat-logo.svg"
+              alt="TT Chat"
+              className="h-12 w-auto object-contain"
+            />
           </a>
-          <p className="mt-4 text-sm leading-7 text-slate-600">
+          <p className="mt-4 text-sm leading-7 text-slate-300">
             AI chatbots for modern businesses that want to support customers and grow revenue 24/7.
           </p>
         </div>
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Quick links</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Quick links</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li><a href="#features" className="transition hover:text-slate-950">Features</a></li>
-              <li><a href="#pricing" className="transition hover:text-slate-950">Pricing</a></li>
-              <li><a href="#faq" className="transition hover:text-slate-950">FAQ</a></li>
+              <li><a href="#features" className="transition hover:text-white">Features</a></li>
+              <li><a href="#pricing" className="transition hover:text-white">Pricing</a></li>
+              <li><a href="#faq" className="transition hover:text-white">FAQ</a></li>
             </ul>
           </div>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Products</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Products</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li><a href="#contact" className="transition hover:text-slate-950">Book demo</a></li>
-              <li><a href="#pricing" className="transition hover:text-slate-950">Starter</a></li>
-              <li><a href="#pricing" className="transition hover:text-slate-950">Professional</a></li>
+              <li><a href="#contact" className="transition hover:text-white">Book demo</a></li>
+              <li><a href="#pricing" className="transition hover:text-white">Starter</a></li>
+              <li><a href="#pricing" className="transition hover:text-white">Professional</a></li>
             </ul>
           </div>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Company</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Company</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-600">
-              <li><a href="#contact" className="transition hover:text-slate-950">Contact</a></li>
-              <li><a href="#" className="transition hover:text-slate-950">Privacy</a></li>
-              <li><a href="#" className="transition hover:text-slate-950">Terms</a></li>
+              <li><a href="#contact" className="transition hover:text-white">Contact</a></li>
+              <li><a href="#" className="transition hover:text-white">Privacy</a></li>
+              <li><a href="#" className="transition hover:text-white">Terms</a></li>
             </ul>
           </div>
         </div>
@@ -1827,7 +1776,7 @@ const handleContactSubmit = async (
 };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white text-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-[#F8FAFC] text-slate-900">
       <LandingHeader />
 
       <main id="hero">
