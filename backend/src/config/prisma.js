@@ -1,22 +1,19 @@
 import "dotenv/config";
 
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
-
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+const adapter = new PrismaMariaDb({
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "",
+  database: "ar_ai_chat_mysql",
+  connectionLimit: 5,
 });
-
-const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({
   adapter,
 });
-
-
-
 
 export default prisma;

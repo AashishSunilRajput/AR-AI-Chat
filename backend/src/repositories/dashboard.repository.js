@@ -406,26 +406,30 @@ async getMonthlyAnalytics(organizationId = null) {
         const leads = await prisma.$queryRaw`
 
             SELECT
-                TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
-                EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
-                COUNT(*)::int AS total
-            FROM "Lead"
-            GROUP BY DATE_TRUNC('month', "createdAt"),
-                     EXTRACT(MONTH FROM "createdAt")
-            ORDER BY EXTRACT(MONTH FROM "createdAt")
+                DATE_FORMAT(createdAt, '%b') AS month,
+                MONTH(createdAt) AS monthNumber,
+                COUNT(*) AS total
+            FROM Lead
+            GROUP BY YEAR(createdAt),
+                     MONTH(createdAt),
+                     DATE_FORMAT(createdAt, '%b')
+            ORDER BY YEAR(createdAt),
+                     MONTH(createdAt)
 
         `;
 
         const conversations = await prisma.$queryRaw`
 
             SELECT
-                TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
-                EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
-                COUNT(*)::int AS total
-            FROM "Conversation"
-            GROUP BY DATE_TRUNC('month', "createdAt"),
-                     EXTRACT(MONTH FROM "createdAt")
-            ORDER BY EXTRACT(MONTH FROM "createdAt")
+                DATE_FORMAT(createdAt, '%b') AS month,
+                MONTH(createdAt) AS monthNumber,
+                COUNT(*) AS total
+            FROM Conversation
+            GROUP BY YEAR(createdAt),
+                     MONTH(createdAt),
+                     DATE_FORMAT(createdAt, '%b')
+            ORDER BY YEAR(createdAt),
+                     MONTH(createdAt)
 
         `;
 
@@ -443,30 +447,34 @@ async getMonthlyAnalytics(organizationId = null) {
     const leads = await prisma.$queryRaw`
 
         SELECT
-            TO_CHAR(DATE_TRUNC('month', "createdAt"), 'Mon') AS month,
-            EXTRACT(MONTH FROM "createdAt")::int AS monthNumber,
-            COUNT(*)::int AS total
-        FROM "Lead"
-        WHERE "organizationId" = ${organizationId}
-        GROUP BY DATE_TRUNC('month', "createdAt"),
-                 EXTRACT(MONTH FROM "createdAt")
-        ORDER BY EXTRACT(MONTH FROM "createdAt")
+            DATE_FORMAT(createdAt, '%b') AS month,
+            MONTH(createdAt) AS monthNumber,
+            COUNT(*) AS total
+        FROM Lead
+        WHERE organizationId = ${organizationId}
+        GROUP BY YEAR(createdAt),
+                 MONTH(createdAt),
+                 DATE_FORMAT(createdAt, '%b')
+        ORDER BY YEAR(createdAt),
+                 MONTH(createdAt)
 
     `;
 
     const conversations = await prisma.$queryRaw`
 
         SELECT
-            TO_CHAR(DATE_TRUNC('month', c."createdAt"), 'Mon') AS month,
-            EXTRACT(MONTH FROM c."createdAt")::int AS monthNumber,
-            COUNT(*)::int AS total
-        FROM "Conversation" c
-        INNER JOIN "Chatbot" cb
-            ON cb.id = c."chatbotId"
-        WHERE cb."organizationId" = ${organizationId}
-        GROUP BY DATE_TRUNC('month', c."createdAt"),
-                 EXTRACT(MONTH FROM c."createdAt")
-        ORDER BY EXTRACT(MONTH FROM c."createdAt")
+            DATE_FORMAT(c.createdAt, '%b') AS month,
+            MONTH(c.createdAt) AS monthNumber,
+            COUNT(*) AS total
+        FROM Conversation c
+        INNER JOIN Chatbot cb
+            ON cb.id = c.chatbotId
+        WHERE cb.organizationId = ${organizationId}
+        GROUP BY YEAR(c.createdAt),
+                 MONTH(c.createdAt),
+                 DATE_FORMAT(c.createdAt, '%b')
+        ORDER BY YEAR(c.createdAt),
+                 MONTH(c.createdAt)
 
     `;
 
