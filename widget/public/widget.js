@@ -14,7 +14,7 @@
 
     if (!widgetKey) {
 
-        console.error("AR AI Chat : Widget Key Missing");
+        console.error("TT AI Chat : Widget Key Missing");
 
         return;
 

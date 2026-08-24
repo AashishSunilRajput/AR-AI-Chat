@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AR AI Chat Admin",
+  title: "TT AI Chat Admin",
   description: "Enterprise AI Chat Platform",
 };
 

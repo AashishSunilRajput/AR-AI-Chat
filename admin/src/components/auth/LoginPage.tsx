@@ -13,7 +13,7 @@ export default function LoginPage() {
                 <div className="hidden lg:flex flex-col justify-center px-20 text-white">
 
                     <span className="inline-flex w-fit rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-300">
-                        AR AI CHAT
+                        TT AI CHAT
                     </span>
 
                     <h1 className="mt-8 text-6xl font-bold leading-tight">

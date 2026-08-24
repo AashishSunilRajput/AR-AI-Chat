@@ -8,9 +8,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AR AI Chat | AI Chatbot for Modern Businesses",
+  title: "TT AI Chat | AI Chatbot for Modern Businesses",
   description:
-    "AR AI Chat helps businesses train AI chatbots with documents, websites, and FAQs to capture leads and support customers 24/7.",
+    "TT AI Chat helps businesses train AI chatbots with documents, websites, and FAQs to capture leads and support customers 24/7.",
   keywords: ["AI chatbot", "customer support", "lead generation", "SaaS landing page"],
 };
 

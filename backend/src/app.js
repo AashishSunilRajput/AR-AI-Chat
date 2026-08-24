@@ -105,7 +105,7 @@ app.get("/", (req, res) => {
         success: true,
 
         message:
-        "🚀 AR AI Chat Backend Running Successfully",
+        "🚀 TT AI Chat Backend Running Successfully",
 
         version:"1.0.0"
 

@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "AR AI Chat Backend",
+  "description": "TT AI Chat Backend",
   "type": "module",
   "main": "src/server.js",
   "scripts": {

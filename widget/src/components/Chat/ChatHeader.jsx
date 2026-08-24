@@ -94,7 +94,7 @@ style={{
     <p className="text-xs opacity-80">
         {
             config?.organizationName ||
-            "AR AI"
+            "TT AI"
         }
     </p>
 

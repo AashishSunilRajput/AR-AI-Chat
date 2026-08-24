@@ -160,11 +160,11 @@ function LandingHeader() {
      <a
   href="#hero"
   className="flex shrink-0 items-center"
-  aria-label="AR AI Chat Home"
+  aria-label="TT AI Chat Home"
 >
   <img
     src="/ar-ai-chat-logo.png"
-    alt="AR AI Chat"
+    alt="TT AI Chat"
     className="h-16 w-auto object-contain sm:h-[72px]"
   />
 </a>
@@ -226,7 +226,7 @@ function LandingHeader() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-lg shadow-sky-500/20">
                     <Bot className="h-5 w-5" />
                   </div>
-                  <span className="text-[0.95rem]">AR AI Chat</span>
+                  <span className="text-[0.95rem]">TT AI Chat</span>
                 </a>
                 <button
                   type="button"
@@ -338,7 +338,7 @@ function HeroSection({ shouldReduceMotion }: HeroSectionProps) {
               <div className="rounded-[20px] bg-white p-4 shadow-xl">
                 <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">AR AI Chat Dashboard</p>
+                    <p className="text-sm font-semibold text-slate-900">TT AI Chat Dashboard</p>
                     <p className="text-sm text-slate-500">Live insights and conversations</p>
                   </div>
                   <div className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
@@ -430,7 +430,7 @@ function FeaturesSection({ features, shouldReduceMotion }: FeaturesSectionProps)
       <SectionHeading
         eyebrow="Features"
         title="Everything you need to turn support into growth"
-        description="From onboarding to intelligent insights, AR AI Chat helps teams serve visitors faster while capturing more opportunities."
+        description="From onboarding to intelligent insights, TT AI Chat helps teams serve visitors faster while capturing more opportunities."
       />
       <div className="mt-14 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         {features.map((feature, index) => (
@@ -502,7 +502,7 @@ function IndustriesSection({ industries, shouldReduceMotion }: IndustriesSection
       <SectionHeading
         eyebrow="Industries"
         title="Built to fit the way modern businesses operate"
-        description="Whether you run a clinic, a campus, or a hotel, AR AI Chat adapts to your audience and workflows."
+        description="Whether you run a clinic, a campus, or a hotel, TT AI Chat adapts to your audience and workflows."
       />
       <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {industries.map((industry, index) => (
@@ -582,7 +582,7 @@ function DashboardPreviewSection({ shouldReduceMotion }: DashboardPreviewSection
         >
           <BrowserMockup
             src="/images/widget.png"
-            alt="AR AI Chat widget preview"
+            alt="TT AI Chat widget preview"
             title="Widget preview"
             subtitle="Launch a branded chat experience that feels native to your website."
           />
@@ -652,7 +652,7 @@ function FaqSection({ faqs, activeFaq, setActiveFaq, shouldReduceMotion }: FaqSe
       <SectionHeading
         eyebrow="FAQ"
         title="Common questions, answered clearly"
-        description="Everything you need to know before your team goes live with AR AI Chat."
+        description="Everything you need to know before your team goes live with TT AI Chat."
       />
       <div className="mt-12 space-y-4">
         {faqs.map((item, index) => {
@@ -733,7 +733,7 @@ function BookDemoSection({
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-300">Book free demo</p>
               <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
-                See how AR AI Chat can elevate support, sales, and service in one live walkthrough.
+                See how TT AI Chat can elevate support, sales, and service in one live walkthrough.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
                 Join a no-obligation session with our team to explore your goals, review the product, and leave with a clear path forward.
@@ -1380,7 +1380,7 @@ function LandingFooter() {
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white">
               <Bot className="h-5 w-5" />
             </div>
-            <span>AR AI Chat</span>
+            <span>TT AI Chat</span>
           </a>
           <p className="mt-4 text-sm leading-7 text-slate-600">
             AI chatbots for modern businesses that want to support customers and grow revenue 24/7.

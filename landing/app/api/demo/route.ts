@@ -145,13 +145,13 @@ export async function POST(request: Request) {
     // ==========================================
 
     await transporter.sendMail({
-      from: `"AR AI Chat" <${process.env.SMTP_USER}>`,
+      from: `"TT AI Chat" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_EMAIL,
       replyTo: cleanEmail,
-      subject: "🚀 New AR AI Chat Demo Request",
+      subject: "🚀 New TT AI Chat Demo Request",
 
       html: `
-        <h2>New AR AI Chat Demo Request</h2>
+        <h2>New TT AI Chat Demo Request</h2>
 
         <p><strong>Name:</strong> ${cleanName}</p>
         <p><strong>Email:</strong> ${cleanEmail}</p>
@@ -171,15 +171,15 @@ export async function POST(request: Request) {
     // ==========================================
 
     await transporter.sendMail({
-      from: `"AR AI Chat" <${process.env.SMTP_USER}>`,
+      from: `"TT AI Chat" <${process.env.SMTP_USER}>`,
       to: cleanEmail,
-      subject: "Thanks for requesting an AR AI Chat demo",
+      subject: "Thanks for requesting an TT AI Chat demo",
 
       html: `
         <h2>Thanks, ${cleanName}!</h2>
 
         <p>
-          We received your demo request for AR AI Chat.
+          We received your demo request for TT AI Chat.
         </p>
 
         <p>
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
 
         <p>
           Regards,<br />
-          <strong>AR AI Chat Team</strong>
+          <strong>TT AI Chat Team</strong>
         </p>
       `,
     });
