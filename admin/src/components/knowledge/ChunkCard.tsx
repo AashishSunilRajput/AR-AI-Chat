@@ -26,7 +26,7 @@ export default function ChunkCard({
     tokenCount = 0,
 } = chunk;
 
-const generated = chunk.embeddings?.length > 0;
+const generated = (chunk.embeddings?.length ?? 0) > 0;
 
     const [expanded, setExpanded] = useState(false);
     const [copied, setCopied] = useState(false);
