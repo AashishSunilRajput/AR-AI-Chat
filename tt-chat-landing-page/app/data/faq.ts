@@ -4,7 +4,7 @@ export const faqs: FaqItem[] = [
   {
     question: "How quickly can we launch our chatbot?",
     answer:
-      "Most teams are live in under a week. You can upload documents, train the assistant, and embed the widget in a few simple steps.",
+      "Most teams can get started quickly. You can upload documents, add your business knowledge, and embed the widget on your website in a few simple steps.",
   },
   {
     question: "Can we use our own knowledge base?",
@@ -36,11 +36,11 @@ export const faqs: FaqItem[] = [
     answer:
       "Yes. Enterprise plans include more secure deployment options, advanced permissions, and dedicated onboarding support.",
   },
-  {
-    question: "Can we connect multiple websites?",
-    answer:
-      "Yes. Multi-site deployments are supported so you can manage knowledge and conversations across channels from one place.",
-  },
+ {
+  question: "Can I use TT Chat on multiple websites?",
+  answer:
+    "Each plan includes one website and one AI chatbot. If you need chatbots for additional websites, you can add them separately based on your requirements.",
+},
   {
     question: "How do we get started?",
     answer:

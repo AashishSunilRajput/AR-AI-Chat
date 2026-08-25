@@ -19,4 +19,5 @@ export const industries: IndustryItem[] = [
   { name: "Finance", icon: BrainCircuit },
   { name: "Law Firms", icon: ClipboardList },
   { name: "Manufacturing", icon: Zap },
+  { name: "Restaurants", icon: Store },
 ];

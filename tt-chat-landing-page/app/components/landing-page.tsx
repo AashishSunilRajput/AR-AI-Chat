@@ -459,12 +459,12 @@ function HowItWorksSection({ steps, shouldReduceMotion }: HowItWorksSectionProps
   return (
     <SectionWrapper>
       <div className="rounded-[32px] border border-slate-200 bg-slate-950 px-6 py-14 text-white sm:px-10 lg:px-14 lg:py-16">
-        <SectionHeading
-          eyebrow="How it works"
-          title="Go from setup to live support in minutes"
-          description="A thoughtful process designed to help your team launch quickly without sacrificing quality."
-          align="center"
-        />
+       <SectionHeading
+  eyebrow="How it works"
+  title="Go from setup to live support quickly"
+  description="Set up your chatbot, add your business knowledge, customize the experience, and launch it on your website."
+  align="center"
+/>
         <div className="mt-12 grid gap-5 lg:grid-cols-5">
           {steps.map((step, index) => (
             <motion.div

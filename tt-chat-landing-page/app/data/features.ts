@@ -30,10 +30,11 @@ export const features: FeatureItem[] = [
     description: "Understand intent, drop-off points, and conversion opportunities from one dashboard.",
   },
   {
-    icon: MonitorSmartphone,
-    title: "Multi Website",
-    description: "Deploy the same assistant across multiple websites with a single setup.",
-  },
+  icon: MonitorSmartphone,
+  title: "Website Integration",
+  description:
+    "Add your AI chatbot to your website with a simple integration and provide instant support to visitors.",
+},
   {
     icon: ShieldCheck,
     title: "Secure",
