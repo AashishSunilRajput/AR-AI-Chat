@@ -1304,7 +1304,7 @@ function ContactSection({
 function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/9960811224"
+      href="https://wa.me/+918767311963"
       target="_blank"
       rel="noreferrer"
       aria-label="Contact us on WhatsApp"

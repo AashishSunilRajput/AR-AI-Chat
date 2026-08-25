@@ -1161,7 +1161,7 @@ function ContactSection({
               </div>
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <PhoneCall className="mt-0.5 h-4 w-4 text-blue-600" />
-                <span>8767311963
+                <span>+91 8767311963
 </span>
               </div>
              
@@ -1172,7 +1172,7 @@ function ContactSection({
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="https://wa.me/8767311963" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100">
+              <a href="https://wa.me/+918767311963" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100">
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp
               </a>
@@ -1357,7 +1357,7 @@ function ContactSection({
 function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/9960811224"
+      href="https://wa.me/+918767311963"
       target="_blank"
       rel="noreferrer"
       aria-label="Contact us on WhatsApp"
