@@ -459,12 +459,27 @@ function HowItWorksSection({ steps, shouldReduceMotion }: HowItWorksSectionProps
   return (
     <SectionWrapper>
       <div className="rounded-[32px] border border-slate-200 bg-slate-950 px-6 py-14 text-white sm:px-10 lg:px-14 lg:py-16">
-       <SectionHeading
+       {/* <SectionHeading
   eyebrow="How it works"
   title="Go from setup to live support quickly"
   description="Set up your chatbot, add your business knowledge, customize the experience, and launch it on your website."
   align="center"
-/>
+/> */}
+<div className="mx-auto max-w-2xl text-center">
+  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-300">
+    How it works
+  </p>
+
+  <h2 className="mt-4 text-[1.8rem] font-semibold leading-[1.1] tracking-[-0.02em] text-white sm:text-[2.3rem] lg:text-[2.7rem]">
+    Go from setup to live support quickly
+  </h2>
+
+  <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+    Set up your chatbot, add your business knowledge, customize the
+    experience, and launch it on your website.
+  </p>
+</div>
+
         <div className="mt-12 grid gap-5 lg:grid-cols-5">
           {steps.map((step, index) => (
             <motion.div
