@@ -40,6 +40,10 @@ import exportRoutes from "./routes/export.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 
+
+import whatsappRoutes from "./routes/whatsapp.routes.js";
+
+
 const app = express();
 
 
@@ -352,6 +356,7 @@ app.use(
     errorHandler
 );
 
+app.use("/api/whatsapp", whatsappRoutes);
 
 
 export default app;

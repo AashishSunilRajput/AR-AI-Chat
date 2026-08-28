@@ -148,7 +148,7 @@ model Organization {
   leads          Lead[]
     notifications Notification[]
   settings       OrganizationSetting?
-
+ whatsappAccounts WhatsAppAccount[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -571,4 +571,181 @@ model Notification {
 
   createdAt       DateTime @default(now())
   readAt DateTime?
+}
+
+// ==========================================
+// WHATSAPP AI AGENT
+// ==========================================
+
+enum WhatsAppConnectionStatus {
+  PENDING
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum WhatsAppConversationStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum WhatsAppMessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum WhatsAppMessageStatus {
+  RECEIVED
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
+
+enum WhatsAppAgentMode {
+  AI
+  HUMAN
+}
+
+enum WhatsAppWebhookStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+model WhatsAppAccount {
+  id Int @id @default(autoincrement())
+
+  organizationId Int
+
+  businessAccountId String?
+  name String?
+
+  status WhatsAppConnectionStatus @default(PENDING)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  phoneNumbers WhatsAppPhoneNumber[]
+  webhookEvents WhatsAppWebhookEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+model WhatsAppPhoneNumber {
+  id Int @id @default(autoincrement())
+
+  whatsappAccountId Int
+
+  phoneNumberId String @unique
+  displayPhoneNumber String
+  verifiedName String?
+
+  status WhatsAppConnectionStatus @default(PENDING)
+
+  whatsappAccount WhatsAppAccount @relation(fields: [whatsappAccountId], references: [id], onDelete: Cascade)
+
+  contacts WhatsAppContact[]
+  conversations WhatsAppConversation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([whatsappAccountId])
+}
+
+model WhatsAppContact {
+  id Int @id @default(autoincrement())
+
+  phoneNumberId Int
+
+  waId String @unique
+
+  name String?
+  profileName String?
+
+  phoneNumber WhatsAppPhoneNumber @relation(fields: [phoneNumberId], references: [id], onDelete: Cascade)
+
+  conversations WhatsAppConversation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([phoneNumberId])
+}
+
+model WhatsAppConversation {
+  id Int @id @default(autoincrement())
+
+  phoneNumberId Int
+  contactId Int
+
+  status WhatsAppConversationStatus @default(ACTIVE)
+  agentMode WhatsAppAgentMode @default(AI)
+
+  lastMessageAt DateTime?
+
+  phoneNumber WhatsAppPhoneNumber @relation(fields: [phoneNumberId], references: [id], onDelete: Cascade)
+  contact WhatsAppContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  messages WhatsAppMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([phoneNumberId])
+  @@index([contactId])
+  @@index([status])
+}
+
+model WhatsAppMessage {
+  id Int @id @default(autoincrement())
+
+  conversationId Int
+
+  whatsappMessageId String? @unique
+
+  direction WhatsAppMessageDirection
+  status WhatsAppMessageStatus @default(RECEIVED)
+
+  messageType String @default("text")
+  message String @db.Text
+
+  errorMessage String? @db.Text
+
+  sentAt DateTime?
+  deliveredAt DateTime?
+  readAt DateTime?
+
+  conversation WhatsAppConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([direction])
+  @@index([status])
+}
+
+model WhatsAppWebhookEvent {
+  id Int @id @default(autoincrement())
+
+  whatsappAccountId Int
+
+  eventId String? @unique
+
+  payload Json
+  status WhatsAppWebhookStatus @default(PENDING)
+
+  errorMessage String? @db.Text
+
+  processedAt DateTime?
+
+  whatsappAccount WhatsAppAccount @relation(fields: [whatsappAccountId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([whatsappAccountId])
+  @@index([status])
 }
