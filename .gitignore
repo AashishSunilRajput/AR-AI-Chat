@@ -71,4 +71,4 @@ backend/src/uploads/
 *.tmp
 *.temp
 
-**/src/generated/
+**/src/generated/**
