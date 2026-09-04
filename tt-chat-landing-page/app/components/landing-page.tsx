@@ -1170,7 +1170,7 @@ function ContactSection({
             <div className="mt-8 space-y-4 text-sm text-slate-700">
               <div className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <Mail className="mt-0.5 h-4 w-4 text-blue-600" />
-                <span>tomartechworks@gmail.com
+                <span>account@tomartechworks.com
 
 </span>
               </div>
