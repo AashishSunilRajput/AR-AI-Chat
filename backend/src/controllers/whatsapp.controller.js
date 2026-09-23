@@ -6,6 +6,9 @@ import whatsappMessageService from "../services/whatsapp-message.service.js";
 import whatsappPhoneNumberService
     from "../services/whatsapp-phone-number.service.js";
 
+    import whatsappWebhookService
+    from "../services/whatsapp-webhook.service.js";
+
 class WhatsAppController {
 
     // ==========================================
@@ -913,6 +916,125 @@ class WhatsAppController {
         }
 
     }
+
+    // ==========================================
+    // Verify WhatsApp Webhook
+    // ==========================================
+
+    async verifyWebhook(req, res) {
+
+        try {
+
+            const mode =
+                req.query["hub.mode"];
+
+            const token =
+                req.query["hub.verify_token"];
+
+            const challenge =
+                req.query["hub.challenge"];
+
+            const verifyToken =
+                process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+
+            if (!verifyToken) {
+
+                console.error(
+                    "WHATSAPP_WEBHOOK_VERIFY_TOKEN is not configured"
+                );
+
+                return res.sendStatus(500);
+            }
+
+            if (
+                mode === "subscribe" &&
+                token === verifyToken
+            ) {
+
+                console.log(
+                    "WhatsApp webhook verified successfully"
+                );
+
+                return res.status(200).send(
+                    challenge
+                );
+            }
+
+            console.error(
+                "WhatsApp webhook verification failed"
+            );
+
+            return res.sendStatus(403);
+
+        } catch (error) {
+
+            console.error(
+                "WhatsApp Webhook Verification Error:",
+                error
+            );
+
+            return res.sendStatus(500);
+        }
+    }
+
+
+    // ==========================================
+    // Receive WhatsApp Webhook
+    // ==========================================
+
+    async receiveWebhook(req, res) {
+
+        try {
+
+            console.log(
+                "WhatsApp Webhook Received"
+            );
+
+            const result =
+                await whatsappWebhookService
+                    .processWebhook(
+                        req.body
+                    );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message:
+                    "WhatsApp webhook processed successfully",
+
+                data:
+                    result
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "WhatsApp Webhook Processing Error:",
+                error
+            );
+
+            /*
+             * Meta expects a successful HTTP response
+             * for a webhook that has been received.
+             *
+             * The event itself is marked FAILED
+             * inside the webhook service when processing
+             * fails.
+             */
+
+            return res.status(200).json({
+
+                success: false,
+
+                message:
+                    error.message
+
+            });
+        }
+    }
+
 
 
     // ==========================================

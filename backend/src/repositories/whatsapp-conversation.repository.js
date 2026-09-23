@@ -7,7 +7,19 @@ class WhatsAppConversationRepository {
             data,
             include: {
                 contact: true,
-                phoneNumber: true
+                phoneNumber: {
+                    include: {
+                        whatsappAccount: {
+                            include: {
+                                chatbot: {
+                                    include: {
+                                        settings: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -19,7 +31,19 @@ class WhatsAppConversationRepository {
             },
             include: {
                 contact: true,
-                phoneNumber: true,
+                phoneNumber: {
+                    include: {
+                        whatsappAccount: {
+                            include: {
+                                chatbot: {
+                                    include: {
+                                        settings: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 messages: {
                     orderBy: {
                         createdAt: "asc"
@@ -38,7 +62,19 @@ class WhatsAppConversationRepository {
             },
             include: {
                 contact: true,
-                phoneNumber: true
+                phoneNumber: {
+                    include: {
+                        whatsappAccount: {
+                            include: {
+                                chatbot: {
+                                    include: {
+                                        settings: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -49,7 +85,19 @@ class WhatsAppConversationRepository {
                 contactId: Number(contactId)
             },
             include: {
-                phoneNumber: true
+                phoneNumber: {
+                    include: {
+                        whatsappAccount: {
+                            include: {
+                                chatbot: {
+                                    include: {
+                                        settings: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
             orderBy: {
                 lastMessageAt: "desc"

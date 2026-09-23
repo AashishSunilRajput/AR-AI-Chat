@@ -86,7 +86,6 @@ enum LeadStatus {
   LOST
 }
 
-
 enum DocumentSourceType {
   WEBSITE
   PDF
@@ -95,7 +94,6 @@ enum DocumentSourceType {
 }
 
 enum NotificationType {
-
   NEW_LEAD
 
   NEW_VISITOR
@@ -126,6 +124,7 @@ enum NotificationEntityType {
   USER
   ORGANIZATION
 }
+
 //
 // ORGANIZATION
 //
@@ -142,16 +141,16 @@ model Organization {
   plan   Plan               @default(FREE)
   status OrganizationStatus @default(ACTIVE)
 
-  users          User[]
-  chatbots       Chatbot[]
-  knowledgeBases KnowledgeBase[]
-  visitors       Visitor[]
-  leads          Lead[]
-    notifications Notification[]
-  settings       OrganizationSetting?
- whatsappAccounts WhatsAppAccount[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  users            User[]
+  chatbots         Chatbot[]
+  knowledgeBases   KnowledgeBase[]
+  visitors         Visitor[]
+  leads            Lead[]
+  notifications    Notification[]
+  settings         OrganizationSetting?
+  whatsappAccounts WhatsAppAccount[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 }
 
 //
@@ -175,8 +174,8 @@ model User {
   refreshTokens RefreshToken[]
   sessions      Session[]
   notifications Notification[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 //
@@ -263,7 +262,8 @@ model Chatbot {
   knowledgeBases KnowledgeBase[]
   visitors       Visitor[]
 
-  conversations Conversation[]
+  conversations    Conversation[]
+  whatsappAccounts WhatsAppAccount[]
 
   widgetKey      String   @unique
   allowedDomains Json?
@@ -336,75 +336,75 @@ model KnowledgeBase {
 }
 
 model KnowledgeDocument {
-  id                Int                    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  knowledgeBaseId   Int
+  knowledgeBaseId Int
 
-  title             String
+  title String
 
-  sourceType        DocumentSourceType     @default(WEBSITE)
+  sourceType DocumentSourceType @default(WEBSITE)
 
-  sourceUrl         String?
+  sourceUrl String?
 
-  fileName          String
+  fileName String
 
-  fileType          String
+  fileType String
 
-  fileSize          Int
+  fileSize Int
 
-  storagePath       String
+  storagePath String
 
-  extractedText     String?
+  extractedText String?
 
-  processingStatus  ProcessingStatus       @default(PENDING)
+  processingStatus ProcessingStatus @default(PENDING)
 
   // ==========================
   // Website Import Progress
   // ==========================
 
-  totalPages        Int                    @default(0)
+  totalPages Int @default(0)
 
-  processedPages    Int                    @default(0)
+  processedPages Int @default(0)
 
-  currentUrl        String?
+  currentUrl String?
 
-  startedAt         DateTime?
+  startedAt DateTime?
 
-  completedAt       DateTime?
+  completedAt DateTime?
 
-  failedReason      String?
+  failedReason String?
 
-  importDuration    Int?
+  importDuration Int?
 
   // ==========================
   // Crawl Settings
   // ==========================
 
-  maxPages          Int                    @default(100)
+  maxPages Int @default(100)
 
-  maxDepth          Int                    @default(3)
+  maxDepth Int @default(3)
 
-  sameDomainOnly    Boolean                @default(true)
+  sameDomainOnly Boolean @default(true)
 
-  ignoreQueryParams Boolean                @default(true)
+  ignoreQueryParams Boolean @default(true)
 
-  skipImages        Boolean                @default(true)
+  skipImages Boolean @default(true)
 
-  skipPdf           Boolean                @default(true)
+  skipPdf Boolean @default(true)
 
-  skipDocuments     Boolean                @default(false)
+  skipDocuments Boolean @default(false)
 
-  timeoutMinutes    Int                    @default(10)
+  timeoutMinutes Int @default(10)
 
   // ==========================
 
-  knowledgeBase     KnowledgeBase          @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  knowledgeBase KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
 
-  chunks            KnowledgeChunk[]
+  chunks KnowledgeChunk[]
 
-  createdAt         DateTime               @default(now())
+  createdAt DateTime @default(now())
 
-  updatedAt         DateTime               @updatedAt
+  updatedAt DateTime @updatedAt
 }
 
 model KnowledgeChunk {
@@ -550,28 +550,28 @@ model Lead {
 
   updatedAt DateTime @updatedAt
 }
+
 model Notification {
+  id Int @id @default(autoincrement())
 
-  id              Int      @id @default(autoincrement())
+  organizationId Int?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  organizationId  Int?
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
 
-  userId          Int?
-  user            User? @relation(fields: [userId], references: [id])
+  title   String
+  message String
 
-  title           String
-  message         String
-
-  type            NotificationType
+  type NotificationType
 
   entityType NotificationEntityType?
-  entityId        Int?
+  entityId   Int?
 
-  isRead          Boolean  @default(false)
+  isRead Boolean @default(false)
 
-  createdAt       DateTime @default(now())
-  readAt DateTime?
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
 }
 
 // ==========================================
@@ -618,21 +618,25 @@ model WhatsAppAccount {
   id Int @id @default(autoincrement())
 
   organizationId Int
+  chatbotId      Int?
 
   businessAccountId String?
-  name String?
+  name              String?
 
   status WhatsAppConnectionStatus @default(PENDING)
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  phoneNumbers WhatsAppPhoneNumber[]
+  chatbot Chatbot? @relation(fields: [chatbotId], references: [id], onDelete: SetNull)
+
+  phoneNumbers  WhatsAppPhoneNumber[]
   webhookEvents WhatsAppWebhookEvent[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([organizationId])
+  @@index([chatbotId])
 }
 
 model WhatsAppPhoneNumber {
@@ -640,15 +644,15 @@ model WhatsAppPhoneNumber {
 
   whatsappAccountId Int
 
-  phoneNumberId String @unique
+  phoneNumberId      String  @unique
   displayPhoneNumber String
-  verifiedName String?
+  verifiedName       String?
 
   status WhatsAppConnectionStatus @default(PENDING)
 
   whatsappAccount WhatsAppAccount @relation(fields: [whatsappAccountId], references: [id], onDelete: Cascade)
 
-  contacts WhatsAppContact[]
+  contacts      WhatsAppContact[]
   conversations WhatsAppConversation[]
 
   createdAt DateTime @default(now())
@@ -664,7 +668,7 @@ model WhatsAppContact {
 
   waId String @unique
 
-  name String?
+  name        String?
   profileName String?
 
   phoneNumber WhatsAppPhoneNumber @relation(fields: [phoneNumberId], references: [id], onDelete: Cascade)
@@ -681,15 +685,15 @@ model WhatsAppConversation {
   id Int @id @default(autoincrement())
 
   phoneNumberId Int
-  contactId Int
+  contactId     Int
 
-  status WhatsAppConversationStatus @default(ACTIVE)
-  agentMode WhatsAppAgentMode @default(AI)
+  status    WhatsAppConversationStatus @default(ACTIVE)
+  agentMode WhatsAppAgentMode          @default(AI)
 
   lastMessageAt DateTime?
 
   phoneNumber WhatsAppPhoneNumber @relation(fields: [phoneNumberId], references: [id], onDelete: Cascade)
-  contact WhatsAppContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contact     WhatsAppContact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
   messages WhatsAppMessage[]
 
@@ -709,16 +713,16 @@ model WhatsAppMessage {
   whatsappMessageId String? @unique
 
   direction WhatsAppMessageDirection
-  status WhatsAppMessageStatus @default(RECEIVED)
+  status    WhatsAppMessageStatus    @default(RECEIVED)
 
   messageType String @default("text")
-  message String @db.Text
+  message     String @db.Text
 
   errorMessage String? @db.Text
 
-  sentAt DateTime?
+  sentAt      DateTime?
   deliveredAt DateTime?
-  readAt DateTime?
+  readAt      DateTime?
 
   conversation WhatsAppConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
@@ -737,7 +741,7 @@ model WhatsAppWebhookEvent {
   eventId String? @unique
 
   payload Json
-  status WhatsAppWebhookStatus @default(PENDING)
+  status  WhatsAppWebhookStatus @default(PENDING)
 
   errorMessage String? @db.Text
 

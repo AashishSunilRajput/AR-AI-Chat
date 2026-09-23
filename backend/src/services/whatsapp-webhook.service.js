@@ -1,157 +1,511 @@
-import whatsappWebhookEventRepository from "../repositories/whatsapp-webhook-event.repository.js";
+import whatsappWebhookEventRepository
+    from "../repositories/whatsapp-webhook-event.repository.js";
+
+import whatsappPhoneNumberService
+    from "./whatsapp-phone-number.service.js";
+
+import whatsappMessageService
+    from "./whatsapp-message.service.js";
+
+import whatsappService
+    from "./whatsapp.service.js";
+
 
 class WhatsAppWebhookService {
 
     // ==========================================
-    // Check Duplicate Event
+    // Process Meta Webhook
     // ==========================================
 
-    async findByEventId(eventId) {
-
-        if (!eventId) {
-
-            return null;
-
-        }
-
-        return await whatsappWebhookEventRepository.findByEventId(
-
-            eventId
-
-        );
-
-    }
-
-
-    // ==========================================
-    // Create Webhook Event
-    // ==========================================
-
-    async create({
-
-        whatsappAccountId,
-
-        eventId = null,
-
-        payload
-
-    }) {
-
-        if (!whatsappAccountId) {
-
-            throw new Error(
-                "WhatsApp Account ID is required"
-            );
-
-        }
+    async processWebhook(payload) {
 
         if (!payload) {
-
             throw new Error(
                 "Webhook payload is required"
             );
-
         }
 
+        const entries =
+            payload.entry || [];
 
-        // Prevent duplicate event
+        if (!entries.length) {
+            return {
+                processed: true,
+                message:
+                    "Webhook received without entries"
+            };
+        }
 
-        if (eventId) {
+        const results = [];
 
-            const existingEvent =
+        for (const entry of entries) {
 
-                await this.findByEventId(eventId);
+            const changes =
+                entry.changes || [];
 
+            for (const change of changes) {
 
-            if (existingEvent) {
+                const value =
+                    change.value || {};
 
-                return {
+                const metadata =
+                    value.metadata || {};
 
-                    duplicate: true,
+                const metaPhoneNumberId =
+                    metadata.phone_number_id;
 
-                    event: existingEvent
+                if (!metaPhoneNumberId) {
 
-                };
+                    results.push({
+                        processed: false,
+                        reason:
+                            "Meta phone number ID not found"
+                    });
 
+                    continue;
+                }
+
+                const phoneNumber =
+                    await whatsappPhoneNumberService
+                        .getByPhoneNumberId(
+                            metaPhoneNumberId
+                        );
+
+                if (!phoneNumber) {
+
+                    results.push({
+                        processed: false,
+                        reason:
+                            "WhatsApp phone number not configured",
+                        phoneNumberId:
+                            metaPhoneNumberId
+                    });
+
+                    continue;
+                }
+
+                const whatsappAccountId =
+                    phoneNumber.whatsappAccountId;
+
+                const eventId =
+                    this.generateEventId(
+                        entry,
+                        change
+                    );
+
+                // ==========================================
+                // Duplicate Webhook Check
+                // ==========================================
+
+                if (eventId) {
+
+                    const existingEvent =
+                        await whatsappWebhookEventRepository
+                            .findByEventId(
+                                eventId
+                            );
+
+                    if (existingEvent) {
+
+                        results.push({
+                            processed: true,
+                            duplicate: true,
+                            eventId
+                        });
+
+                        continue;
+                    }
+
+                }
+
+                // ==========================================
+                // Save Webhook Event
+                // ==========================================
+
+                const webhookEvent =
+                    await whatsappWebhookEventRepository
+                        .create({
+
+                            whatsappAccountId,
+
+                            eventId,
+
+                            payload,
+
+                            status: "PENDING"
+
+                        });
+
+                try {
+
+                    // ==========================================
+                    // Incoming Messages
+                    // ==========================================
+
+                    if (
+                        Array.isArray(
+                            value.messages
+                        ) &&
+                        value.messages.length
+                    ) {
+
+                        for (
+                            const message
+                            of value.messages
+                        ) {
+
+                            await this
+                                .processIncomingMessage(
+                                    phoneNumber,
+                                    value,
+                                    message
+                                );
+
+                        }
+
+                    }
+
+                    // ==========================================
+                    // Message Status Updates
+                    // ==========================================
+
+                    if (
+                        Array.isArray(
+                            value.statuses
+                        ) &&
+                        value.statuses.length
+                    ) {
+
+                        for (
+                            const status
+                            of value.statuses
+                        ) {
+
+                            await this
+                                .processMessageStatus(
+                                    status
+                                );
+
+                        }
+
+                    }
+
+                    await whatsappWebhookEventRepository
+                        .markProcessed(
+                            webhookEvent.id
+                        );
+
+                    results.push({
+
+                        processed: true,
+
+                        duplicate: false,
+
+                        eventId,
+
+                        webhookEventId:
+                            webhookEvent.id
+
+                    });
+
+                } catch (error) {
+
+                    await whatsappWebhookEventRepository
+                        .markFailed(
+                            webhookEvent.id,
+                            error.message
+                        );
+
+                    throw error;
+                }
             }
-
         }
-
-
-        const event =
-
-            await whatsappWebhookEventRepository.create({
-
-                whatsappAccountId:
-                    Number(whatsappAccountId),
-
-                eventId,
-
-                payload,
-
-                status:
-                    "PENDING"
-
-            });
-
 
         return {
-
-            duplicate: false,
-
-            event
-
+            processed: true,
+            results
         };
-
     }
 
 
     // ==========================================
-    // Get Pending Events
+    // Process Incoming WhatsApp Message
     // ==========================================
 
-    async getPending(whatsappAccountId) {
+    async processIncomingMessage(
+        phoneNumber,
+        value,
+        message
+    ) {
 
-        return await whatsappWebhookEventRepository.findPending(
+        // ------------------------------------------
+        // Only process text messages for now
+        // ------------------------------------------
 
-            Number(whatsappAccountId)
+        if (
+            message.type !== "text"
+        ) {
 
+            console.log(
+                "WhatsApp message type not supported:",
+                message.type
+            );
+
+            return {
+                processed: false,
+                reason:
+                    "Unsupported message type",
+                messageType:
+                    message.type
+            };
+        }
+
+        const waId =
+            message.from;
+
+        const contactName =
+            value.contacts?.[0]
+                ?.profile
+                ?.name || null;
+
+        const profileName =
+            contactName;
+
+        const messageText =
+            message.text?.body || "";
+
+        if (!waId) {
+            throw new Error(
+                "WhatsApp sender waId is missing"
+            );
+        }
+
+        if (!messageText) {
+            throw new Error(
+                "WhatsApp text message is empty"
+            );
+        }
+
+        const result =
+            await whatsappService
+                .processIncomingMessage({
+
+                    phoneNumberId:
+                        phoneNumber.id,
+
+                    waId,
+
+                    contactName,
+
+                    profileName,
+
+                    whatsappMessageId:
+                        message.id,
+
+                    message:
+                        messageText
+
+                });
+
+        return result;
+    }
+
+
+    // ==========================================
+    // Process Message Status
+    // ==========================================
+
+    async processMessageStatus(status) {
+
+        const whatsappMessageId =
+            status.id;
+
+        const statusValue =
+            status.status;
+
+        if (
+            !whatsappMessageId ||
+            !statusValue
+        ) {
+            return;
+        }
+
+        const message =
+            await whatsappMessageService
+                .getByWhatsAppMessageId(
+                    whatsappMessageId
+                );
+
+        if (!message) {
+
+            console.log(
+                "WhatsApp message not found for status:",
+                whatsappMessageId
+            );
+
+            return;
+        }
+
+        const updateData = {};
+
+        switch (statusValue) {
+
+            case "sent":
+
+                updateData.status =
+                    "SENT";
+
+                updateData.sentAt =
+                    this.getStatusDate(status);
+
+                break;
+
+
+            case "delivered":
+
+                updateData.status =
+                    "DELIVERED";
+
+                updateData.deliveredAt =
+                    this.getStatusDate(status);
+
+                break;
+
+
+            case "read":
+
+                updateData.status =
+                    "READ";
+
+                updateData.readAt =
+                    this.getStatusDate(status);
+
+                break;
+
+
+            case "failed":
+
+                updateData.status =
+                    "FAILED";
+
+                updateData.errorMessage =
+                    this.getStatusError(status);
+
+                break;
+
+
+            default:
+
+                console.log(
+                    "Unknown WhatsApp status:",
+                    statusValue
+                );
+
+                return;
+        }
+
+        await whatsappMessageService.update(
+            message.id,
+            updateData
         );
-
     }
 
 
     // ==========================================
-    // Mark Processed
+    // Generate Event ID
     // ==========================================
 
-    async markProcessed(id) {
+    generateEventId(
+        entry,
+        change
+    ) {
 
-        return await whatsappWebhookEventRepository.markProcessed(
+        const value =
+            change.value || {};
 
-            Number(id)
+        const messageId =
+            value.messages?.[0]?.id;
 
+        if (messageId) {
+            return `message:${messageId}`;
+        }
+
+        const statusId =
+            value.statuses?.[0]?.id;
+
+        if (statusId) {
+            return `status:${statusId}:${value.statuses?.[0]?.status}`;
+        }
+
+        const entryId =
+            entry.id;
+
+        const field =
+            change.field;
+
+        if (
+            entryId &&
+            field
+        ) {
+            return `${entryId}:${field}:${JSON.stringify(value)}`;
+        }
+
+        return null;
+    }
+
+
+    // ==========================================
+    // Get Status Date
+    // ==========================================
+
+    getStatusDate(status) {
+
+        if (!status.timestamp) {
+            return new Date();
+        }
+
+        const timestamp =
+            Number(
+                status.timestamp
+            );
+
+        if (
+            Number.isNaN(timestamp)
+        ) {
+            return new Date();
+        }
+
+        return new Date(
+            timestamp * 1000
         );
-
     }
 
 
     // ==========================================
-    // Mark Failed
+    // Get Status Error
     // ==========================================
 
-    async markFailed(id, errorMessage) {
+    getStatusError(status) {
 
-        return await whatsappWebhookEventRepository.markFailed(
+        const errors =
+            status.errors || [];
 
-            Number(id),
+        if (!errors.length) {
+            return "WhatsApp message failed";
+        }
 
-            errorMessage
+        return errors
+            .map(error => {
 
-        );
+                return (
+                    error.title ||
+                    error.message ||
+                    `WhatsApp error code: ${error.code || "unknown"}`
+                );
 
+            })
+            .join("; ");
     }
-
 }
 
 

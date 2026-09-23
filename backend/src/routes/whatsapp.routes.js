@@ -8,6 +8,26 @@ const router = express.Router();
 
 
 // ==========================================
+// WhatsApp Webhook
+// ==========================================
+
+router.get(
+
+    "/webhook",
+
+    whatsappController.verifyWebhook
+
+);
+
+router.post(
+
+    "/webhook",
+
+    whatsappController.receiveWebhook
+
+);
+
+// ==========================================
 // WhatsApp Account
 // ==========================================
 

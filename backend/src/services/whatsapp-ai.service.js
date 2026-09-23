@@ -1,6 +1,3 @@
-import whatsappConversationRepository
-    from "../repositories/whatsapp-conversation.repository.js";
-
 import whatsappMessageRepository
     from "../repositories/whatsapp-message.repository.js";
 
@@ -9,6 +6,9 @@ import knowledgeSearchService
 
 import openAIService
     from "./openai.service.js";
+
+import whatsappCloudService
+    from "./whatsapp-cloud.service.js";
 
 
 class WhatsAppAIService {
@@ -65,6 +65,23 @@ class WhatsAppAIService {
 
 
         // ==========================================
+        // Get WhatsApp Recipient
+        // ==========================================
+
+        const recipientWaId =
+            conversation.contact?.waId;
+
+
+        if (!recipientWaId) {
+
+            throw new Error(
+                "WhatsApp recipient waId is not available"
+            );
+
+        }
+
+
+        // ==========================================
         // Knowledge Search
         // ==========================================
 
@@ -88,6 +105,31 @@ class WhatsAppAIService {
                 "I can only answer questions related to this business. Please ask about our services, products, pricing, or other information available in our knowledge base.";
 
 
+            // ------------------------------------------
+            // Send fallback message to WhatsApp
+            // ------------------------------------------
+
+            const whatsappResponse =
+                await whatsappCloudService.sendTextMessage({
+
+                    to:
+                        recipientWaId,
+
+                    message:
+                        fallbackMessage
+
+                });
+
+
+            const whatsappMessageId =
+                whatsappResponse
+                    ?.messages?.[0]?.id || null;
+
+
+            // ------------------------------------------
+            // Save OUTBOUND message
+            // ------------------------------------------
+
             const aiMessage =
                 await whatsappMessageRepository.create({
 
@@ -95,7 +137,8 @@ class WhatsAppAIService {
                         conversation.id,
 
                     whatsappMessageId:
-                        null,
+
+                        whatsappMessageId,
 
                     direction:
                         "OUTBOUND",
@@ -117,7 +160,9 @@ class WhatsAppAIService {
                 aiProcessed: true,
 
                 message:
-                    aiMessage
+                    aiMessage,
+
+                whatsappResponse
 
             };
 
@@ -223,6 +268,31 @@ ${item.content}`
 
 
         // ==========================================
+        // Send AI Reply to WhatsApp
+        // ==========================================
+
+        const whatsappResponse =
+            await whatsappCloudService.sendTextMessage({
+
+                to:
+                    recipientWaId,
+
+                message:
+                    aiResponse.message
+
+            });
+
+
+        // ==========================================
+        // Get Meta WhatsApp Message ID
+        // ==========================================
+
+        const whatsappMessageId =
+            whatsappResponse
+                ?.messages?.[0]?.id || null;
+
+
+        // ==========================================
         // Save OUTBOUND Message
         // ==========================================
 
@@ -233,7 +303,8 @@ ${item.content}`
                     conversation.id,
 
                 whatsappMessageId:
-                    null,
+
+                    whatsappMessageId,
 
                 direction:
                     "OUTBOUND",
@@ -261,6 +332,8 @@ ${item.content}`
             message:
                 aiMessage,
 
+            whatsappResponse,
+
             usage:
                 aiResponse.usage
 
@@ -272,3 +345,4 @@ ${item.content}`
 
 
 export default new WhatsAppAIService();
+
