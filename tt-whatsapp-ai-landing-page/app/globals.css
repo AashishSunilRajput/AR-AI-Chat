@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+:root { --background: #ffffff; --foreground: #0f172a; --navy: #071a3d; --blue: #2563eb; --whatsapp: #25d366; }
+@theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --font-sans: ui-sans-serif, system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--background); color: var(--foreground); font-family: ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3 { text-wrap: balance; }
+a, button { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
+a:focus-visible, button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, .25); }
