@@ -24,7 +24,7 @@
         new URL(currentScript.src).origin;
 
     const API_URL =
-        "http://localhost:5000/api";
+        "https://chatapi.tomartechworks.com/api";
 
     loadManifest();
 
