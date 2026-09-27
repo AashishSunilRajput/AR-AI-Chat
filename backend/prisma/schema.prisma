@@ -130,6 +130,7 @@ enum NotificationEntityType {
 //
 
 model Organization {
+  @@map("organization")
   id      Int     @id @default(autoincrement())
   name    String
   slug    String  @unique
@@ -158,6 +159,7 @@ model Organization {
 //
 
 model User {
+   @@map("user")
   id Int @id @default(autoincrement())
 
   organizationId Int?
@@ -183,6 +185,7 @@ model User {
 //
 
 model OrganizationSetting {
+    @@map("organizationsetting")
   id Int @id @default(autoincrement())
 
   organizationId Int @unique
@@ -206,6 +209,7 @@ model OrganizationSetting {
 //
 
 model RefreshToken {
+  @@map("refreshtoken")
   id Int @id @default(autoincrement())
 
   token String @unique
@@ -226,6 +230,7 @@ model RefreshToken {
 //
 
 model Session {
+   @@map("session")
   id Int @id @default(autoincrement())
 
   userId Int
@@ -244,6 +249,7 @@ model Session {
 }
 
 model Chatbot {
+   @@map("chatbot")
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -273,6 +279,7 @@ model Chatbot {
 }
 
 model ChatbotSetting {
+  @@map("chatbotsetting")
   id Int @id @default(autoincrement())
 
   chatbotId Int @unique
@@ -312,6 +319,7 @@ model ChatbotSetting {
 }
 
 model KnowledgeBase {
+  @@map("knowledgebase")
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -336,6 +344,7 @@ model KnowledgeBase {
 }
 
 model KnowledgeDocument {
+   @@map("knowledgedocument")
   id Int @id @default(autoincrement())
 
   knowledgeBaseId Int
@@ -408,6 +417,7 @@ model KnowledgeDocument {
 }
 
 model KnowledgeChunk {
+  @@map("knowledgechunk")
   id Int @id @default(autoincrement())
 
   documentId Int
@@ -426,6 +436,7 @@ model KnowledgeChunk {
 }
 
 model KnowledgeEmbedding {
+  @@map("knowledgeembedding")
   id Int @id @default(autoincrement())
 
   chunkId Int
@@ -444,6 +455,7 @@ model KnowledgeEmbedding {
 }
 
 model Visitor {
+  @@map("visitor")
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -475,6 +487,7 @@ model Visitor {
 }
 
 model Conversation {
+   @@map("conversation")
   id Int @id @default(autoincrement())
 
   visitorId Int
@@ -499,6 +512,7 @@ model Conversation {
 }
 
 model Message {
+  @@map("message")
   id Int @id @default(autoincrement())
 
   conversationId Int
@@ -519,6 +533,7 @@ model Message {
 }
 
 model Lead {
+    @@map("lead")
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -552,6 +567,7 @@ model Lead {
 }
 
 model Notification {
+  @@map("notification")
   id Int @id @default(autoincrement())
 
   organizationId Int?
@@ -615,6 +631,7 @@ enum WhatsAppWebhookStatus {
 }
 
 model WhatsAppAccount {
+  @@map("whatsappaccount")
   id Int @id @default(autoincrement())
 
   organizationId Int
@@ -640,6 +657,7 @@ model WhatsAppAccount {
 }
 
 model WhatsAppPhoneNumber {
+  @@map("whatsappphonenumber")
   id Int @id @default(autoincrement())
 
   whatsappAccountId Int
@@ -662,6 +680,7 @@ model WhatsAppPhoneNumber {
 }
 
 model WhatsAppContact {
+   @@map("whatsappcontact")
   id Int @id @default(autoincrement())
 
   phoneNumberId Int
@@ -682,6 +701,7 @@ model WhatsAppContact {
 }
 
 model WhatsAppConversation {
+   @@map("whatsappconversation")
   id Int @id @default(autoincrement())
 
   phoneNumberId Int
@@ -706,6 +726,7 @@ model WhatsAppConversation {
 }
 
 model WhatsAppMessage {
+   @@map("whatsappmessage")
   id Int @id @default(autoincrement())
 
   conversationId Int
@@ -734,6 +755,7 @@ model WhatsAppMessage {
 }
 
 model WhatsAppWebhookEvent {
+  @@map("whatsappwebhookevent")
   id Int @id @default(autoincrement())
 
   whatsappAccountId Int
