@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -79,6 +80,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white">
         {children}
+        <Script
+  src="https://chatwidget.tomartechworks.com/widget.js"
+  data-key="ar_live_ddQ_2FG0KCWqO7cq"
+  strategy="afterInteractive"
+/>
       </body>
     </html>
   );
