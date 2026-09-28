@@ -14,13 +14,8 @@ export interface KnowledgeBase {
         id: number;
         name: string;
     };
-    
-    organization?: {
-    id: number;
-    name: string;
-};
 
-   _count?: {
+      _count?: {
         documents: number;
     };
 

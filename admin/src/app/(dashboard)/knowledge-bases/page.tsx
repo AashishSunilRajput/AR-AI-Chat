@@ -219,7 +219,7 @@ export default function KnowledgeBasesPage() {
 
                                     <td
 
-                                        colSpan={6}
+                                        colSpan={5}
 
                                         className="
                                             p-10
@@ -267,9 +267,7 @@ export default function KnowledgeBasesPage() {
                                         </div>
 
                                     </td>
-                                    <td className="p-4">
-    {kb.organization?.name || "-"}
-</td>
+                                    
 
                                     <td className="p-4">
 
