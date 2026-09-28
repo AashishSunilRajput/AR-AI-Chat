@@ -23,7 +23,7 @@ export default function ConversationDetail({
       const token = localStorage.getItem("arai_token");
 
       const res = await fetch(
-        `http://localhost:5000/api/conversations/${id}`,
+        `https://chatapi.tomartechworks.com/api/conversations/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ async function closeConversation() {
     const token = localStorage.getItem("arai_token");
 
     const res = await fetch(
-      `http://localhost:5000/api/conversations/${id}/close`,
+      `https://chatapi.tomartechworks.com/api/conversations/${id}/close`,
       {
         method: "PATCH",
         headers: {

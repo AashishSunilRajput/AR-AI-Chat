@@ -5,7 +5,7 @@ function Avatar({
 
 
     const avatarUrl = avatar
-        ? `http://localhost:5000${avatar}`
+        ? `https://chatapi.tomartechworks.com${avatar}`
         : null;
 
 
