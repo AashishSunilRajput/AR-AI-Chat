@@ -1,68 +1,46 @@
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const documentsPath =
-    "src/uploads/documents";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Persistent upload root
+const uploadRoot =
+    process.env.UPLOADS_ROOT ||
+    path.resolve(__dirname, "../../../uploads");
 
-const imagesPath =
-    "src/uploads/images";
+const imagesPath = path.join(
+    uploadRoot,
+    "images"
+);
 
-
-
-// Create Documents Folder
+const documentsPath = path.join(
+    uploadRoot,
+    "documents"
+);
 
 if (!fs.existsSync(documentsPath)) {
-
-    fs.mkdirSync(
-        documentsPath,
-        {
-            recursive:true
-        }
-    );
-
+    fs.mkdirSync(documentsPath, {
+        recursive: true
+    });
 }
-
-
-
-// Create Images Folder
 
 if (!fs.existsSync(imagesPath)) {
-
-    fs.mkdirSync(
-        imagesPath,
-        {
-            recursive:true
-        }
-    );
-
+    fs.mkdirSync(imagesPath, {
+        recursive: true
+    });
 }
-
-
 
 class LocalStorage {
 
-
-    // Knowledge Base Documents
-
     getDestination() {
-
         return documentsPath;
-
     }
-
-
-
-    // Organization Logo
-    // Chatbot Avatar
 
     getImageDestination() {
-
         return imagesPath;
-
     }
-
-
 }
-
 
 export default new LocalStorage();

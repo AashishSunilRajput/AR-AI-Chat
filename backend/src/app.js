@@ -82,18 +82,13 @@ app.use(
 // ==========================================
 
 app.use(
-
     "/uploads",
-
     express.static(
-
         path.join(
             process.cwd(),
-            "src/uploads"
+            "../../../public_html/uploads"
         )
-
     )
-
 );
 
 
