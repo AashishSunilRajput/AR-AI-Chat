@@ -21,8 +21,16 @@ class WebsiteCleaner {
         $("nav").remove();
 
 
-        const text = $("body")
-            .text();
+        
+const text = $("body")
+    .text();
+
+console.log("CLEANED WEBSITE TEXT:", text.length);
+console.log(
+    "CLEANED WEBSITE PREVIEW:",
+    text.substring(0, 2000)
+);
+            
 
 
         return text
