@@ -93,6 +93,13 @@ class KnowledgeSearchService {
 
             return [];
 
+            console.log("VECTOR TYPE:", typeof embeddings[0].vector);
+console.log("IS ARRAY:", Array.isArray(embeddings[0].vector));
+console.log("VECTOR LENGTH:", embeddings[0].vector?.length);
+console.log("FIRST 5 VALUES:", embeddings[0].vector?.slice?.(0, 5));
+
+const results = [];
+
         }
 
 
