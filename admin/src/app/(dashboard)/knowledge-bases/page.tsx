@@ -178,6 +178,12 @@ export default function KnowledgeBasesPage() {
 
                             <th className="p-4 text-left">
 
+                                Orgenization
+
+                            </th>
+
+                            <th className="p-4 text-left">
+
                                 Chatbot
 
                             </th>
@@ -213,7 +219,7 @@ export default function KnowledgeBasesPage() {
 
                                     <td
 
-                                        colSpan={5}
+                                        colSpan={6}
 
                                         className="
                                             p-10
@@ -261,6 +267,9 @@ export default function KnowledgeBasesPage() {
                                         </div>
 
                                     </td>
+                                    <td className="p-4">
+    {kb.organization?.name || "-"}
+</td>
 
                                     <td className="p-4">
 
