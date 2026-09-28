@@ -363,7 +363,7 @@ model KnowledgeDocument {
 
   storagePath String
 
-  extractedText String?
+  extractedText String? @db.LongText
 
   processingStatus ProcessingStatus @default(PENDING)
 
@@ -424,7 +424,7 @@ model KnowledgeChunk {
 
   chunkIndex Int
 
-  content String
+  content String @db.LongText
 
   tokenCount Int?
 
