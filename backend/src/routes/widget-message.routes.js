@@ -5,6 +5,18 @@ import widgetAuth from "../middleware/widget-auth.middleware.js";
 
 const router = express.Router();
 
+
+// ==========================================
+// Get Conversation Messages
+// ==========================================
+
+router.get(
+
+    "/conversation/:conversationId",
+
+    messageController.history
+
+);
 // ==========================================
 // Widget Send Message
 // ==========================================
