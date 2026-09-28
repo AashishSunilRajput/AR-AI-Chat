@@ -190,7 +190,7 @@ const results = [];
         for (const item of results) {
 
 
-            if (item.similarity < 0.30) {
+            if (item.similarity < 0.15) {
 
                 continue;
 
