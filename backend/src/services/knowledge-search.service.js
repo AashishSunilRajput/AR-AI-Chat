@@ -1,9 +1,7 @@
 import embeddingRepository from "../repositories/embedding.repository.js";
 import openAIEmbeddingProvider from "../providers/openai.embedding.provider.js";
 
-
 class KnowledgeSearchService {
-
 
     // ==========================================
     // Cosine Similarity
@@ -11,30 +9,19 @@ class KnowledgeSearchService {
 
     cosineSimilarity(a, b) {
 
-
         let dot = 0;
-
         let normA = 0;
-
         let normB = 0;
-
-
 
         for (let i = 0; i < a.length; i++) {
 
-
             dot += a[i] * b[i];
-
 
             normA += a[i] * a[i];
 
-
             normB += b[i] * b[i];
 
-
         }
-
-
 
         if (normA === 0 || normB === 0) {
 
@@ -42,18 +29,12 @@ class KnowledgeSearchService {
 
         }
 
-
-
         return (
             dot /
             (Math.sqrt(normA) * Math.sqrt(normB))
         );
 
-
     }
-
-
-
 
 
     // ==========================================
@@ -62,188 +43,150 @@ class KnowledgeSearchService {
 
     async search(chatbotId, question) {
 
-
-        // Generate Question Embedding
+        // ------------------------------------------
+        // Generate query embedding
+        // ------------------------------------------
 
         const queryEmbedding =
-
             await openAIEmbeddingProvider.generateEmbedding(
-
                 question
-
             );
 
 
-
-
-        // Get Chatbot Knowledge Embeddings
+        // ------------------------------------------
+        // Get all chatbot embeddings
+        // ------------------------------------------
 
         const embeddings =
-
             await embeddingRepository.findByChatbot(
-
                 chatbotId
-
             );
-
-
 
 
         if (!embeddings.length) {
 
             return [];
 
-            console.log("VECTOR TYPE:", typeof embeddings[0].vector);
-console.log("IS ARRAY:", Array.isArray(embeddings[0].vector));
-console.log("VECTOR LENGTH:", embeddings[0].vector?.length);
-console.log("FIRST 5 VALUES:", embeddings[0].vector?.slice?.(0, 5));
-
-const results = [];
-
         }
 
 
-
+        // ------------------------------------------
+        // Calculate similarity
+        // ------------------------------------------
 
         const results = [];
 
 
+        for (const item of embeddings) {
 
+            const similarity =
+                this.cosineSimilarity(
+                    queryEmbedding.embedding,
+                    item.vector
+                );
 
-        // Calculate Similarity
 
-     for (const item of embeddings) {
+            results.push({
 
+                similarity,
 
-    const similarity =
+                content:
+                    item.chunk.content,
 
-        this.cosineSimilarity(
+                document:
+                    item.chunk.document.title
 
-            queryEmbedding.embedding,
-
-            item.vector
-
-        );
-
-
-    console.log(
-        "----------------------------"
-    );
-
-    console.log(
-        "SIMILARITY:",
-        similarity
-    );
-
-    console.log(
-        "DOCUMENT:",
-        item.chunk.document.title
-    );
-
-    console.log(
-        "CONTENT:",
-        item.chunk.content.substring(0,200)
-    );
-
-
-    results.push({
-
-        similarity,
-
-        content:
-            item.chunk.content,
-
-        document:
-            item.chunk.document.title
-
-    });
-
-
-}
-
-
-
-
-        // Sort Highest Similarity First
-
-        results.sort(
-
-            (a,b) =>
-                b.similarity - a.similarity
-
-        );
-
-
-
-
-
-        // ==========================================
-        // Filter Relevant Results
-        // ==========================================
-
-        const relevantResults = [];
-
-        const documentLimit = {};
-
-
-
-        for (const item of results) {
-
-
-            if (item.similarity < 0.15) {
-
-                continue;
-
-            }
-
-
-
-            if (!documentLimit[item.document]) {
-
-                documentLimit[item.document] = 0;
-
-            }
-
-
-
-            // Maximum 2 chunks from same document
-
-            if (documentLimit[item.document] >= 2) {
-
-                continue;
-
-            }
-
-
-
-            documentLimit[item.document]++;
-
-
-
-            relevantResults.push(item);
-
-
-
-            if (relevantResults.length >= 5) {
-
-                break;
-
-            }
-
+            });
 
         }
 
 
+        // ------------------------------------------
+        // Sort by similarity
+        // ------------------------------------------
 
+        results.sort(
+            (a, b) =>
+                b.similarity - a.similarity
+        );
+
+
+        // ------------------------------------------
+        // Debug top results
+        // ------------------------------------------
+
+        console.log(
+            "======================================"
+        );
+
+        console.log(
+            "KNOWLEDGE SEARCH QUESTION:",
+            question
+        );
+
+        console.log(
+            "TOP SIMILARITY RESULTS:"
+        );
+
+
+        results
+            .slice(0, 10)
+            .forEach((item, index) => {
+
+                console.log(
+                    `#${index + 1}`,
+                    "Similarity:",
+                    item.similarity
+                );
+
+                console.log(
+                    "Content:",
+                    item.content.substring(0, 300)
+                );
+
+                console.log(
+                    "--------------------------------------"
+                );
+
+            });
+
+
+        // ------------------------------------------
+        // Relevance threshold
+        // ------------------------------------------
+
+        const MIN_SIMILARITY = 0.15;
+
+
+        const relevantResults =
+            results
+                .filter(
+                    item =>
+                        item.similarity >=
+                        MIN_SIMILARITY
+                )
+                .slice(0, 5);
+
+
+        console.log(
+            "FINAL KNOWLEDGE RESULTS:",
+            relevantResults.map(item => ({
+                similarity: item.similarity,
+                document: item.document,
+                content: item.content.substring(0, 300)
+            }))
+        );
+
+
+        console.log(
+            "======================================"
+        );
 
 
         return relevantResults;
 
-
     }
 
-
 }
-
 
 export default new KnowledgeSearchService();
