@@ -176,11 +176,7 @@ export default function KnowledgeBasesPage() {
 
                             </th>
 
-                            <th className="p-4 text-left">
-
-                                Orgenization
-
-                            </th>
+                           
 
                             <th className="p-4 text-left">
 
@@ -267,7 +263,9 @@ export default function KnowledgeBasesPage() {
                                         </div>
 
                                     </td>
-                                    
+                                    <td className="p-4">
+    {kb.organization?.name || "-"}
+</td>
 
                                     <td className="p-4">
 
