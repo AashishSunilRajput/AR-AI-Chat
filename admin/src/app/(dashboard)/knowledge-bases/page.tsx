@@ -263,9 +263,7 @@ export default function KnowledgeBasesPage() {
                                         </div>
 
                                     </td>
-                                    <td className="p-4">
-    {kb.organization?.name || "-"}
-</td>
+                                    
 
                                     <td className="p-4">
 
