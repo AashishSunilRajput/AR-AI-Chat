@@ -5,8 +5,12 @@ function Avatar({
 
 
     const avatarUrl = avatar
-        ? `https://chatstorage.tomartechworks.com${avatar}`
-        : null;
+    ? (
+        avatar.startsWith("http")
+            ? avatar
+            : `https://chatstorage.tomartechworks.com${avatar}`
+    )
+    : null;
 
 
     if (assistant) {
