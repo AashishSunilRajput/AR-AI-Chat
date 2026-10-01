@@ -101,14 +101,9 @@ export default function AvatarSettingsCard({
 
 
 
-            setPreview(
-
-                `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                    "/api",
-                    ""
-                )}${response.data.avatar}`
-
-            );
+           setPreview(
+    getStorageUrl(response.data.avatar)
+);
 
 
 

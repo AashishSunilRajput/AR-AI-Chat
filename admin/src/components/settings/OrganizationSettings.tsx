@@ -4,6 +4,7 @@ import { useState } from "react";
 import settingService from "@/services/setting.service";
 import organizationService from "@/services/organization.service";
 import { toast } from "sonner";
+import { getStorageUrl } from "@/utils/storage-url";
 
 interface Props {
     organization: any;
@@ -178,11 +179,7 @@ const [logoPreview, setLogoPreview] = useState(
         {logoPreview ? (
 
            <img
-    src={
-        logoPreview.startsWith("http")
-        ? logoPreview
-        : `${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${logoPreview}`
-    }
+   src={getStorageUrl(logoPreview) ?? undefined}
     alt="Organization Logo"
     className="h-20 w-20 rounded-xl border object-cover"
 />

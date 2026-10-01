@@ -6,6 +6,8 @@ import { toast } from "sonner";
 
 import organizationService from "@/services/organization.service";
 
+import { getStorageUrl } from "@/utils/storage-url";
+
 interface Props {
     organization: any;
 }
@@ -14,17 +16,8 @@ export default function EditOrganizationForm({
     organization,
 }: Props) {
 
-  const [preview, setPreview] = useState(
-
-    organization.logo
-
-        ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
-            "/api",
-            ""
-        )}${organization.logo}`
-
-        : null
-
+ const [preview, setPreview] = useState(
+    getStorageUrl(organization.logo)
 );
 
 const handleLogoChange = async (
@@ -54,12 +47,9 @@ const handleLogoChange = async (
 
         console.log("UPLOAD SUCCESS:", response);
 
-        setPreview(
-            `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                "/api",
-                ""
-            )}${response.data.logo}`
-        );
+       setPreview(
+    getStorageUrl(response.data.logo)
+);
 
         toast.success(
             "Organization logo updated successfully."

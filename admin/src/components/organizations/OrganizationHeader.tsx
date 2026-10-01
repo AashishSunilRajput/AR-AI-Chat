@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Pencil } from "lucide-react";
+import { getStorageUrl } from "@/utils/storage-url";
 
 interface Props {
     organization: any;
@@ -13,9 +14,7 @@ export default function OrganizationHeader({
 
     const router = useRouter();
 
-    const logoUrl = organization.logo
-        ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${organization.logo}`
-        : null;
+    const logoUrl = getStorageUrl(organization.logo);
 
     return (
 
