@@ -5,6 +5,8 @@ import { toast } from "sonner";
 
 import chatbotSettingService from "@/services/chatbot-setting.service";
 
+import { getStorageUrl } from "@/utils/storage-url";
+
 interface Props {
 
     chatbotId: number;
@@ -27,17 +29,21 @@ export default function AvatarSettingsCard({
 }: Props) {
 
 
+    // const [preview, setPreview] =
+    //     useState<string | null>(
+
+    //         avatar
+    //             ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
+    //                 "/api",
+    //                 ""
+    //             )}${avatar}`
+    //             : null
+
+    //     );
     const [preview, setPreview] =
-        useState<string | null>(
-
-            avatar
-                ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                    "/api",
-                    ""
-                )}${avatar}`
-                : null
-
-        );
+    useState<string | null>(
+        getStorageUrl(avatar)
+    );
 
 
     const [uploading, setUploading] =
