@@ -5,7 +5,7 @@ function Avatar({
 
 
     const avatarUrl = avatar
-        ? `https://chatapi.tomartechworks.com${avatar}`
+        ? `https://chatstorage.tomartechworks.com${avatar}`
         : null;
 
 
