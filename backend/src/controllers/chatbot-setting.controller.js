@@ -103,6 +103,9 @@ const data =
         avatar
     );
 
+data.avatar =
+    getStorageUrl(data.avatar);
+
 await fs.unlink(req.file.path);
 
         return res.status(200).json({
