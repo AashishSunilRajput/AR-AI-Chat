@@ -1,4 +1,7 @@
 import chatbotSettingService from "../services/chatbot-setting.service.js";
+import fs from "fs/promises";
+import remoteStorage from "../storage/remote.storage.js";
+import { getStorageUrl } from "../utils/storage-url.js";
 
 class ChatbotSettingController {
 
@@ -84,19 +87,23 @@ async uploadAvatar(req, res, next) {
 
         }
 
-        const avatar =
-            `/uploads/images/${req.file.filename}`;
+    const result =
+    await remoteStorage.upload(
+        req.file.path,
+        "images"
+    );
 
-        const data =
-            await chatbotSettingService.updateAvatar(
+const avatar =
+    `/uploads/images/${result.filename}`;
 
-                req.params.chatbotId,
+const data =
+    await chatbotSettingService.updateAvatar(
+        req.params.chatbotId,
+        req.user,
+        avatar
+    );
 
-                req.user,
-
-                avatar
-
-            );
+await fs.unlink(req.file.path);
 
         return res.status(200).json({
 

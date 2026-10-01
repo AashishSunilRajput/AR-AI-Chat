@@ -3,6 +3,8 @@ import express from "express";
 import authMiddleware from "../middleware/auth.middleware.js";
 import authorize from "../middleware/authorize.middleware.js";
 
+
+
 const router = express.Router();
 
 // Everyone (Logged In)
@@ -84,5 +86,8 @@ router.get(
 
     }
 );
+
+
+
 
 export default router;

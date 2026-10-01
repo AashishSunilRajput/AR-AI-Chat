@@ -1,4 +1,6 @@
 import organizationService from "../services/organization.service.js";
+import fs from "fs/promises";
+import remoteStorage from "../storage/remote.storage.js";
 
 class OrganizationController {
 
@@ -97,17 +99,34 @@ async uploadLogo(req, res) {
 
         }
 
-        const logo =
-            `/uploads/images/${req.file.filename}`;
+        // const logo =
+        //     `/uploads/images/${req.file.filename}`;
 
-        const organization =
-            await organizationService.updateLogo(
+        // const organization =
+        //     await organizationService.updateLogo(
 
-                Number(req.params.id),
+        //         Number(req.params.id),
 
-                logo
+        //         logo
 
-            );
+        //     );
+
+        const result =
+    await remoteStorage.upload(
+        req.file.path,
+        "images"
+    );
+
+const logo =
+    `/uploads/images/${result.filename}`;
+
+const organization =
+    await organizationService.updateLogo(
+        Number(req.params.id),
+        logo
+    );
+
+await fs.unlink(req.file.path);
 
         return res.status(200).json({
 

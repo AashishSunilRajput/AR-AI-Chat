@@ -1,5 +1,6 @@
 import chatbotRepository from "../repositories/chatbot.repository.js";
 import chatbotSettingRepository from "../repositories/chatbot-setting.repository.js";
+import { getStorageUrl } from "../utils/storage-url.js";
 
 class ChatbotSettingService {
 
@@ -93,7 +94,10 @@ class ChatbotSettingService {
 
         }
 
-        return settings;
+       return {
+    ...settings,
+    avatar: getStorageUrl(settings.avatar)
+};
 
     }
 

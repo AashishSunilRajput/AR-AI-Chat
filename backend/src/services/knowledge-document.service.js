@@ -6,6 +6,8 @@ import knowledgeDocumentRepository from "../repositories/knowledge-document.repo
 
 import extractorFactory from "../utils/extractors/extractor.factory.js";
 import embeddingRepository from "../repositories/embedding.repository.js";
+import remoteStorage from "../storage/remote.storage.js";
+import { getStorageUrl } from "../utils/storage-url.js";
 class KnowledgeDocumentService {
 
     // ==========================================
@@ -48,26 +50,44 @@ class KnowledgeDocumentService {
         // Create Document
         // ==========================================
 
-        const document =
-            await knowledgeDocumentRepository.create({
+        // const document =
+        //     await knowledgeDocumentRepository.create({
 
-                knowledgeBaseId: Number(knowledgeBaseId),
+        //         knowledgeBaseId: Number(knowledgeBaseId),
 
-                title: path.parse(
-                    file.originalname
-                ).name,
+        //         title: path.parse(
+        //             file.originalname
+        //         ).name,
 
-                fileName: file.filename,
+        //         fileName: file.filename,
 
-                fileType: file.mimetype,
+        //         fileType: file.mimetype,
 
-                fileSize: file.size,
+        //         fileSize: file.size,
 
-                storagePath: file.path,
+        //         storagePath: file.path,
 
-                processingStatus: "PENDING"
+        //         processingStatus: "PENDING"
 
-            });
+        //     });
+
+        const remoteFile =
+    await remoteStorage.upload(
+        file.path,
+        "documents"
+    );
+
+const document =
+    await knowledgeDocumentRepository.create({
+        knowledgeBaseId: Number(knowledgeBaseId),
+        title: path.parse(file.originalname).name,
+        fileName: remoteFile.filename,
+        fileType: file.mimetype,
+        fileSize: file.size,
+        storagePath:
+            `/uploads/documents/${remoteFile.filename}`,
+        processingStatus: "PENDING"
+    });
 
         // ==========================================
         // Update Status -> PROCESSING
@@ -106,51 +126,58 @@ class KnowledgeDocumentService {
             // Extract Text
             // ==========================================
 
+            // const extractedText =
+            //     await extractor.extract(
+            //         file.path
+            //     );
+
+            // // ==========================================
+            // // Save Extracted Text
+            // // ==========================================
+
+            // await knowledgeDocumentRepository.update(
+
+            //     document.id,
+
+            //     {
+
+            //         extractedText,
+
+            //         processingStatus: "COMPLETED"
+
+            //     }
+
+            // );
+
             const extractedText =
-                await extractor.extract(
-                    file.path
-                );
+    await extractor.extract(file.path);
 
-            // ==========================================
-            // Save Extracted Text
-            // ==========================================
+await knowledgeDocumentRepository.update(
+    document.id,
+    {
+        extractedText,
+        processingStatus: "COMPLETED"
+    }
+);
 
-            await knowledgeDocumentRepository.update(
-
-                document.id,
-
-                {
-
-                    extractedText,
-
-                    processingStatus: "COMPLETED"
-
-                }
-
-            );
+await fs.unlink(file.path);
 
         }
-        catch (error) {
+       catch (error) {
 
-            // ==========================================
-            // Failed
-            // ==========================================
+    await knowledgeDocumentRepository.update(
+        document.id,
+        { processingStatus: "FAILED" }
+    );
 
-            await knowledgeDocumentRepository.update(
+    try {
+        await fs.unlink(file.path);
+    } catch {
+        // Ignore if temporary file does not exist
+    }
 
-                document.id,
-
-                {
-
-                    processingStatus: "FAILED"
-
-                }
-
-            );
-
-            throw error;
-
-        }
+    throw error;
+}
 
         return await knowledgeDocumentRepository.findById(
             document.id
@@ -208,16 +235,19 @@ const data = await Promise.all(
                 doc.id
             );
 
-        return {
+       return {
 
-            ...doc,
+    ...doc,
 
-            chunkCount:
-                doc._count.chunks,
+    storagePath:
+        getStorageUrl(doc.storagePath),
 
-            embeddingCount
+    chunkCount:
+        doc._count.chunks,
 
-        };
+    embeddingCount
+
+};
 
     })
 

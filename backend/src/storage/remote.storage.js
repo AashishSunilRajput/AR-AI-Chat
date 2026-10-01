@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import path from "path";
 
 class RemoteStorage {
 
@@ -18,11 +19,11 @@ class RemoteStorage {
             folder
         );
 
-        formData.append(
-            "file",
-            blob,
-            filePath.split("/").pop()
-        );
+       formData.append(
+    "file",
+    blob,
+    path.basename(filePath)
+);
 
         const response =
             await fetch(
@@ -39,8 +40,29 @@ class RemoteStorage {
                 }
             );
 
-        const result =
-            await response.json();
+        const responseText =
+            await response.text();
+
+        console.log(
+            "STORAGE STATUS:",
+            response.status
+        );
+
+        console.log(
+            "STORAGE RESPONSE:",
+            responseText
+        );
+
+        let result;
+
+        try {
+            result =
+                JSON.parse(responseText);
+        } catch {
+            throw new Error(
+                `Storage returned non-JSON response (${response.status})`
+            );
+        }
 
         if (!response.ok || !result.success) {
             throw new Error(

@@ -1,6 +1,7 @@
 import organizationRepository from "../repositories/organization.repository.js";
 import bcrypt from "bcrypt";
 import prisma from "../config/prisma.js";
+import { getStorageUrl } from "../utils/storage-url.js";
 class OrganizationService {
 
     async getProfile(user) {
@@ -13,7 +14,10 @@ class OrganizationService {
             throw new Error("Organization not found");
         }
 
-        return organization;
+       return {
+    ...organization,
+    logo: getStorageUrl(organization.logo)
+};
 
     }
 
